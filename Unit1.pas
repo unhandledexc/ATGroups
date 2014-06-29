@@ -1,10 +1,19 @@
+{$ifdef FPC}
+  {$mode delphi}
+{$else}
+  {$define SP}
+{$endif}
+
 unit Unit1;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ATGroups, StdCtrls, ExtCtrls, ATTabs, Menus, SpTbxSkins,
+  Dialogs, ATGroups, StdCtrls, ExtCtrls, ATTabs, Menus,
+  {$ifdef SP}
+  SpTbxSkins,
+  {$endif}
   ComCtrls;
 
 type
@@ -90,8 +99,9 @@ procedure TForm1.FormCreate(Sender: TObject);
   end;
 begin
   Tree.FullExpand;
-  SkinManager.SetSkin(
-    'Aluminum');
+  {$ifdef SP}
+  SkinManager.SetSkin('Aluminum');
+  {$endif}
 
   Groups:= TATGroups.Create(Self);
   Groups.Parent:= Self;
@@ -125,7 +135,7 @@ begin
   D:= Tabs.GetTabData(ATabIndex);
   ACanClose:=
     //true;
-    Application.MessageBox(PChar('Close: '+D.TabCaption), 'Close', mb_okcancel) = id_ok;
+    Application.MessageBox(PChar('Close: '+D.TabCaption), 'Close', mb_okcancel) = idok;
 
   if ACanClose then
     D.TabObject.Free;

@@ -1,4 +1,6 @@
 # Delphi compiler-generated binaries (safe to delete)
+*.dbg
+*.ico
 *.exe
 *.dll
 *.bpl
@@ -28,3 +30,6 @@
 # Delphi history and backups
 __history/
 *.~*
+
+lib/
+backup/

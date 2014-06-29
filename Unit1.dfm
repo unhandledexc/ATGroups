@@ -26,6 +26,7 @@ object Form1: TForm1
     HideSelection = False
     Indent = 19
     TabOrder = 0
+    Visible = False
     OnDragDrop = TreeDragDrop
     OnDragOver = TreeDragOver
     Items.Data = {

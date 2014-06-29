@@ -2,6 +2,9 @@ program Demo;
 
 uses
   Forms,
+  {$ifdef FPC}
+  Interfaces,
+  {$endif}
   Unit1 in 'Unit1.pas' {Form1},
   ATGroups in 'ATGroups.pas';
 
