@@ -36,6 +36,17 @@ type
     m3: TMenuItem;
     m4: TMenuItem;
     Tree: TTreeView;
+    Focus1: TMenuItem;
+    Next1: TMenuItem;
+    N12: TMenuItem;
+    N21: TMenuItem;
+    N31: TMenuItem;
+    N41: TMenuItem;
+    N2: TMenuItem;
+    Pr1: TMenuItem;
+    mNext: TMenuItem;
+    mPre: TMenuItem;
+    N3: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure mnuCloseClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
@@ -54,6 +65,14 @@ type
     procedure TreeDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure Next1Click(Sender: TObject);
+    procedure N12Click(Sender: TObject);
+    procedure N21Click(Sender: TObject);
+    procedure N31Click(Sender: TObject);
+    procedure N41Click(Sender: TObject);
+    procedure Pr1Click(Sender: TObject);
+    procedure mNextClick(Sender: TObject);
+    procedure mPreClick(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -61,6 +80,7 @@ type
     procedure AddTab(Pages: TATPages);
     procedure TabPopup(S: TObject);
     procedure MoveTab(Pages: TATPages);
+    procedure MoveTabNext(ANext: boolean);
   public
     { Public declarations }
     Groups: TATGroups;
@@ -252,6 +272,57 @@ begin
   if N=nil then begin Beep; Exit end;
   Tree.Items.AddChild(N, Caption);
   Tree.FullExpand;
+end;
+
+procedure TForm1.Next1Click(Sender: TObject);
+begin
+  Groups.FocusGroupNext(true);
+end;
+
+procedure TForm1.N12Click(Sender: TObject);
+begin
+  if not Groups.FocusGroupNum(1) then beep;
+end;
+
+procedure TForm1.N21Click(Sender: TObject);
+begin
+  if not Groups.FocusGroupNum(2) then beep;
+end;
+
+procedure TForm1.N31Click(Sender: TObject);
+begin
+  if not Groups.FocusGroupNum(3) then beep;
+end;
+
+procedure TForm1.N41Click(Sender: TObject);
+begin
+  if not Groups.FocusGroupNum(4) then beep;
+end;
+
+procedure TForm1.Pr1Click(Sender: TObject);
+begin
+  Groups.FocusGroupNext(false);
+end;
+
+procedure TForm1.mNextClick(Sender: TObject);
+begin
+  MoveTabNext(true);
+end;
+
+procedure TForm1.mPreClick(Sender: TObject);
+begin
+  MoveTabNext(false);
+end;
+
+procedure TForm1.MoveTabNext(ANext: boolean);
+var
+  N0, N1: Integer;
+begin
+  N0:= Groups.PagesIndex(Groups.PopupPages);
+  if N0<0 then Exit;
+  N1:= Groups.PagesNextIndex(N0, ANext);
+  if N1<0 then Exit;
+  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.PagesArray[N1], -1);
 end;
 
 end.

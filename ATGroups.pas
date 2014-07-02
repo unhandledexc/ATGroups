@@ -61,6 +61,8 @@ type
     gm4Vert,
     gm4Grid
     );
+type
+  TATGroupsNums = 1..4;
 
 type
   TATGroups = class(TPanel)
@@ -91,9 +93,15 @@ type
     Pages2,
     Pages3,
     Pages4: TATPages;
+    PagesArray: array[TATGroupsNums] of TATPages;
     constructor Create(AOwner: TComponent); override;
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
       AToPages: TATPages; AToIndex: Integer);
+    function FocusGroupNum(ANum: Integer): boolean;
+    procedure FocusGroupNext(ANext: boolean);
+    function PagesOfControl(ACtl: TControl): Integer;
+    function PagesIndex(APages: TATPages): Integer;
+    function PagesNextIndex(AIndex: Integer; ANext: boolean): Integer;
     property Mode: TATGroupsMode read FMode write SetMode;
     property PopupPages: TATPages read FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex;
@@ -104,7 +112,7 @@ type
 implementation
 
 uses
-  SysUtils, Windows,
+  Windows, SysUtils,
   {$ifdef SP}
   SpTbxSkins,
   {$endif}
@@ -112,7 +120,7 @@ uses
 
 function PtInControl(Control: TControl; const Pnt: TPoint): boolean;
 begin
-  Result:= PtInRect(Control.BoundsRect, Control.ScreenToClient(Pnt));
+  Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(Pnt));
 end;
 
 { TATPages }
@@ -172,7 +180,7 @@ begin
     if Ctl.Showing then
       if Ctl.CanFocus then
         Ctl.SetFocus;
-  end;      
+  end;
 end;
 
 procedure TATPages.SetOnTabClose(AEvent: TATTabCloseEvent);
@@ -240,6 +248,11 @@ begin
   Pages2.Tabs.Name:= 'aTabs2';
   Pages3.Tabs.Name:= 'aTabs3';
   Pages4.Tabs.Name:= 'aTabs4';
+
+  PagesArray[1]:= Pages1;
+  PagesArray[2]:= Pages2;
+  PagesArray[3]:= Pages3;
+  PagesArray[4]:= Pages4;
 
   FSplit1:= TMySplitter.Create(Self);
   FSplit1.Parent:= Self;
@@ -580,7 +593,7 @@ begin
 
   if Assigned(FOnPopup) then
     FOnPopup(Self);
-  Handled:= true;  
+  Handled:= true;
 end;
 
 procedure TATPages.TabDrawBefore(Sender: TObject;
@@ -738,6 +751,81 @@ begin
   AFromPages.Tabs.DeleteTab(AFromIndex, false);
 end;
 
+
+function TATGroups.FocusGroupNum(ANum: Integer): boolean;
+var
+  Pages: TATPages;
+begin
+  if (ANum>=Low(PagesArray)) and (ANum<=High(PagesArray)) then
+    Pages:= PagesArray[ANum]
+  else
+    Pages:= nil;
+
+  Result:= (Pages<>nil) and Pages.Visible and (Pages.Tabs.TabCount>0);
+  if Result then
+    Pages.Tabs.OnTabClick(nil);
+end;
+
+procedure TATGroups.FocusGroupNext(ANext: boolean);
+var
+  Num0: Integer;
+begin
+//
+end;
+
+
+function TATGroups.PagesOfControl(ACtl: TControl): Integer;
+var
+  i, j: Integer;
+begin
+  for i:= Low(PagesArray) to High(PagesArray) do
+    with PagesArray[i] do
+      for j:= 0 to Tabs.TabCount-1 do
+        if Tabs.GetTabData(j).TabObject = ACtl then
+        begin
+          Result:= i;
+          Exit
+        end;
+  Result:= -1;
+end;
+
+function TATGroups.PagesIndex(APages: TATPages): Integer;
+var
+  i: Integer;
+begin
+  Result:= -1;
+  for i:= Low(PagesArray) to High(PagesArray) do
+    if PagesArray[i] = APages then
+    begin
+      Result:= i;
+      Exit
+    end;
+end;
+
+function TATGroups.PagesNextIndex(AIndex: Integer; ANext: boolean): Integer;
+var
+  N: Integer;
+begin
+  Result:= -1;
+  N:= AIndex;
+
+  repeat
+    if ANext then Inc(N) else Dec(N);
+    if N>High(TATGroupsNums) then
+      N:= Low(TATGroupsNums)
+    else
+    if N<Low(TATGroupsNums) then
+      N:= High(TATGroupsNums);
+
+    if N=AIndex then Exit;
+
+    if PagesArray[N].Visible then
+    begin
+      Result:= N;
+      Exit
+    end;
+  until false;
+end;
 
 end.
 

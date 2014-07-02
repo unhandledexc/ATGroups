@@ -63,6 +63,17 @@ object Form1: TForm1
       Caption = 'Move to 4'
       OnClick = m4Click
     end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object mNext: TMenuItem
+      Caption = 'Move to next'
+      OnClick = mNextClick
+    end
+    object mPre: TMenuItem
+      Caption = 'Move to pr'
+      OnClick = mPreClick
+    end
   end
   object MainMenu1: TMainMenu
     Left = 368
@@ -100,6 +111,42 @@ object Form1: TForm1
       object N4grid1: TMenuItem
         Caption = '4 grid'
         OnClick = N4grid1Click
+      end
+    end
+    object Focus1: TMenuItem
+      Caption = 'Focus'
+      object Next1: TMenuItem
+        Caption = 'Next'
+        ShortCut = 116
+        OnClick = Next1Click
+      end
+      object Pr1: TMenuItem
+        Caption = 'Prv'
+        ShortCut = 117
+        OnClick = Pr1Click
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object N12: TMenuItem
+        Caption = '1'
+        ShortCut = 112
+        OnClick = N12Click
+      end
+      object N21: TMenuItem
+        Caption = '2'
+        ShortCut = 113
+        OnClick = N21Click
+      end
+      object N31: TMenuItem
+        Caption = '3'
+        ShortCut = 114
+        OnClick = N31Click
+      end
+      object N41: TMenuItem
+        Caption = '4'
+        ShortCut = 115
+        OnClick = N41Click
       end
     end
   end
