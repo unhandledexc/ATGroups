@@ -98,10 +98,8 @@ type
     Pages3,
     Pages4,
     PagesCurrent: TATPages;
-    PagesArray: array[TATGroupsNums] of TATPages;
+    Pages: array[TATGroupsNums] of TATPages;
     constructor Create(AOwner: TComponent); override;
-    procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
-      AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
     //
     function PagesSetIndex(ANum: Integer): boolean;
     procedure PagesSetNext(ANext: boolean);
@@ -109,6 +107,8 @@ type
     function PagesIndexOfControl(ACtl: TControl): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
     //
+    procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
+      AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
     procedure MovePopupTabToNext(ANext: boolean);
     procedure MoveCurrentTabToNext(ANext: boolean);
     //
@@ -231,13 +231,13 @@ begin
   Pages4:= TATPages.Create(Self);
 
   PagesCurrent:= Pages1;
-  PagesArray[1]:= Pages1;
-  PagesArray[2]:= Pages2;
-  PagesArray[3]:= Pages3;
-  PagesArray[4]:= Pages4;
+  Pages[1]:= Pages1;
+  Pages[2]:= Pages2;
+  Pages[3]:= Pages3;
+  Pages[4]:= Pages4;
 
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
-    with PagesArray[i] do
+    with Pages[i] do
     begin
       Name:= 'aPages'+IntToStr(i);
       Caption:= '';
@@ -757,16 +757,16 @@ end;
 
 function TATGroups.PagesSetIndex(ANum: Integer): boolean;
 var
-  Pages: TATPages;
+  APages: TATPages;
 begin
-  if (ANum>=Low(PagesArray)) and (ANum<=High(PagesArray)) then
-    Pages:= PagesArray[ANum]
+  if (ANum>=Low(Pages)) and (ANum<=High(Pages)) then
+    APages:= Pages[ANum]
   else
-    Pages:= nil;
+    APages:= nil;
 
-  Result:= (Pages<>nil) and Pages.Visible and (Pages.Tabs.TabCount>0);
+  Result:= (APages<>nil) and APages.Visible and (APages.Tabs.TabCount>0);
   if Result then
-    Pages.Tabs.OnTabClick(nil);
+    APages.Tabs.OnTabClick(nil);
 end;
 
 procedure TATGroups.PagesSetNext(ANext: boolean);
@@ -785,8 +785,8 @@ function TATGroups.PagesIndexOfControl(ACtl: TControl): Integer;
 var
   i, j: Integer;
 begin
-  for i:= Low(PagesArray) to High(PagesArray) do
-    with PagesArray[i] do
+  for i:= Low(Pages) to High(Pages) do
+    with Pages[i] do
       for j:= 0 to Tabs.TabCount-1 do
         if Tabs.GetTabData(j).TabObject = ACtl then
         begin
@@ -801,8 +801,8 @@ var
   i: Integer;
 begin
   Result:= -1;
-  for i:= Low(PagesArray) to High(PagesArray) do
-    if PagesArray[i] = APages then
+  for i:= Low(Pages) to High(Pages) do
+    if Pages[i] = APages then
     begin
       Result:= i;
       Exit
@@ -827,8 +827,8 @@ begin
 
     if N=AIndex then Exit;
 
-    if PagesArray[N].Visible then
-      if (PagesArray[N].Tabs.TabCount>0) or AEnableEmpty then
+    if Pages[N].Visible then
+      if (Pages[N].Tabs.TabCount>0) or AEnableEmpty then
       begin
         Result:= N;
         Exit
@@ -851,7 +851,7 @@ begin
   if N0<0 then Exit;
   N1:= PagesNextIndex(N0, ANext, true);
   if N1<0 then Exit;
-  MoveTab(PopupPages, PopupTabIndex, PagesArray[N1], -1, false);
+  MoveTab(PopupPages, PopupTabIndex, Pages[N1], -1, false);
 end;
 
 procedure TATGroups.MoveCurrentTabToNext(ANext: boolean);
@@ -862,7 +862,7 @@ begin
   if N0<0 then Exit;
   N1:= PagesNextIndex(N0, ANext, true);
   if N1<0 then Exit;
-  MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, PagesArray[N1], -1, true);
+  MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, Pages[N1], -1, true);
 end;
 
 end.

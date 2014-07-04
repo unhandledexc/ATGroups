@@ -241,7 +241,7 @@ end;
 
 procedure TForm1.MoveTabTo(Num: Integer);
 begin
-  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.PagesArray[Num], -1, false);
+  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.Pages[Num], -1, false);
 end;
 
 procedure TForm1.m1Click(Sender: TObject);
