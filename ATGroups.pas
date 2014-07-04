@@ -320,9 +320,6 @@ begin
   FPopupPages:= nil;
   FPopupTabIndex:= -1;
   FMode:= gmNone;
-
-  FOnTabPopup:= nil;
-  FOnTabFocus:= nil;
 end;
 
 procedure TATGroups.InitSplitterPopup;
