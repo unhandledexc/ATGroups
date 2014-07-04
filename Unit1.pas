@@ -47,6 +47,9 @@ type
     mNext: TMenuItem;
     mPre: TMenuItem;
     N3: TMenuItem;
+    Movetab1: TMenuItem;
+    tonext1: TMenuItem;
+    toprev1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure mnuCloseClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
@@ -73,6 +76,8 @@ type
     procedure Pr1Click(Sender: TObject);
     procedure mNextClick(Sender: TObject);
     procedure mPreClick(Sender: TObject);
+    procedure tonext1Click(Sender: TObject);
+    procedure toprev1Click(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -81,7 +86,6 @@ type
     procedure TabPopup(S: TObject);
     procedure TabFocus(S: TObject);
     procedure MoveTab(Pages: TATPages);
-    procedure MoveTabNext(ANext: boolean);
     procedure MemoFocus(S: TObject);
   public
     { Public declarations }
@@ -237,7 +241,7 @@ end;
 
 procedure TForm1.MoveTab(Pages: TATPages);
 begin
-  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Pages, -1);
+  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Pages, -1, false);
 end;
 
 procedure TForm1.m1Click(Sender: TObject);
@@ -311,23 +315,12 @@ end;
 
 procedure TForm1.mNextClick(Sender: TObject);
 begin
-  MoveTabNext(true);
+  Groups.MovePopupTabToNext(true);
 end;
 
 procedure TForm1.mPreClick(Sender: TObject);
 begin
-  MoveTabNext(false);
-end;
-
-procedure TForm1.MoveTabNext(ANext: boolean);
-var
-  N0, N1: Integer;
-begin
-  N0:= Groups.PagesIndexOf(Groups.PopupPages);
-  if N0<0 then Exit;
-  N1:= Groups.PagesNextIndex(N0, ANext, true);
-  if N1<0 then Exit;
-  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.PagesArray[N1], -1);
+  Groups.MovePopupTabToNext(false);
 end;
 
 procedure TForm1.TabFocus(S: TObject);
@@ -345,6 +338,17 @@ procedure TForm1.MemoFocus(S: TObject);
 begin
   Groups.PagesCurrent:= (S as TMemo).Parent as TATPages;
   Caption:= Format('Group: %d', [Groups.PagesIndexOf(Groups.PagesCurrent)]);
+end;
+
+procedure TForm1.tonext1Click(Sender: TObject);
+begin
+  Groups.MoveCurrentTabToNext(true);
+end;
+
+
+procedure TForm1.toprev1Click(Sender: TObject);
+begin
+  Groups.MoveCurrentTabToNext(false);
 end;
 
 end.

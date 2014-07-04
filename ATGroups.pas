@@ -101,13 +101,16 @@ type
     PagesArray: array[TATGroupsNums] of TATPages;
     constructor Create(AOwner: TComponent); override;
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
-      AToPages: TATPages; AToIndex: Integer);
+      AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
     //
     function PagesSetIndex(ANum: Integer): boolean;
     procedure PagesSetNext(ANext: boolean);
     function PagesIndexOf(APages: TATPages): Integer;
     function PagesIndexOfControl(ACtl: TControl): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
+    //
+    procedure MovePopupTabToNext(ANext: boolean);
+    procedure MoveCurrentTabToNext(ANext: boolean);
     //
     property Mode: TATGroupsMode read FMode write SetMode;
     property PopupPages: TATPages read FPopupPages;
@@ -737,7 +740,7 @@ begin
 end;
 
 procedure TATGroups.MoveTab(AFromPages: TATPages; AFromIndex: Integer;
-  AToPages: TATPages; AToIndex: Integer);
+  AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
 var
   D: TATTabData;
 begin
@@ -745,6 +748,10 @@ begin
   if D=nil then Exit;
   AToPages.AddTab(D.TabObject as TControl, D.TabCaption, D.TabColor);
   AFromPages.Tabs.DeleteTab(AFromIndex, false);
+
+  if AActivateTabAfter then
+    with AToPages.Tabs do
+      TabIndex:= TabCount-1;
 end;
 
 
@@ -834,6 +841,28 @@ procedure TATGroups.TabFocus(Sender: TObject);
 begin
   if Assigned(FOnTabFocus) then
     FOnTabFocus(Sender);
+end;
+
+procedure TATGroups.MovePopupTabToNext(ANext: boolean);
+var
+  N0, N1: Integer;
+begin
+  N0:= PagesIndexOf(PopupPages);
+  if N0<0 then Exit;
+  N1:= PagesNextIndex(N0, ANext, true);
+  if N1<0 then Exit;
+  MoveTab(PopupPages, PopupTabIndex, PagesArray[N1], -1, false);
+end;
+
+procedure TATGroups.MoveCurrentTabToNext(ANext: boolean);
+var
+  N0, N1: Integer;
+begin
+  N0:= PagesIndexOf(PagesCurrent);
+  if N0<0 then Exit;
+  N1:= PagesNextIndex(N0, ANext, true);
+  if N1<0 then Exit;
+  MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, PagesArray[N1], -1, true);
 end;
 
 end.

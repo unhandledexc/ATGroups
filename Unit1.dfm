@@ -149,5 +149,16 @@ object Form1: TForm1
         OnClick = Pr1Click
       end
     end
+    object Movetab1: TMenuItem
+      Caption = 'Move tab'
+      object tonext1: TMenuItem
+        Caption = 'to next'
+        OnClick = tonext1Click
+      end
+      object toprev1: TMenuItem
+        Caption = 'to prev'
+        OnClick = toprev1Click
+      end
+    end
   end
 end
