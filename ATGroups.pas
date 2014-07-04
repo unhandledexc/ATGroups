@@ -61,19 +61,29 @@ type
     gm3Vert,
     gm4Horz,
     gm4Vert,
-    gm4Grid
+    gm4Grid,
+    gm6Grid
     );
 type
-  TATGroupsNums = 1..4;
+  TATGroupsNums = 1..6;
 
 type
   TATGroups = class(TPanel)
   private
-    FSplit1, FSplit2, FSplit3: TMySplitter;
-    FPanel1, FPanel2: TPanel;
+    FSplit1,
+    FSplit2,
+    FSplit3,
+    FSplit4,
+    FSplit5: TMySplitter;
+    FPanel1,
+    FPanel2: TPanel;
+    FPos1,
+    FPos2,
+    FPos3,
+    FPos4,
+    FPos5: Real;
     FSplitPopup: {$ifdef SP} TSpTbxPopupMenu {$else} TPopupMenu {$endif};
     FMode: TATGroupsMode;
-    FPos1, FPos2, FPos3: Real;
     FOnTabPopup: TNotifyEvent;
     FOnTabFocus: TNotifyEvent;
     FPopupPages: TATPages;
@@ -86,6 +96,8 @@ type
     procedure Split1Moved(Sender: TObject);
     procedure Split2Moved(Sender: TObject);
     procedure Split3Moved(Sender: TObject);
+    procedure Split4Moved(Sender: TObject);
+    procedure Split5Moved(Sender: TObject);
     procedure SplitClick(Sender: TObject);
     procedure SaveSplitPos;
     procedure RestoreSplitPos;
@@ -97,6 +109,8 @@ type
     Pages2,
     Pages3,
     Pages4,
+    Pages5,
+    Pages6,
     PagesCurrent: TATPages;
     Pages: array[TATGroupsNums] of TATPages;
     constructor Create(AOwner: TComponent); override;
@@ -229,12 +243,16 @@ begin
   Pages2:= TATPages.Create(Self);
   Pages3:= TATPages.Create(Self);
   Pages4:= TATPages.Create(Self);
+  Pages5:= TATPages.Create(Self);
+  Pages6:= TATPages.Create(Self);
 
   PagesCurrent:= Pages1;
   Pages[1]:= Pages1;
   Pages[2]:= Pages2;
   Pages[3]:= Pages3;
   Pages[4]:= Pages4;
+  Pages[5]:= Pages5;
+  Pages[6]:= Pages6;
 
   for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
     with Pages[i] do
@@ -261,6 +279,14 @@ begin
   FSplit3:= TMySplitter.Create(Self);
   FSplit3.Parent:= Self;
   FSplit3.OnMoved:= Split3Moved;
+
+  FSplit4:= TMySplitter.Create(Self);
+  FSplit4.Parent:= Self;
+  FSplit4.OnMoved:= Split4Moved;
+
+  FSplit5:= TMySplitter.Create(Self);
+  FSplit5.Parent:= Self;
+  FSplit5.OnMoved:= Split5Moved;
 
   FPanel1:= TPanel.Create(Self);
   FPanel1.Parent:= Self;
@@ -347,27 +373,55 @@ begin
     else
       SetSplitterPopup(FSplit1, nil);
 
-    if FMode=gm4Grid then
-    begin
-      FPanel1.Visible:= true;
-      FPanel2.Visible:= true;
-      Pages1.Parent:= FPanel1;
-      Pages2.Parent:= FPanel1;
-      Pages3.Parent:= FPanel2;
-      Pages4.Parent:= FPanel2;
-      FSplit1.Parent:= FPanel1;
-      FSplit2.Parent:= FPanel2;
-    end
-    else
-    begin
-      FPanel1.Visible:= false;
-      FPanel2.Visible:= false;
-      Pages1.Parent:= Self;
-      Pages2.Parent:= Self;
-      Pages3.Parent:= Self;
-      Pages4.Parent:= Self;
-      FSplit1.Parent:= Self;
-      FSplit2.Parent:= Self;
+    case FMode of
+      gm4Grid:
+      begin
+        FPanel1.Visible:= true;
+        FPanel2.Visible:= true;
+        Pages1.Parent:= FPanel1;
+        Pages2.Parent:= FPanel1;
+        Pages3.Parent:= FPanel2;
+        Pages4.Parent:= FPanel2;
+        Pages5.Parent:= FPanel2;
+        Pages6.Parent:= FPanel2;
+        FSplit1.Parent:= FPanel1;
+        FSplit2.Parent:= FPanel2;
+        FSplit3.Parent:= Self;
+        FSplit4.Parent:= Self;
+        FSplit5.Parent:= Self;
+      end;
+      gm6Grid:
+      begin
+        FPanel1.Visible:= true;
+        FPanel2.Visible:= true;
+        Pages1.Parent:= FPanel1;
+        Pages2.Parent:= FPanel1;
+        Pages3.Parent:= FPanel1;
+        Pages4.Parent:= FPanel2;
+        Pages5.Parent:= FPanel2;
+        Pages6.Parent:= FPanel2;
+        FSplit1.Parent:= FPanel1;
+        FSplit2.Parent:= FPanel1;
+        FSplit3.Parent:= Self;
+        FSplit4.Parent:= FPanel2;
+        FSplit5.Parent:= FPanel2;
+      end
+      else
+      begin
+        FPanel1.Visible:= false;
+        FPanel2.Visible:= false;
+        Pages1.Parent:= Self;
+        Pages2.Parent:= Self;
+        Pages3.Parent:= Self;
+        Pages4.Parent:= Self;
+        Pages5.Parent:= Self;
+        Pages6.Parent:= Self;
+        FSplit1.Parent:= Self;
+        FSplit2.Parent:= Self;
+        FSplit3.Parent:= Self;
+        FSplit4.Parent:= Self;
+        FSplit5.Parent:= Self;
+      end;
     end;
 
     case FMode of
@@ -376,9 +430,13 @@ begin
           Pages2.Visible:= false;
           Pages3.Visible:= false;
           Pages4.Visible:= false;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= false;
           FSplit2.Visible:= false;
           FSplit3.Visible:= false;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alClient;
         end;
       gm2Horz:
@@ -386,9 +444,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= false;
           Pages4.Visible:= false;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= false;
           FSplit3.Visible:= false;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alLeft;
           Pages2.Align:= alClient;
           FSplit1.Align:= alLeft;
@@ -403,9 +465,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= false;
           Pages4.Visible:= false;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= false;
           FSplit3.Visible:= false;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alTop;
           Pages2.Align:= alClient;
           FSplit1.Align:= alTop;
@@ -420,9 +486,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= true;
           Pages4.Visible:= false;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= false;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alLeft;
           Pages2.Align:= alLeft;
           Pages3.Align:= alClient;
@@ -442,9 +512,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= true;
           Pages4.Visible:= false;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= false;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alTop;
           Pages2.Align:= alTop;
           Pages3.Align:= alClient;
@@ -464,9 +538,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= true;
           Pages4.Visible:= true;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alLeft;
           Pages2.Align:= alLeft;
           Pages3.Align:= alLeft;
@@ -491,9 +569,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= true;
           Pages4.Visible:= true;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alTop;
           Pages2.Align:= alTop;
           Pages3.Align:= alTop;
@@ -518,9 +600,13 @@ begin
           Pages2.Visible:= true;
           Pages3.Visible:= true;
           Pages4.Visible:= true;
+          Pages5.Visible:= false;
+          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
           Pages1.Align:= alLeft;
           Pages2.Align:= alClient;
           Pages3.Align:= alLeft;
@@ -532,11 +618,58 @@ begin
           Pages1.Width:= ClientWidth div 2;
           Pages3.Width:= ClientWidth div 2;
           FPanel1.Height:= ClientHeight div 2;
-          //pos
+          //pos-a
+          FSplit1.Left:= ClientWidth;
+          Pages2.Left:= ClientWidth;
+          //pos-b
+          FSplit2.Left:= ClientWidth;
+          Pages4.Left:= ClientWidth;
+          //pos-c
+          FSplit3.Top:= ClientHeight;
+          FPanel2.Top:= ClientHeight;
+        end;
+      gm6Grid:
+        begin
+          Pages2.Visible:= true;
+          Pages3.Visible:= true;
+          Pages4.Visible:= true;
+          Pages5.Visible:= true;
+          Pages6.Visible:= true;
+          FSplit1.Visible:= true;
+          FSplit2.Visible:= true;
+          FSplit3.Visible:= true;
+          FSplit4.Visible:= true;
+          FSplit5.Visible:= true;
+          Pages1.Align:= alLeft;
+          Pages2.Align:= alLeft;
+          Pages3.Align:= alClient;
+          Pages4.Align:= alLeft;
+          Pages5.Align:= alLeft;
+          Pages6.Align:= alClient;
+          FSplit1.Align:= alLeft;
+          FSplit2.Align:= alLeft;
+          FSplit3.Align:= alTop;
+          FSplit4.Align:= alLeft;
+          FSplit5.Align:= alLeft;
+          //size
+          Pages1.Width:= ClientWidth div 3;
+          Pages2.Width:= ClientWidth div 3;
+          Pages4.Width:= ClientWidth div 3;
+          Pages5.Width:= ClientWidth div 3;
+          FPanel1.Height:= ClientHeight div 2;
+          //pos-a
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
           FSplit2.Left:= ClientWidth;
-          Pages4.Left:= ClientWidth;
+          Pages3.Left:= ClientWidth;
+          //pos-b
+          FSplit4.Left:= ClientWidth;
+          Pages5.Left:= ClientWidth;
+          FSplit5.Left:= ClientWidth;
+          Pages6.Left:= ClientWidth;
+          //pos-c
+          FSplit3.Top:= ClientHeight;
+          FPanel2.Top:= ClientHeight;
         end;
     end;
 
@@ -548,6 +681,9 @@ procedure TATGroups.Split1Moved(Sender: TObject);
 begin
   if FMode=gm4Grid then
     Pages3.Width:= Pages1.Width;
+  if FMode=gm6Grid then
+    Pages4.Width:= Pages1.Width;
+
   SaveSplitPos;
 end;
 
@@ -555,6 +691,9 @@ procedure TATGroups.Split2Moved(Sender: TObject);
 begin
   if FMode=gm4Grid then
     Pages1.Width:= Pages3.Width;
+  if FMode=gm6Grid then
+    Pages5.Width:= Pages2.Width;
+
   SaveSplitPos;
 end;
 
@@ -563,29 +702,38 @@ begin
   SaveSplitPos;
 end;
 
+procedure TATGroups.Split4Moved(Sender: TObject);
+begin
+  if FMode=gm6Grid then
+    Pages1.Width:= Pages4.Width;
+
+  SaveSplitPos;
+end;
+
+procedure TATGroups.Split5Moved(Sender: TObject);
+begin
+  if FMode=gm6Grid then
+    Pages2.Width:= Pages5.Width;
+
+  SaveSplitPos;
+end;
+
 procedure TATGroups.TabPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
 var
   Pnt, PntC: TPoint;
+  i: Integer;
 begin
-  Pnt:= (Sender as TControl).ClientToScreen(MousePos);
+  FPopupPages:= nil;
+  FPopupTabIndex:= -1;
 
-  if PtInControl(Pages1.Tabs, Pnt) then
-    FPopupPages:= Pages1
-  else
-  if PtInControl(Pages2.Tabs, Pnt) then
-    FPopupPages:= Pages2
-  else
-  if PtInControl(Pages3.Tabs, Pnt) then
-    FPopupPages:= Pages3
-  else
-  if PtInControl(Pages4.Tabs, Pnt) then
-    FPopupPages:= Pages4
-  else
-  begin
-    FPopupPages:= nil;
-    FPopupTabIndex:= -1;
-    Exit;
-  end;
+  Pnt:= (Sender as TControl).ClientToScreen(MousePos);
+  for i:= Low(Pages) to High(Pages) do
+    if PtInControl(Pages[i].Tabs, Pnt) then
+    begin
+      FPopupPages:= Pages[i];
+      Break
+    end;
+  if FPopupPages=nil then Exit;
 
   PntC:= PopupPages.Tabs.ScreenToClient(Pnt);
   FPopupTabIndex:= FPopupPages.Tabs.GetTabAt(PntC.X, PntC.Y);
@@ -639,6 +787,8 @@ begin
   FPos1:= 0;
   FPos2:= 0;
   FPos3:= 0;
+  FPos4:= 0;
+  FPos5:= 0;
 
   case FMode of
     gm2Horz,
@@ -662,6 +812,14 @@ begin
         FPos1:= Pages1.Width / ClientWidth;
         FPos2:= Pages3.Width / ClientWidth;
         FPos3:= FPanel1.Height / ClientHeight;
+      end;
+    gm6Grid:
+      begin
+        FPos1:= Pages1.Width / ClientWidth;
+        FPos2:= Pages2.Width / ClientWidth;
+        FPos3:= FPanel1.Height / ClientHeight;
+        FPos4:= Pages4.Width / ClientWidth;
+        FPos5:= Pages5.Width / ClientWidth;
       end;
   end;
 end;
@@ -693,6 +851,14 @@ begin
         Pages1.Width:= Trunc(FPos1 * ClientWidth);
         Pages3.Width:= Trunc(FPos2 * ClientWidth);
         FPanel1.Height:= Trunc(FPos3 * ClientHeight);
+      end;
+    gm6Grid:
+      begin
+        Pages1.Width:= Trunc(FPos1 * ClientWidth);
+        Pages2.Width:= Trunc(FPos2 * ClientWidth);
+        FPanel1.Height:= Trunc(FPos3 * ClientHeight);
+        Pages4.Width:= Trunc(FPos4 * ClientWidth);
+        Pages5.Width:= Trunc(FPos5 * ClientWidth);
       end;
   end;
 end;

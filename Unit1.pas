@@ -50,6 +50,11 @@ type
     Movetab1: TMenuItem;
     tonext1: TMenuItem;
     toprev1: TMenuItem;
+    N6grid1: TMenuItem;
+    group51: TMenuItem;
+    group61: TMenuItem;
+    togroup51: TMenuItem;
+    togroup61: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure mnuCloseClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
@@ -78,6 +83,11 @@ type
     procedure toprev1Click(Sender: TObject);
     procedure TreeDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
+    procedure N6grid1Click(Sender: TObject);
+    procedure group51Click(Sender: TObject);
+    procedure group61Click(Sender: TObject);
+    procedure togroup51Click(Sender: TObject);
+    procedure togroup61Click(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -141,6 +151,8 @@ begin
   InitPage(Groups.Pages2);
   InitPage(Groups.Pages3);
   InitPage(Groups.Pages4);
+  InitPage(Groups.Pages5);
+  InitPage(Groups.Pages6);
 
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages1);
@@ -185,10 +197,12 @@ begin
 
   mnuClose.Caption:= 'Close: '+D.TabCaption;
 
+  {
   m1.Enabled:= (Groups.PopupPages<>Groups.Pages1);
   m2.Enabled:= (Groups.PopupPages<>Groups.Pages2) and not (Groups.Mode in [gmOne]);
   m3.Enabled:= (Groups.PopupPages<>Groups.Pages3) and not (Groups.Mode in [gmOne, gm2Horz, gm2Vert]);
   m4.Enabled:= (Groups.PopupPages<>Groups.Pages4) and not (Groups.Mode in [gmOne, gm2Horz, gm2Vert, gm3Horz, gm3Vert]);
+  }
 
   P:= Mouse.CursorPos;
   PopupMenu1.Popup(P.X, P.Y);
@@ -348,6 +362,31 @@ procedure TForm1.TreeDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
   Accept:= true;
+end;
+
+procedure TForm1.N6grid1Click(Sender: TObject);
+begin
+  Groups.Mode:= gm6Grid;
+end;
+
+procedure TForm1.group51Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(5) then beep;
+end;
+
+procedure TForm1.group61Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(6) then beep;
+end;
+
+procedure TForm1.togroup51Click(Sender: TObject);
+begin
+  MoveTabTo(5);
+end;
+
+procedure TForm1.togroup61Click(Sender: TObject);
+begin
+  MoveTabTo(6);
 end;
 
 end.

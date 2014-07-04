@@ -63,6 +63,14 @@ object Form1: TForm1
       Caption = 'to group 4'
       OnClick = m4Click
     end
+    object togroup51: TMenuItem
+      Caption = 'to group 5'
+      OnClick = togroup51Click
+    end
+    object togroup61: TMenuItem
+      Caption = 'to group 6'
+      OnClick = togroup61Click
+    end
     object N3: TMenuItem
       Caption = '-'
     end
@@ -112,6 +120,10 @@ object Form1: TForm1
         Caption = '4 grid'
         OnClick = N4grid1Click
       end
+      object N6grid1: TMenuItem
+        Caption = '6 grid'
+        OnClick = N6grid1Click
+      end
     end
     object Focus1: TMenuItem
       Caption = 'Focus'
@@ -135,17 +147,27 @@ object Form1: TForm1
         ShortCut = 115
         OnClick = N41Click
       end
+      object group51: TMenuItem
+        Caption = 'group 5'
+        ShortCut = 116
+        OnClick = group51Click
+      end
+      object group61: TMenuItem
+        Caption = 'group 6'
+        ShortCut = 117
+        OnClick = group61Click
+      end
       object N2: TMenuItem
         Caption = '-'
       end
       object Next1: TMenuItem
         Caption = 'group next'
-        ShortCut = 116
+        ShortCut = 120
         OnClick = Next1Click
       end
       object Pr1: TMenuItem
         Caption = 'group prev'
-        ShortCut = 117
+        ShortCut = 121
         OnClick = Pr1Click
       end
     end
