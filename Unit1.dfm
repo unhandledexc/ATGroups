@@ -41,37 +41,37 @@ object Form1: TForm1
     Left = 400
     Top = 96
     object mnuClose: TMenuItem
-      Caption = 'Close tab'
+      Caption = 'Close'
       OnClick = mnuCloseClick
     end
     object N1: TMenuItem
       Caption = '-'
     end
     object m1: TMenuItem
-      Caption = 'Move to 1'
+      Caption = 'to group 1'
       OnClick = m1Click
     end
     object m2: TMenuItem
-      Caption = 'Move to 2'
+      Caption = 'to group 2'
       OnClick = m2Click
     end
     object m3: TMenuItem
-      Caption = 'Move to 3'
+      Caption = 'to group 3'
       OnClick = m3Click
     end
     object m4: TMenuItem
-      Caption = 'Move to 4'
+      Caption = 'to group 4'
       OnClick = m4Click
     end
     object N3: TMenuItem
       Caption = '-'
     end
     object mNext: TMenuItem
-      Caption = 'Move to next'
+      Caption = 'to group next'
       OnClick = mNextClick
     end
     object mPre: TMenuItem
-      Caption = 'Move to pr'
+      Caption = 'to group prev'
       OnClick = mPreClick
     end
   end
@@ -79,7 +79,7 @@ object Form1: TForm1
     Left = 368
     Top = 96
     object Mode1: TMenuItem
-      Caption = 'View mode'
+      Caption = 'Mode'
       object N11: TMenuItem
         Caption = 'single'
         OnClick = N11Click
@@ -115,19 +115,6 @@ object Form1: TForm1
     end
     object Focus1: TMenuItem
       Caption = 'Focus'
-      object Next1: TMenuItem
-        Caption = 'Next'
-        ShortCut = 116
-        OnClick = Next1Click
-      end
-      object Pr1: TMenuItem
-        Caption = 'Prv'
-        ShortCut = 117
-        OnClick = Pr1Click
-      end
-      object N2: TMenuItem
-        Caption = '-'
-      end
       object N12: TMenuItem
         Caption = '1'
         ShortCut = 112
@@ -147,6 +134,19 @@ object Form1: TForm1
         Caption = '4'
         ShortCut = 115
         OnClick = N41Click
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Next1: TMenuItem
+        Caption = 'Next'
+        ShortCut = 116
+        OnClick = Next1Click
+      end
+      object Pr1: TMenuItem
+        Caption = 'Pre'
+        ShortCut = 117
+        OnClick = Pr1Click
       end
     end
   end

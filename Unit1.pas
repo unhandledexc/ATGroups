@@ -79,8 +79,10 @@ type
     procedure TabAdd(Sender: TObject);
     procedure AddTab(Pages: TATPages);
     procedure TabPopup(S: TObject);
+    procedure TabFocus(S: TObject);
     procedure MoveTab(Pages: TATPages);
     procedure MoveTabNext(ANext: boolean);
+    procedure MemoFocus(S: TObject);
   public
     { Public declarations }
     Groups: TATGroups;
@@ -104,6 +106,8 @@ begin
   F.Parent:= Self;
   F.ScrollBars:= ssBoth;
   F.BorderStyle:= bsNone;
+  F.OnEnter:= MemoFocus;
+
   ch:= Chr(Ord('A')+Random(26));
   for i:= 0 to 1+Random(4) do
     F.Lines.Add(StringOfChar(ch, 2+Random(50)));
@@ -127,6 +131,7 @@ begin
   Groups.Parent:= Self;
   Groups.Align:= alClient;
   Groups.OnTabPopup:= TabPopup;
+  Groups.OnTabFocus:= TabFocus;
 
   InitPage(Groups.Pages1);
   InitPage(Groups.Pages2);
@@ -276,32 +281,32 @@ end;
 
 procedure TForm1.Next1Click(Sender: TObject);
 begin
-  Groups.FocusGroupNext(true);
-end;
-
-procedure TForm1.N12Click(Sender: TObject);
-begin
-  if not Groups.FocusGroupNum(1) then beep;
-end;
-
-procedure TForm1.N21Click(Sender: TObject);
-begin
-  if not Groups.FocusGroupNum(2) then beep;
-end;
-
-procedure TForm1.N31Click(Sender: TObject);
-begin
-  if not Groups.FocusGroupNum(3) then beep;
-end;
-
-procedure TForm1.N41Click(Sender: TObject);
-begin
-  if not Groups.FocusGroupNum(4) then beep;
+  Groups.PagesSetNext(true);
 end;
 
 procedure TForm1.Pr1Click(Sender: TObject);
 begin
-  Groups.FocusGroupNext(false);
+  Groups.PagesSetNext(false);
+end;
+
+procedure TForm1.N12Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(1) then beep;
+end;
+
+procedure TForm1.N21Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(2) then beep;
+end;
+
+procedure TForm1.N31Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(3) then beep;
+end;
+
+procedure TForm1.N41Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(4) then beep;
 end;
 
 procedure TForm1.mNextClick(Sender: TObject);
@@ -318,11 +323,28 @@ procedure TForm1.MoveTabNext(ANext: boolean);
 var
   N0, N1: Integer;
 begin
-  N0:= Groups.PagesIndex(Groups.PopupPages);
+  N0:= Groups.PagesIndexOf(Groups.PopupPages);
   if N0<0 then Exit;
-  N1:= Groups.PagesNextIndex(N0, ANext);
+  N1:= Groups.PagesNextIndex(N0, ANext, true);
   if N1<0 then Exit;
   Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.PagesArray[N1], -1);
+end;
+
+procedure TForm1.TabFocus(S: TObject);
+var
+  D: TATTabData;
+begin
+  D:= (S as TATTabs).GetTabData((S as TATTabs).TabIndex);
+  if D<>nil then
+  begin
+    (D.TabObject as TMemo).SetFocus;
+  end;
+end;
+
+procedure TForm1.MemoFocus(S: TObject);
+begin
+  Groups.PagesCurrent:= (S as TMemo).Parent as TATPages;
+  Caption:= Format('Group: %d', [Groups.PagesIndexOf(Groups.PagesCurrent)]);
 end;
 
 end.
