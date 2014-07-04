@@ -116,22 +116,22 @@ object Form1: TForm1
     object Focus1: TMenuItem
       Caption = 'Focus'
       object N12: TMenuItem
-        Caption = '1'
+        Caption = 'group 1'
         ShortCut = 112
         OnClick = N12Click
       end
       object N21: TMenuItem
-        Caption = '2'
+        Caption = 'group 2'
         ShortCut = 113
         OnClick = N21Click
       end
       object N31: TMenuItem
-        Caption = '3'
+        Caption = 'group 3'
         ShortCut = 114
         OnClick = N31Click
       end
       object N41: TMenuItem
-        Caption = '4'
+        Caption = 'group 4'
         ShortCut = 115
         OnClick = N41Click
       end
@@ -139,12 +139,12 @@ object Form1: TForm1
         Caption = '-'
       end
       object Next1: TMenuItem
-        Caption = 'Next'
+        Caption = 'group next'
         ShortCut = 116
         OnClick = Next1Click
       end
       object Pr1: TMenuItem
-        Caption = 'Pre'
+        Caption = 'group prev'
         ShortCut = 117
         OnClick = Pr1Click
       end
