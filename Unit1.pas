@@ -130,11 +130,6 @@ end;
 
 
 procedure TForm1.FormCreate(Sender: TObject);
-  procedure InitPage(P: TATPages);
-  begin
-    P.OnTabClose:= TabClose;
-    P.OnTabAdd:= TabAdd;
-  end;
 begin
   Tree.FullExpand;
   {$ifdef SP}
@@ -146,13 +141,8 @@ begin
   Groups.Align:= alClient;
   Groups.OnTabPopup:= TabPopup;
   Groups.OnTabFocus:= TabFocus;
-
-  InitPage(Groups.Pages1);
-  InitPage(Groups.Pages2);
-  InitPage(Groups.Pages3);
-  InitPage(Groups.Pages4);
-  InitPage(Groups.Pages5);
-  InitPage(Groups.Pages6);
+  Groups.OnTabClose:= TabClose;
+  Groups.OnTabAdd:= TabAdd;
 
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages1);

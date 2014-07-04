@@ -86,11 +86,15 @@ type
     FMode: TATGroupsMode;
     FOnTabPopup: TNotifyEvent;
     FOnTabFocus: TNotifyEvent;
+    FOnTabClose: TATTabCloseEvent;
+    FOnTabAdd: TNotifyEvent;
     FPopupPages: TATPages;
     FPopupTabIndex: Integer;
     procedure TabFocus(Sender: TObject);
     procedure TabEmpty(Sender: TObject);
     procedure TabPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
+    procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
+    procedure TabAdd(Sender: TObject);
     procedure SetMode(Value: TATGroupsMode);
     procedure SetSplitPercent(N: Integer);
     procedure Split1Moved(Sender: TObject);
@@ -130,8 +134,11 @@ type
     property PopupPages: TATPages read FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex;
     property SplitPercent: Integer write SetSplitPercent;
+    //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
+    property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
+    property OnTabAdd: TNotifyEvent read FOnTabAdd write FOnTabAdd;
   end;
 
 implementation
@@ -259,13 +266,16 @@ begin
     begin
       Name:= 'aPages'+IntToStr(i);
       Caption:= '';
-      Tabs.Name:= 'aTabs'+IntToStr(i);
+      Tabs.Name:= 'aPagesTabs'+IntToStr(i);
       //
       Parent:= Self;
       Align:= alLeft;
+      //
       OnContextPopup:= Self.TabPopup;
       OnTabEmpty:= Self.TabEmpty;
       OnTabFocus:= Self.TabFocus;
+      OnTabClose:= Self.TabClose;
+      OnTabAdd:= Self.TabAdd;
     end;
 
   FSplit1:= TMySplitter.Create(Self);
@@ -1029,6 +1039,19 @@ begin
   N1:= PagesNextIndex(N0, ANext, true);
   if N1<0 then Exit;
   MoveTab(PagesCurrent, PagesCurrent.Tabs.TabIndex, Pages[N1], -1, true);
+end;
+
+procedure TATGroups.TabClose(Sender: TObject; ATabIndex: Integer;
+  var ACanClose: boolean);
+begin
+  if Assigned(FOnTabClose) then
+    FOnTabClose(Sender, ATabIndex, ACanClose);
+end;
+
+procedure TATGroups.TabAdd(Sender: TObject);
+begin
+  if Assigned(FOnTabAdd) then
+    FOnTabAdd(Sender);
 end;
 
 end.
