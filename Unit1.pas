@@ -65,8 +65,6 @@ type
     procedure m2Click(Sender: TObject);
     procedure m3Click(Sender: TObject);
     procedure m4Click(Sender: TObject);
-    procedure TreeDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
     procedure TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure Next1Click(Sender: TObject);
     procedure N12Click(Sender: TObject);
@@ -78,6 +76,8 @@ type
     procedure mPreClick(Sender: TObject);
     procedure tonext1Click(Sender: TObject);
     procedure toprev1Click(Sender: TObject);
+    procedure TreeDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -85,7 +85,7 @@ type
     procedure AddTab(Pages: TATPages);
     procedure TabPopup(S: TObject);
     procedure TabFocus(S: TObject);
-    procedure MoveTab(Pages: TATPages);
+    procedure MoveTabTo(Num: Integer);
     procedure MemoFocus(S: TObject);
   public
     { Public declarations }
@@ -239,35 +239,29 @@ begin
   Groups.Mode:= gm2Horz;
 end;
 
-procedure TForm1.MoveTab(Pages: TATPages);
+procedure TForm1.MoveTabTo(Num: Integer);
 begin
-  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Pages, -1, false);
+  Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.PagesArray[Num], -1, false);
 end;
 
 procedure TForm1.m1Click(Sender: TObject);
 begin
-  MoveTab(Groups.Pages1);
+  MoveTabTo(1);
 end;
 
 procedure TForm1.m2Click(Sender: TObject);
 begin
-  MoveTab(Groups.Pages2);
+  MoveTabTo(2);
 end;
 
 procedure TForm1.m3Click(Sender: TObject);
 begin
-  MoveTab(Groups.Pages3);
+  MoveTabTo(3);
 end;
 
 procedure TForm1.m4Click(Sender: TObject);
 begin
-  MoveTab(Groups.Pages4);
-end;
-
-procedure TForm1.TreeDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
-begin
-  Accept:= true;
+  MoveTabTo(4);
 end;
 
 procedure TForm1.TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -345,10 +339,15 @@ begin
   Groups.MoveCurrentTabToNext(true);
 end;
 
-
 procedure TForm1.toprev1Click(Sender: TObject);
 begin
   Groups.MoveCurrentTabToNext(false);
+end;
+
+procedure TForm1.TreeDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  Accept:= true;
 end;
 
 end.
