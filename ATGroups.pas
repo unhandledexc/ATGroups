@@ -402,6 +402,7 @@ end;
 procedure TATGroups.SetMode(Value: TATGroupsMode);
 var
   FSplitDiv: Real;
+  i: Integer;
 begin
   if Value<>FMode then
   begin
@@ -424,6 +425,9 @@ begin
       SetSplitterPopup(FSplit1, FSplitPopup)
     else
       SetSplitterPopup(FSplit1, nil);
+
+    for i:= Low(Pages) to High(Pages) do
+      Pages[i].Visible:= i<=cModesGroupsCount[FMode];
 
     case FMode of
       gm4Grid:
@@ -479,11 +483,6 @@ begin
     case FMode of
       gmOne:
         begin
-          Pages2.Visible:= false;
-          Pages3.Visible:= false;
-          Pages4.Visible:= false;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= false;
           FSplit2.Visible:= false;
           FSplit3.Visible:= false;
@@ -493,11 +492,6 @@ begin
         end;
       gm2Horz:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= false;
-          Pages4.Visible:= false;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= false;
           FSplit3.Visible:= false;
@@ -514,11 +508,6 @@ begin
         end;
       gm2Vert:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= false;
-          Pages4.Visible:= false;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= false;
           FSplit3.Visible:= false;
@@ -535,11 +524,6 @@ begin
         end;
       gm3Horz:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= true;
-          Pages4.Visible:= false;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= false;
@@ -561,11 +545,6 @@ begin
         end;
       gm3Vert:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= true;
-          Pages4.Visible:= false;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= false;
@@ -587,11 +566,6 @@ begin
         end;
       gm4Horz:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= true;
-          Pages4.Visible:= true;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
@@ -618,11 +592,6 @@ begin
         end;
       gm4Vert:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= true;
-          Pages4.Visible:= true;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
@@ -649,11 +618,6 @@ begin
         end;
       gm4Grid:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= true;
-          Pages4.Visible:= true;
-          Pages5.Visible:= false;
-          Pages6.Visible:= false;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
@@ -682,11 +646,6 @@ begin
         end;
       gm6Grid:
         begin
-          Pages2.Visible:= true;
-          Pages3.Visible:= true;
-          Pages4.Visible:= true;
-          Pages5.Visible:= true;
-          Pages6.Visible:= true;
           FSplit1.Visible:= true;
           FSplit2.Visible:= true;
           FSplit3.Visible:= true;
