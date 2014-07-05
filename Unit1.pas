@@ -236,6 +236,11 @@ begin
   Groups.Mode:= gm3Vert;
 end;
 
+procedure TForm1.N121Click(Sender: TObject);
+begin
+  Groups.Mode:= gm3Plus;
+end;
+
 procedure TForm1.N4horz1Click(Sender: TObject);
 begin
   Groups.Mode:= gm4Horz;
@@ -249,6 +254,11 @@ end;
 procedure TForm1.N4grid1Click(Sender: TObject);
 begin
   Groups.Mode:= gm4Grid;
+end;
+
+procedure TForm1.N6grid1Click(Sender: TObject);
+begin
+  Groups.Mode:= gm6Grid;
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
@@ -279,6 +289,16 @@ end;
 procedure TForm1.m4Click(Sender: TObject);
 begin
   MoveTabTo(4);
+end;
+
+procedure TForm1.togroup51Click(Sender: TObject);
+begin
+  MoveTabTo(5);
+end;
+
+procedure TForm1.togroup61Click(Sender: TObject);
+begin
+  MoveTabTo(6);
 end;
 
 procedure TForm1.TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -324,6 +344,16 @@ begin
   if not Groups.PagesSetIndex(4) then beep;
 end;
 
+procedure TForm1.group51Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(5) then beep;
+end;
+
+procedure TForm1.group61Click(Sender: TObject);
+begin
+  if not Groups.PagesSetIndex(6) then beep;
+end;
+
 procedure TForm1.mNextClick(Sender: TObject);
 begin
   Groups.MovePopupTabToNext(true);
@@ -367,39 +397,9 @@ begin
   Accept:= true;
 end;
 
-procedure TForm1.N6grid1Click(Sender: TObject);
-begin
-  Groups.Mode:= gm6Grid;
-end;
-
-procedure TForm1.group51Click(Sender: TObject);
-begin
-  if not Groups.PagesSetIndex(5) then beep;
-end;
-
-procedure TForm1.group61Click(Sender: TObject);
-begin
-  if not Groups.PagesSetIndex(6) then beep;
-end;
-
-procedure TForm1.togroup51Click(Sender: TObject);
-begin
-  MoveTabTo(5);
-end;
-
-procedure TForm1.togroup61Click(Sender: TObject);
-begin
-  MoveTabTo(6);
-end;
-
 procedure TForm1.toothergroup1Click(Sender: TObject);
 begin
   Groups.MoveCurrentTabToOpposite;
-end;
-
-procedure TForm1.N121Click(Sender: TObject);
-begin
-  Groups.Mode:= gm3plus;
 end;
 
 end.
