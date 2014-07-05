@@ -265,6 +265,8 @@ end;
 { TATGroups }
 
 constructor TATGroups.Create(AOwner: TComponent);
+const
+  cMinSize = 60;
 var
   i: Integer;
 begin
@@ -310,22 +312,27 @@ begin
   FSplit1:= TMySplitter.Create(Self);
   FSplit1.Parent:= Self;
   FSplit1.OnMoved:= Split1Moved;
+  FSplit1.MinSize:= cMinSize;
 
   FSplit2:= TMySplitter.Create(Self);
   FSplit2.Parent:= Self;
   FSplit2.OnMoved:= Split2Moved;
+  FSplit2.MinSize:= cMinSize;
 
   FSplit3:= TMySplitter.Create(Self);
   FSplit3.Parent:= Self;
   FSplit3.OnMoved:= Split3Moved;
+  FSplit3.MinSize:= cMinSize;
 
   FSplit4:= TMySplitter.Create(Self);
   FSplit4.Parent:= Self;
   FSplit4.OnMoved:= Split4Moved;
+  FSplit4.MinSize:= cMinSize;
 
   FSplit5:= TMySplitter.Create(Self);
   FSplit5.Parent:= Self;
   FSplit5.OnMoved:= Split5Moved;
+  FSplit5.MinSize:= cMinSize;
 
   FPanel1:= TPanel.Create(Self);
   FPanel1.Parent:= Self;
