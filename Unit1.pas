@@ -144,6 +144,13 @@ begin
   Groups.OnTabClose:= TabClose;
   Groups.OnTabAdd:= TabAdd;
 
+  Groups.SetColor(tabColorFont, clBlack);
+  Groups.SetColor(tabColorActive, clBtnFace);
+  Groups.SetColor(tabColorPassive, clLtGray);
+  Groups.SetColor(tabColorPassiveOver, clMedGray);
+  Groups.SetColor(tabColorBorderActive, clMedGray);
+  Groups.SetColor(tabColorBorderPassive, clMedGray);
+
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages1);

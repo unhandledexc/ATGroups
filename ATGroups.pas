@@ -52,6 +52,16 @@ type
   end;
 
 type
+  TATTabsColorId = (
+    tabColorActive,
+    tabColorPassive,
+    tabColorPassiveOver,
+    tabColorFont,
+    tabColorBorderActive,
+    tabColorBorderPassive
+    );
+
+type
   TATGroupsMode = (
     gmNone,
     gmOne,
@@ -134,6 +144,7 @@ type
     property PopupPages: TATPages read FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex;
     property SplitPercent: Integer write SetSplitPercent;
+    procedure SetColor(Id: TATTabsColorId; N: TColor);
     //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -1049,6 +1060,22 @@ procedure TATGroups.TabAdd(Sender: TObject);
 begin
   if Assigned(FOnTabAdd) then
     FOnTabAdd(Sender);
+end;
+
+procedure TATGroups.SetColor(Id: TATTabsColorId; N: TColor);
+var
+  i: Integer;
+begin
+  for i:= Low(Pages) to High(Pages) do
+    with Pages[i].Tabs do
+      case Id of
+        tabColorActive: ColorTabActive:= N;
+        tabColorPassive: ColorTabPassive:= N;
+        tabColorPassiveOver: ColorTabOver:= N;
+        tabColorFont: Font.Color:= N;
+        tabColorBorderActive: ColorBorderActive:= N;
+        tabColorBorderPassive: ColorBorderPassive:= N;
+      end;
 end;
 
 end.
