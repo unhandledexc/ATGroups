@@ -55,6 +55,8 @@ type
     group61: TMenuItem;
     togroup51: TMenuItem;
     togroup61: TMenuItem;
+    N4: TMenuItem;
+    toothergroup1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure mnuCloseClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
@@ -88,6 +90,7 @@ type
     procedure group61Click(Sender: TObject);
     procedure togroup51Click(Sender: TObject);
     procedure togroup61Click(Sender: TObject);
+    procedure toothergroup1Click(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -385,6 +388,11 @@ end;
 procedure TForm1.togroup61Click(Sender: TObject);
 begin
   MoveTabTo(6);
+end;
+
+procedure TForm1.toothergroup1Click(Sender: TObject);
+begin
+  Groups.MoveCurrentTabToOpposite;
 end;
 
 end.

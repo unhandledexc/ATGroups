@@ -172,14 +172,21 @@ object Form1: TForm1
       end
     end
     object Movetab1: TMenuItem
-      Caption = 'Move tab'
+      Caption = 'Move current tab'
       object tonext1: TMenuItem
-        Caption = 'to next'
+        Caption = 'to next group'
         OnClick = tonext1Click
       end
       object toprev1: TMenuItem
-        Caption = 'to prev'
+        Caption = 'to prev group'
         OnClick = toprev1Click
+      end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object toothergroup1: TMenuItem
+        Caption = 'to opposite group (1->2, 2..6->1)'
+        OnClick = toothergroup1Click
       end
     end
   end

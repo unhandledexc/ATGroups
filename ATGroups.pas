@@ -155,6 +155,7 @@ type
       AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
     procedure MovePopupTabToNext(ANext: boolean);
     procedure MoveCurrentTabToNext(ANext: boolean);
+    procedure MoveCurrentTabToOpposite;
     //
     property Mode: TATGroupsMode read FMode write SetMode;
     property PopupPages: TATPages read FPopupPages;
@@ -289,7 +290,7 @@ begin
   Pages[5]:= Pages5;
   Pages[6]:= Pages6;
 
-  for i:= Low(TATGroupsNums) to High(TATGroupsNums) do
+  for i:= Low(Pages) to High(Pages) do
     with Pages[i] do
     begin
       Name:= 'aPages'+IntToStr(i);
@@ -996,13 +997,10 @@ begin
 
   repeat
     if ANext then Inc(N) else Dec(N);
-    if N>High(TATGroupsNums) then
-      N:= Low(TATGroupsNums)
-    else
-    if N<Low(TATGroupsNums) then
-      N:= High(TATGroupsNums);
+    if N>High(Pages) then N:= Low(Pages) else
+      if N<Low(Pages) then N:= High(Pages);
 
-    if N=AIndex then Exit;
+    if N=AIndex then Exit; //don't return same index
 
     if Pages[N].Visible then
       if (Pages[N].Tabs.TabCount>0) or AEnableEmpty then
@@ -1077,6 +1075,23 @@ begin
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
       end;
+end;
+
+procedure TATGroups.MoveCurrentTabToOpposite;
+var
+  NFrom, NTo, NTabIndex: Integer;
+begin
+  NFrom:= PagesIndexOf(PagesCurrent);
+  if NFrom<0 then Exit;
+  if NFrom=1 then NTo:= 2 else NTo:= 1;
+
+  NTabIndex:= Pages[NFrom].Tabs.TabIndex;
+  if NTabIndex<0 then Exit;
+
+  if (NTo>1) and (FMode<=gmOne) then
+    SetMode(gm2Horz);
+
+  MoveTab(Pages[NFrom], NTabIndex, Pages[NTo], -1, true);
 end;
 
 end.
