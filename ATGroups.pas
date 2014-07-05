@@ -74,6 +74,21 @@ type
     gm4Grid,
     gm6Grid
     );
+
+const
+  cModesGroupsCount: array[TATGroupsMode] of Integer = (
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    4,
+    6
+    );
+
 type
   TATGroupsNums = 1..6;
 
@@ -116,6 +131,7 @@ type
     procedure SaveSplitPos;
     procedure RestoreSplitPos;
     procedure InitSplitterPopup;
+    procedure MoveTabsOnModeChanging(Value: TATGroupsMode);
   protected
     procedure Resize; override;
   public
@@ -370,12 +386,28 @@ begin
   {$endif}
 end;
 
+procedure TATGroups.MoveTabsOnModeChanging(Value: TATGroupsMode);
+var
+  NCountBefore, NCountAfter: Integer;
+  i, j: Integer;
+begin
+  NCountBefore:= cModesGroupsCount[FMode];
+  NCountAfter:= cModesGroupsCount[Value];
+
+  for i:= NCountAfter+1 to NCountBefore do
+    for j:= 0 to Pages[i].Tabs.TabCount-1 do
+      MoveTab(Pages[i], 0{first tab}, Pages[NCountAfter], -1, false);
+end;
+
 procedure TATGroups.SetMode(Value: TATGroupsMode);
 var
   FSplitDiv: Real;
 begin
   if Value<>FMode then
   begin
+    //actions before changing FMode
+    MoveTabsOnModeChanging(Value);
+
     case FMode of
       gm2Horz:
         FSplitDiv:= Pages1.Width / ClientWidth;
@@ -385,6 +417,7 @@ begin
         FSplitDiv:= 0.5;
     end;
 
+    //changing FMode and actions after changing
     FMode:= Value;
 
     if FMode in [gm2Horz, gm2Vert] then
