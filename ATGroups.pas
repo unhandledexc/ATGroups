@@ -144,7 +144,8 @@ type
     property PopupPages: TATPages read FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex;
     property SplitPercent: Integer write SetSplitPercent;
-    procedure SetColor(Id: TATTabsColorId; N: TColor);
+    procedure SetTabFont(AFont: TFont);
+    procedure SetTabColor(Id: TATTabsColorId; N: TColor);
     //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -1062,7 +1063,15 @@ begin
     FOnTabAdd(Sender);
 end;
 
-procedure TATGroups.SetColor(Id: TATTabsColorId; N: TColor);
+procedure TATGroups.SetTabFont(AFont: TFont);
+var
+  i: Integer;
+begin
+  for i:= Low(Pages) to High(Pages) do
+    Pages[i].Tabs.Font.Assign(AFont);
+end;
+
+procedure TATGroups.SetTabColor(Id: TATTabsColorId; N: TColor);
 var
   i: Integer;
 begin
