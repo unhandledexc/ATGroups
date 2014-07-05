@@ -69,6 +69,7 @@ type
     gm2Vert,
     gm3Horz,
     gm3Vert,
+    gm3Plus,
     gm4Horz,
     gm4Vert,
     gm4Grid,
@@ -81,6 +82,7 @@ const
     1,
     2,
     2,
+    3,
     3,
     3,
     4,
@@ -438,6 +440,24 @@ begin
       Pages[i].Visible:= i<=cModesGroupsCount[FMode];
 
     case FMode of
+      gm3Plus:
+      begin
+        FPanel1.Visible:= true;
+        FPanel2.Visible:= true;
+        Pages1.Parent:= FPanel1;
+        Pages2.Parent:= FPanel2;
+        Pages3.Parent:= FPanel2;
+        Pages4.Parent:= FPanel2;
+        Pages5.Parent:= FPanel2;
+        Pages6.Parent:= FPanel2;
+        FSplit1.Parent:= FPanel1;
+        FSplit2.Parent:= FPanel2;
+        FSplit3.Parent:= Self;
+        FSplit4.Parent:= Self;
+        FSplit5.Parent:= Self;
+        //
+        FPanel1.Align:= alLeft;
+      end;
       gm4Grid:
       begin
         FPanel1.Visible:= true;
@@ -453,6 +473,8 @@ begin
         FSplit3.Parent:= Self;
         FSplit4.Parent:= Self;
         FSplit5.Parent:= Self;
+        //
+        FPanel1.Align:= alTop;
       end;
       gm6Grid:
       begin
@@ -469,6 +491,8 @@ begin
         FSplit3.Parent:= Self;
         FSplit4.Parent:= FPanel2;
         FSplit5.Parent:= FPanel2;
+        //
+        FPanel1.Align:= alTop;
       end
       else
       begin
@@ -651,6 +675,30 @@ begin
           //pos-c
           FSplit3.Top:= ClientHeight;
           FPanel2.Top:= ClientHeight;
+        end;
+      gm3Plus:
+        begin
+          FSplit1.Visible:= false;
+          FSplit2.Visible:= true;
+          FSplit3.Visible:= true;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
+          Pages1.Align:= alClient; //pages1 on panel1
+          Pages2.Align:= alTop; //pages2 on panel2
+          Pages3.Align:= alClient;
+          Pages4.Align:= alBottom;
+          FSplit1.Align:= alTop;
+          FSplit2.Align:= alTop;
+          FSplit3.Align:= alLeft;
+          //size
+          Pages2.Height:= ClientHeight div 2;
+          FPanel1.Width:= ClientWidth div 2;
+          //pos-b
+          FSplit2.Top:= ClientHeight;
+          Pages4.Top:= ClientHeight;
+          //pos-c
+          FSplit3.Left:= ClientWidth;
+          FPanel2.Left:= ClientWidth;
         end;
       gm6Grid:
         begin

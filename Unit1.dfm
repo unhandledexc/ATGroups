@@ -108,6 +108,10 @@ object Form1: TForm1
         Caption = '3 vert'
         OnClick = N3vert1Click
       end
+      object N121: TMenuItem
+        Caption = '3 as 1+2'
+        OnClick = N121Click
+      end
       object N4horz1: TMenuItem
         Caption = '4 horz'
         OnClick = N4horz1Click
