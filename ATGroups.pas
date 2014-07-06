@@ -179,7 +179,7 @@ uses
   {$ifdef SP}
   SpTbxSkins,
   {$endif}
-  Dialogs;
+  Math, Dialogs;
 
 function PtInControl(Control: TControl; const Pnt: TPoint): boolean;
 begin
@@ -411,21 +411,23 @@ end;
 
 procedure TATGroups.SetMode(Value: TATGroupsMode);
 var
-  FSplitDiv: Real;
+  NSplit: Real;
+  NPagesBefore, NPagesAfter: Integer;
   i: Integer;
 begin
   if Value<>FMode then
   begin
     //actions before changing FMode
+    NPagesBefore:= PagesIndexOf(PagesCurrent);
     MoveTabsOnModeChanging(Value);
 
     case FMode of
       gm2Horz:
-        FSplitDiv:= Pages1.Width / ClientWidth;
+        NSplit:= Pages1.Width / ClientWidth;
       gm2Vert:
-        FSplitDiv:= Pages1.Height / ClientHeight;
+        NSplit:= Pages1.Height / ClientHeight;
       else
-        FSplitDiv:= 0.5;
+        NSplit:= 0.5;
     end;
 
     //changing FMode and actions after changing
@@ -533,7 +535,7 @@ begin
           Pages2.Align:= alClient;
           FSplit1.Align:= alLeft;
           //size
-          Pages1.Width:= Trunc(ClientWidth * FSplitDiv);
+          Pages1.Width:= Trunc(ClientWidth * NSplit);
           //pos
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
@@ -549,7 +551,7 @@ begin
           Pages2.Align:= alClient;
           FSplit1.Align:= alTop;
           //size
-          Pages1.Height:= Trunc(ClientHeight * FSplitDiv);
+          Pages1.Height:= Trunc(ClientHeight * NSplit);
           //pos
           FSplit1.Top:= ClientHeight;
           Pages2.Top:= ClientHeight;
@@ -741,6 +743,11 @@ begin
     end;
 
     SaveSplitPos;
+
+    //focus same group, if possible
+    NPagesAfter:= Min(NPagesBefore, cModesGroupsCount[FMode]);
+    if Assigned(FOnTabFocus) then
+      OnTabFocus(Pages[NPagesAfter].Tabs);
   end;
 end;
 
