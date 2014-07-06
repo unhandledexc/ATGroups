@@ -7,6 +7,7 @@ License: MPL 2.0
 {$ifdef FPC}
   {$mode delphi}
 {$else}
+  {$define windows}
   {$define SP} //Allow using SpTBXLib
 {$endif}
 
@@ -142,6 +143,8 @@ type
     procedure RestoreSplitPos;
     procedure InitSplitterPopup;
     procedure MoveTabsOnModeChanging(Value: TATGroupsMode);
+    procedure LockUpdate;
+    procedure UnlockUpdate;
   protected
     procedure Resize; override;
   public
@@ -190,7 +193,10 @@ type
 implementation
 
 uses
-  Windows, SysUtils,
+  {$ifdef windows}
+  Windows, Messages,
+  {$endif}
+  SysUtils,
   {$ifdef SP}
   SpTbxSkins,
   {$endif}
@@ -312,9 +318,10 @@ begin
   for i:= Low(Pages) to High(Pages) do
     with Pages[i] do
     begin
-      Name:= 'aPages'+IntToStr(i);
+      Visible:= i=Low(Pages);
+      //Name:= 'aPages'+IntToStr(i);
       Caption:= '';
-      Tabs.Name:= 'aPagesTabs'+IntToStr(i);
+      //Tabs.Name:= 'aPagesTabs'+IntToStr(i);
       //
       Parent:= Self;
       Align:= alLeft;
@@ -431,7 +438,9 @@ var
   i: Integer;
 begin
   if Value<>FMode then
-  begin
+  try
+    LockUpdate;
+
     //actions before changing FMode
     NPagesBefore:= PagesIndexOf(PagesCurrent);
     MoveTabsOnModeChanging(Value);
@@ -763,6 +772,8 @@ begin
     NPagesAfter:= Min(NPagesBefore, cModesGroupsCount[FMode]);
     if Assigned(FOnTabFocus) then
       FOnTabFocus(Pages[NPagesAfter].Tabs);
+  finally
+    UnlockUpdate;
   end;
 end;
 
@@ -1272,6 +1283,19 @@ begin
 
   Result:= true;
 end;
+
+procedure TATGroups.LockUpdate;
+begin
+  Perform(WM_SetRedraw, 0, 0);
+end;
+
+procedure TATGroups.UnlockUpdate;
+begin
+  Perform(WM_SetRedraw, 1, 0);
+  SetWindowPos(Handle, 0, 0, 0, 0, 0,
+    SWP_FRAMECHANGED or SWP_NOCOPYBITS or SWP_NOMOVE or SWP_NOZORDER or SWP_NOSIZE);
+end;
+
 
 end.
 
