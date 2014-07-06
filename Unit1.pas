@@ -104,7 +104,8 @@ type
     procedure mnuCloseAllThisClick(Sender: TObject);
   private
     { Private declarations }
-    procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
+    procedure TabClose(Sender: TObject; ATabIndex: Integer;
+      var ACanClose, ACanContinue: boolean);
     procedure TabAdd(Sender: TObject);
     procedure AddTab(Pages: TATPages);
     procedure TabPopup(S: TObject);
@@ -179,16 +180,18 @@ begin
 end;
 
 procedure TForm1.TabClose(Sender: TObject; ATabIndex: Integer;
-  var ACanClose: boolean);
+  var ACanClose, ACanContinue: boolean);
 var
-  Tabs: TATTabs;
   D: TATTabData;
+  Id, Res: Integer;
 begin
-  Tabs:= Sender as TATTabs;
-  D:= Tabs.GetTabData(ATabIndex);
-  ACanClose:=
-    //true;
-    Application.MessageBox(PChar('Close: '+D.TabCaption), 'Close', mb_okcancel) = idok;
+  D:= (Sender as TATTabs).GetTabData(ATabIndex);
+
+  if ACanContinue then Id:= mb_yesnocancel else Id:= mb_okcancel;
+  Res:= Application.MessageBox(PChar('Close: '+D.TabCaption), 'Close', Id);
+  
+  ACanClose:= (Res=idok) or (Res=idyes);
+  ACanContinue:= Res<>idcancel;
 
   if ACanClose then
     D.TabObject.Free;
@@ -201,14 +204,7 @@ var
 begin
   D:= Groups.PopupPages.Tabs.GetTabData(Groups.PopupTabIndex);
   if D=nil then Exit;
-
-  mnuCloseThis.Caption:= 'Close: '+D.TabCaption;
-  {
-  m1.Enabled:= (Groups.PopupPages<>Groups.Pages1);
-  m2.Enabled:= (Groups.PopupPages<>Groups.Pages2) and not (Groups.Mode in [gmOne]);
-  m3.Enabled:= (Groups.PopupPages<>Groups.Pages3) and not (Groups.Mode in [gmOne, gm2Horz, gm2Vert]);
-  m4.Enabled:= (Groups.PopupPages<>Groups.Pages4) and not (Groups.Mode in [gmOne, gm2Horz, gm2Vert, gm3Horz, gm3Vert]);
-  }
+  mnuCloseThis.Caption:= 'this tab: '+D.TabCaption;
 
   P:= Mouse.CursorPos;
   PopupMenu1.Popup(P.X, P.Y);
@@ -407,7 +403,7 @@ end;
 
 procedure TForm1.mnuCloseThisClick(Sender: TObject);
 begin
-  Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex);
+  Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex, true, false);
 end;
 
 procedure TForm1.mnuCloseOthSameClick(Sender: TObject);

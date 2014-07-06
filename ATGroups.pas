@@ -127,7 +127,8 @@ type
     procedure TabFocus(Sender: TObject);
     procedure TabEmpty(Sender: TObject);
     procedure TabPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
-    procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
+    procedure TabClose(Sender: TObject; ATabIndex: Integer;
+      var ACanClose, ACanContinue: boolean);
     procedure TabAdd(Sender: TObject);
     procedure SetMode(Value: TATGroupsMode);
     procedure SetSplitPercent(N: Integer);
@@ -163,9 +164,9 @@ type
     function TabTotalCount: Integer;
     function TabDataOfTotalIndex(N: Integer): TATTabData;
     //
-    procedure CloseTabsOther(APages: TATPages; ATabIndex: Integer);
-    procedure CloseTabsAll(APages: TATPages);
-    procedure CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean);
+    function CloseTabsOther(APages: TATPages; ATabIndex: Integer): boolean;
+    function CloseTabsAll(APages: TATPages): boolean;
+    function CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
     //
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
       AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
@@ -1001,7 +1002,7 @@ begin
   D:= AFromPages.Tabs.GetTabData(AFromIndex);
   if D=nil then Exit;
   AToPages.AddTab(D.TabObject as TControl, D.TabCaption, D.TabColor);
-  AFromPages.Tabs.DeleteTab(AFromIndex, false);
+  AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
   if AActivateTabAfter then
     with AToPages.Tabs do
@@ -1117,10 +1118,10 @@ begin
 end;
 
 procedure TATGroups.TabClose(Sender: TObject; ATabIndex: Integer;
-  var ACanClose: boolean);
+  var ACanClose, ACanContinue: boolean);
 begin
   if Assigned(FOnTabClose) then
-    FOnTabClose(Sender, ATabIndex, ACanClose);
+    FOnTabClose(Sender, ATabIndex, ACanClose, ACanContinue);
 end;
 
 procedure TATGroups.TabAdd(Sender: TObject);
@@ -1197,33 +1198,39 @@ begin
   end;
 end;
 
-procedure TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer);
+function TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer): boolean;
 var
   j: Integer;
 begin
+  Result:= false;
   with APages do
   begin
     for j:= Tabs.TabCount-1 downto ATabIndex+1 do
-      Tabs.DeleteTab(j);
+      if not Tabs.DeleteTab(j, true, true) then Exit;
     for j:= ATabIndex-1 downto 0 do
-      Tabs.DeleteTab(j);
+      if not Tabs.DeleteTab(j, true, true) then Exit;
   end;
+  Result:= true;
 end;
 
-procedure TATGroups.CloseTabsAll(APages: TATPages);
+function TATGroups.CloseTabsAll(APages: TATPages): boolean;
 var
   j: Integer;
 begin
+  Result:= false;
   with APages do
     for j:= Tabs.TabCount-1 downto 0 do
-      Tabs.DeleteTab(j);
+      if not Tabs.DeleteTab(j, true, true) then Exit;
+  Result:= true;
 end;
 
-procedure TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean);
+function TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
 var
   i: Integer;
   APagesIndex, ATabIndex: Integer;
 begin
+  Result:= false;
+
   if AForPopupMenu then
   begin
     APagesIndex:= PagesIndexOf(PopupPages);
@@ -1238,26 +1245,32 @@ begin
   case Id of
     tabCloseOthersThisPage:
       begin
-        CloseTabsOther(Pages[APagesIndex], ATabIndex);
+        if not CloseTabsOther(Pages[APagesIndex], ATabIndex) then Exit;
       end;
     tabCloseOthersAllPages:
       begin
         for i:= High(Pages) downto Low(Pages) do
           if i=APagesIndex then
-            CloseTabsOther(Pages[i], ATabIndex)
+          begin
+            if not CloseTabsOther(Pages[i], ATabIndex) then Exit;
+          end
           else
-            CloseTabsAll(Pages[i]);
+          begin
+            if not CloseTabsAll(Pages[i]) then Exit;
+          end;
       end;
     tabCloseAllThisPage:
       begin
-        CloseTabsAll(Pages[APagesIndex]);
+        if not CloseTabsAll(Pages[APagesIndex]) then Exit;
       end;
     tabCloseAll:
       begin
         for i:= High(Pages) downto Low(Pages) do
-          CloseTabsAll(Pages[i]);
+          if not CloseTabsAll(Pages[i]) then Exit;
       end;
   end;
+
+  Result:= true;
 end;
 
 end.
