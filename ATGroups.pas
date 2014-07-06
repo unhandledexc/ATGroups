@@ -52,6 +52,12 @@ type
   end;
 
 type
+  TATTabCloseId = (
+    tabCloseOthersThisPage,
+    tabCloseOthersAllPages,
+    tabCloseAll
+    );
+type
   TATTabsColorId = (
     tabColorActive,
     tabColorPassive,
@@ -153,6 +159,12 @@ type
     function PagesIndexOfControl(ACtl: TControl): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
     //
+    function TabTotalCount: Integer;
+    function TabDataOfTotalIndex(N: Integer): TATTabData;
+    //
+    procedure CloseTabsOtherThan(APages: TATPages; ATabIndex: Integer);
+    procedure CloseTabsAll(APages: TATPages);
+    procedure CloseTabs(Id: TATTabCloseId; APagesIndex, ATabIndex: Integer);
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
       AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
     procedure MovePopupTabToNext(ANext: boolean);
@@ -747,7 +759,7 @@ begin
     //focus same group, if possible
     NPagesAfter:= Min(NPagesBefore, cModesGroupsCount[FMode]);
     if Assigned(FOnTabFocus) then
-      OnTabFocus(Pages[NPagesAfter].Tabs);
+      FOnTabFocus(Pages[NPagesAfter].Tabs);
   end;
 end;
 
@@ -1154,6 +1166,80 @@ begin
     SetMode(gm2Horz);
 
   MoveTab(Pages[NFrom], NTabIndex, Pages[NTo], -1, true);
+end;
+
+function TATGroups.TabTotalCount: Integer;
+var
+  i: Integer;
+begin
+  Result:= 0;
+  for i:= Low(Pages) to High(Pages) do
+    Inc(Result, Pages[i].Tabs.TabCount);
+end;
+
+
+function TATGroups.TabDataOfTotalIndex(N: Integer): TATTabData;
+var
+  i, Count: Integer;
+begin
+  Result:= nil;
+  Count:= N;
+  for i:= Low(Pages) to High(Pages) do
+  begin
+    if (Count>=0) and (Count<Pages[i].Tabs.TabCount) then
+    begin
+      Result:= Pages[i].Tabs.GetTabData(Count);
+      Exit
+    end;
+    Dec(Count, Pages[i].Tabs.TabCount);
+  end;
+end;
+
+procedure TATGroups.CloseTabsOtherThan(APages: TATPages; ATabIndex: Integer);
+var
+  j: Integer;
+begin
+  with APages do
+  begin
+    for j:= Tabs.TabCount-1 downto ATabIndex+1 do
+      Tabs.DeleteTab(j);
+    for j:= ATabIndex-1 downto 0 do
+      Tabs.DeleteTab(j);
+  end;
+end;
+
+procedure TATGroups.CloseTabsAll(APages: TATPages);
+var
+  j: Integer;
+begin
+  with APages do
+    for j:= Tabs.TabCount-1 downto 0 do
+      Tabs.DeleteTab(j);
+end;
+
+procedure TATGroups.CloseTabs(Id: TATTabCloseId; APagesIndex, ATabIndex: Integer);
+var
+  i: Integer;
+begin
+  case Id of
+    tabCloseOthersThisPage:
+      begin
+        CloseTabsOtherThan(Pages[APagesIndex], ATabIndex);
+      end;
+    tabCloseOthersAllPages:
+      begin
+        for i:= High(Pages) downto Low(Pages) do
+          if i=APagesIndex then
+            CloseTabsOtherThan(Pages[i], ATabIndex)
+          else
+            CloseTabsAll(Pages[i]);
+      end;
+    tabCloseAll:
+      begin
+        for i:= High(Pages) downto Low(Pages) do
+          CloseTabsAll(Pages[i]);
+      end;
+  end;
 end;
 
 end.

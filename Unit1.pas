@@ -58,8 +58,11 @@ type
     N4: TMenuItem;
     toothergroup1: TMenuItem;
     N121: TMenuItem;
+    mnuCloseThis: TMenuItem;
+    mnuCloseOthSame: TMenuItem;
+    mnuCloseOthAll: TMenuItem;
+    mnuCloseAll: TMenuItem;
     procedure FormCreate(Sender: TObject);
-    procedure mnuCloseClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
     procedure N2vert1Click(Sender: TObject);
@@ -93,6 +96,10 @@ type
     procedure togroup61Click(Sender: TObject);
     procedure toothergroup1Click(Sender: TObject);
     procedure N121Click(Sender: TObject);
+    procedure mnuCloseThisClick(Sender: TObject);
+    procedure mnuCloseAllClick(Sender: TObject);
+    procedure mnuCloseOthSameClick(Sender: TObject);
+    procedure mnuCloseOthAllClick(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -185,11 +192,6 @@ begin
     D.TabObject.Free;
 end;
 
-procedure TForm1.mnuCloseClick(Sender: TObject);
-begin
-  Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex);
-end;
-
 procedure TForm1.TabPopup(S: TObject);
 var
   D: TATTabData;
@@ -198,8 +200,7 @@ begin
   D:= Groups.PopupPages.Tabs.GetTabData(Groups.PopupTabIndex);
   if D=nil then Exit;
 
-  mnuClose.Caption:= 'Close: '+D.TabCaption;
-
+  mnuCloseThis.Caption:= 'Close: '+D.TabCaption;
   {
   m1.Enabled:= (Groups.PopupPages<>Groups.Pages1);
   m2.Enabled:= (Groups.PopupPages<>Groups.Pages2) and not (Groups.Mode in [gmOne]);
@@ -400,6 +401,26 @@ end;
 procedure TForm1.toothergroup1Click(Sender: TObject);
 begin
   Groups.MoveCurrentTabToOpposite;
+end;
+
+procedure TForm1.mnuCloseThisClick(Sender: TObject);
+begin
+  Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex);
+end;
+
+procedure TForm1.mnuCloseAllClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseAll, -1, -1);
+end;
+
+procedure TForm1.mnuCloseOthSameClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseOthersThisPage, Groups.PagesIndexOf(Groups.PopupPages), Groups.PopupTabIndex);
+end;
+
+procedure TForm1.mnuCloseOthAllClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseOthersAllPages, Groups.PagesIndexOf(Groups.PopupPages), Groups.PopupTabIndex);
 end;
 
 end.

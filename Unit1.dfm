@@ -41,8 +41,23 @@ object Form1: TForm1
     Left = 400
     Top = 96
     object mnuClose: TMenuItem
-      Caption = 'Close'
-      OnClick = mnuCloseClick
+      Caption = 'close'
+      object mnuCloseThis: TMenuItem
+        Caption = 'this'
+        OnClick = mnuCloseThisClick
+      end
+      object mnuCloseOthSame: TMenuItem
+        Caption = 'others in same group'
+        OnClick = mnuCloseOthSameClick
+      end
+      object mnuCloseOthAll: TMenuItem
+        Caption = 'all others'
+        OnClick = mnuCloseOthAllClick
+      end
+      object mnuCloseAll: TMenuItem
+        Caption = 'all'
+        OnClick = mnuCloseAllClick
+      end
     end
     object N1: TMenuItem
       Caption = '-'
