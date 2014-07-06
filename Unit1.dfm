@@ -51,8 +51,12 @@ object Form1: TForm1
         OnClick = mnuCloseOthSameClick
       end
       object mnuCloseOthAll: TMenuItem
-        Caption = 'all others'
+        Caption = 'others all'
         OnClick = mnuCloseOthAllClick
+      end
+      object mnuCloseAllThis: TMenuItem
+        Caption = 'all in same group'
+        OnClick = mnuCloseAllThisClick
       end
       object mnuCloseAll: TMenuItem
         Caption = 'all'

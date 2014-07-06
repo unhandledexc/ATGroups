@@ -55,6 +55,7 @@ type
   TATTabCloseId = (
     tabCloseOthersThisPage,
     tabCloseOthersAllPages,
+    tabCloseAllThisPage,
     tabCloseAll
     );
 type
@@ -162,9 +163,10 @@ type
     function TabTotalCount: Integer;
     function TabDataOfTotalIndex(N: Integer): TATTabData;
     //
-    procedure CloseTabsOtherThan(APages: TATPages; ATabIndex: Integer);
+    procedure CloseTabsOther(APages: TATPages; ATabIndex: Integer);
     procedure CloseTabsAll(APages: TATPages);
-    procedure CloseTabs(Id: TATTabCloseId; APagesIndex, ATabIndex: Integer);
+    procedure CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean);
+    //
     procedure MoveTab(AFromPages: TATPages; AFromIndex: Integer;
       AToPages: TATPages; AToIndex: Integer; AActivateTabAfter: boolean);
     procedure MovePopupTabToNext(ANext: boolean);
@@ -1195,7 +1197,7 @@ begin
   end;
 end;
 
-procedure TATGroups.CloseTabsOtherThan(APages: TATPages; ATabIndex: Integer);
+procedure TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer);
 var
   j: Integer;
 begin
@@ -1217,22 +1219,38 @@ begin
       Tabs.DeleteTab(j);
 end;
 
-procedure TATGroups.CloseTabs(Id: TATTabCloseId; APagesIndex, ATabIndex: Integer);
+procedure TATGroups.CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean);
 var
   i: Integer;
+  APagesIndex, ATabIndex: Integer;
 begin
+  if AForPopupMenu then
+  begin
+    APagesIndex:= PagesIndexOf(PopupPages);
+    ATabIndex:= PopupTabIndex;
+  end
+  else
+  begin
+    APagesIndex:= PagesIndexOf(PagesCurrent);
+    ATabIndex:= PagesCurrent.Tabs.TabIndex;
+  end;
+
   case Id of
     tabCloseOthersThisPage:
       begin
-        CloseTabsOtherThan(Pages[APagesIndex], ATabIndex);
+        CloseTabsOther(Pages[APagesIndex], ATabIndex);
       end;
     tabCloseOthersAllPages:
       begin
         for i:= High(Pages) downto Low(Pages) do
           if i=APagesIndex then
-            CloseTabsOtherThan(Pages[i], ATabIndex)
+            CloseTabsOther(Pages[i], ATabIndex)
           else
             CloseTabsAll(Pages[i]);
+      end;
+    tabCloseAllThisPage:
+      begin
+        CloseTabsAll(Pages[APagesIndex]);
       end;
     tabCloseAll:
       begin

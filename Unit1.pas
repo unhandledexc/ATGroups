@@ -62,6 +62,7 @@ type
     mnuCloseOthSame: TMenuItem;
     mnuCloseOthAll: TMenuItem;
     mnuCloseAll: TMenuItem;
+    mnuCloseAllThis: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
@@ -100,6 +101,7 @@ type
     procedure mnuCloseAllClick(Sender: TObject);
     procedure mnuCloseOthSameClick(Sender: TObject);
     procedure mnuCloseOthAllClick(Sender: TObject);
+    procedure mnuCloseAllThisClick(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer; var ACanClose: boolean);
@@ -408,19 +410,24 @@ begin
   Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex);
 end;
 
-procedure TForm1.mnuCloseAllClick(Sender: TObject);
-begin
-  Groups.CloseTabs(tabCloseAll, -1, -1);
-end;
-
 procedure TForm1.mnuCloseOthSameClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseOthersThisPage, Groups.PagesIndexOf(Groups.PopupPages), Groups.PopupTabIndex);
+  Groups.CloseTabs(tabCloseOthersThisPage, true);
 end;
 
 procedure TForm1.mnuCloseOthAllClick(Sender: TObject);
 begin
-  Groups.CloseTabs(tabCloseOthersAllPages, Groups.PagesIndexOf(Groups.PopupPages), Groups.PopupTabIndex);
+  Groups.CloseTabs(tabCloseOthersAllPages, true);
+end;
+
+procedure TForm1.mnuCloseAllClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseAll, false);
+end;
+
+procedure TForm1.mnuCloseAllThisClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseAllThisPage, true);
 end;
 
 end.
