@@ -160,12 +160,12 @@ begin
   Groups.OnTabAdd:= TabAdd;
 
   Groups.SetTabFont(Font);
-  Groups.SetTabColor(tabColorFont, clBlack);
-  Groups.SetTabColor(tabColorActive, clBtnFace);
-  Groups.SetTabColor(tabColorPassive, clLtGray);
-  Groups.SetTabColor(tabColorPassiveOver, clMedGray);
-  Groups.SetTabColor(tabColorBorderActive, clMedGray);
-  Groups.SetTabColor(tabColorBorderPassive, clMedGray);
+  Groups.SetTabOption(tabColorFont, clBlack);
+  Groups.SetTabOption(tabColorActive, clBtnFace);
+  Groups.SetTabOption(tabColorPassive, clLtGray);
+  Groups.SetTabOption(tabColorPassiveOver, clMedGray);
+  Groups.SetTabOption(tabColorBorderActive, clMedGray);
+  Groups.SetTabOption(tabColorBorderPassive, clMedGray);
 
   AddTab(Groups.Pages1);
   AddTab(Groups.Pages1);

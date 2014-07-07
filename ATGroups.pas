@@ -54,19 +54,27 @@ type
 
 type
   TATTabCloseId = (
+    tabCloseCurrent,
     tabCloseOthersThisPage,
     tabCloseOthersAllPages,
     tabCloseAllThisPage,
     tabCloseAll
     );
 type
-  TATTabsColorId = (
+  TATTabsOptionId = (
+    tabColorFont,
     tabColorActive,
     tabColorPassive,
     tabColorPassiveOver,
-    tabColorFont,
     tabColorBorderActive,
-    tabColorBorderPassive
+    tabColorBorderPassive,
+    tabOptionBottomTabs,
+    tabOptionShowTabs,
+    tabOptionShowXButtons,
+    tabOptionShowPlus,
+    tabOptionShowNums,
+    tabOptionDragDrop,
+    tabOptionWidthMax
     );
 
 type
@@ -182,7 +190,7 @@ type
     property PopupTabIndex: Integer read FPopupTabIndex;
     property SplitPercent: Integer write SetSplitPercent;
     procedure SetTabFont(AFont: TFont);
-    procedure SetTabColor(Id: TATTabsColorId; N: TColor);
+    procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
     //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -196,7 +204,7 @@ uses
   {$ifdef windows}
   Windows, Messages,
   {$endif}
-  SysUtils,
+  SysUtils, StrUtils,
   {$ifdef SP}
   SpTbxSkins,
   {$endif}
@@ -1149,19 +1157,38 @@ begin
     Pages[i].Tabs.Font.Assign(AFont);
 end;
 
-procedure TATGroups.SetTabColor(Id: TATTabsColorId; N: TColor);
+procedure TATGroups.SetTabOption(Id: TATTabsOptionId; N: Integer);
 var
   i: Integer;
 begin
   for i:= Low(Pages) to High(Pages) do
     with Pages[i].Tabs do
       case Id of
+        //
         tabColorActive: ColorTabActive:= N;
         tabColorPassive: ColorTabPassive:= N;
         tabColorPassiveOver: ColorTabOver:= N;
         tabColorFont: Font.Color:= N;
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
+        //
+        tabOptionBottomTabs:
+          begin
+            TabBottom:= Bool(N);
+            if TabBottom then Align:= alBottom else Align:= alTop;
+          end;
+        tabOptionShowTabs:
+          Visible:= Bool(N);  
+        tabOptionShowXButtons:
+          TabShowClose:= TATTabShowClose(N);
+        tabOptionShowPlus:
+          TabShowPlus:= Bool(N);
+        tabOptionShowNums:
+          TabNumPrefix:= IfThen(Bool(N), '%d. ', '');
+        tabOptionDragDrop:
+          TabDragEnabled:= Bool(N);
+        tabOptionWidthMax:
+          TabWidthMax:= N;    
       end;
 end;
 
@@ -1254,6 +1281,11 @@ begin
   end;
 
   case Id of
+    tabCloseCurrent:
+      begin
+        with Pages[APagesIndex].Tabs do
+          if not DeleteTab(ATabIndex, true, true) then Exit;
+      end;
     tabCloseOthersThisPage:
       begin
         if not CloseTabsOther(Pages[APagesIndex], ATabIndex) then Exit;
