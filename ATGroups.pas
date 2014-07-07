@@ -74,7 +74,8 @@ type
     tabOptionShowPlus,
     tabOptionShowNums,
     tabOptionDragDrop,
-    tabOptionWidthMax
+    tabOptionWidthMax,
+    tabOptionTabHeight  //todo
     );
 
 type
@@ -140,6 +141,7 @@ type
       var ACanClose, ACanContinue: boolean);
     procedure TabAdd(Sender: TObject);
     procedure SetMode(Value: TATGroupsMode);
+    function GetSplitPercent: Integer;
     procedure SetSplitPercent(N: Integer);
     procedure Split1Moved(Sender: TObject);
     procedure Split2Moved(Sender: TObject);
@@ -188,7 +190,9 @@ type
     property Mode: TATGroupsMode read FMode write SetMode;
     property PopupPages: TATPages read FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex;
-    property SplitPercent: Integer write SetSplitPercent;
+    property SplitPercent: Integer read GetSplitPercent write SetSplitPercent;
+    procedure SplitPercentIncrease;
+    procedure SplitPercentDecrease;
     procedure SetTabFont(AFont: TFont);
     procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
     //
@@ -236,7 +240,8 @@ begin
   FTabs.TabAngle:= 0;
   FTabs.TabIndentTop:= 1;
   FTabs.TabIndentInter:= 1;
-  FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+4;
+  FTabs.TabIndentXSize:= 14;
+  FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
   FTabs.ColorBg:= clWindow;
 end;
 
@@ -997,6 +1002,22 @@ begin
   SetSplitPercent((Sender as TComponent).Tag);
 end;
 
+function TATGroups.GetSplitPercent: Integer;
+begin
+  case FMode of
+    gm2Horz:
+      begin
+        Result:= Pages1.Width * 100 div ClientWidth;
+      end;
+    gm2Vert:
+      begin
+        Result:= Pages1.Height * 100 div ClientHeight;
+      end;
+    else
+      Result:= 50;
+  end;
+end;
+
 procedure TATGroups.SetSplitPercent(N: Integer);
 begin
   case FMode of
@@ -1328,6 +1349,19 @@ begin
     SWP_FRAMECHANGED or SWP_NOCOPYBITS or SWP_NOMOVE or SWP_NOZORDER or SWP_NOSIZE);
 end;
 
+
+const
+  cMinSplitter = 10;
+
+procedure TATGroups.SplitPercentIncrease;
+begin
+  SplitPercent:= Min(SplitPercent + cMinSplitter, 100-cMinSplitter);
+end;
+
+procedure TATGroups.SplitPercentDecrease;
+begin
+  SplitPercent:= Max(SplitPercent - cMinSplitter, cMinSplitter);
+end;
 
 end.
 
