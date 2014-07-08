@@ -93,21 +93,6 @@ type
     gm6Grid
     );
 
-const
-  cModesGroupsCount: array[TATGroupsMode] of Integer = (
-    1,
-    1,
-    2,
-    2,
-    3,
-    3,
-    3,
-    4,
-    4,
-    4,
-    6
-    );
-
 type
   TATGroupsNums = 1..6;
 
@@ -168,11 +153,13 @@ type
     Pages: array[TATGroupsNums] of TATPages;
     constructor Create(AOwner: TComponent); override;
     //
+    function PagesVisibleCount: Integer;
     function PagesSetIndex(ANum: Integer): boolean;
     procedure PagesSetNext(ANext: boolean);
     function PagesIndexOf(APages: TATPages): Integer;
     function PagesIndexOfControl(ACtl: TControl): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
+    function SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
     //
     function TabTotalCount: Integer;
     function TabDataOfTotalIndex(N: Integer): TATTabData;
@@ -189,7 +176,7 @@ type
     //
     property Mode: TATGroupsMode read FMode write SetMode;
     property PopupPages: TATPages read FPopupPages;
-    property PopupTabIndex: Integer read FPopupTabIndex;
+    property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
     property SplitPercent: Integer read GetSplitPercent write SetSplitPercent;
     procedure SplitPercentIncrease;
     procedure SplitPercentDecrease;
@@ -201,6 +188,9 @@ type
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write FOnTabAdd;
   end;
+
+function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
+  
 
 implementation
 
@@ -214,10 +204,25 @@ uses
   {$endif}
   Math, Dialogs;
 
-function PtInControl(Control: TControl; const Pnt: TPoint): boolean;
+function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
 begin
-  Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(Pnt));
+  Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(ScreenPnt));
 end;
+
+const
+  cGroupsCount: array[TATGroupsMode] of Integer = (
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    6
+    );
 
 { TATPages }
 
@@ -243,6 +248,7 @@ begin
   FTabs.TabIndentXSize:= 14;
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
   FTabs.ColorBg:= clWindow;
+  FTabs.TabShowBorderActiveLow:= true;
 end;
 
 procedure TATPages.AddTab(AControl: TControl;
@@ -436,8 +442,8 @@ var
   NCountBefore, NCountAfter: Integer;
   i, j: Integer;
 begin
-  NCountBefore:= cModesGroupsCount[FMode];
-  NCountAfter:= cModesGroupsCount[Value];
+  NCountBefore:= cGroupsCount[FMode];
+  NCountAfter:= cGroupsCount[Value];
 
   for i:= NCountAfter+1 to NCountBefore do
     for j:= 0 to Pages[i].Tabs.TabCount-1 do
@@ -480,7 +486,7 @@ begin
     end;
 
     for i:= Low(Pages) to High(Pages) do
-      Pages[i].Visible:= i<=cModesGroupsCount[FMode];
+      Pages[i].Visible:= i<=cGroupsCount[FMode];
 
     case FMode of
       gm3Plus:
@@ -786,7 +792,7 @@ begin
     SaveSplitPos;
 
     //focus same group, if possible
-    NPagesAfter:= Min(NPagesBefore, cModesGroupsCount[FMode]);
+    NPagesAfter:= Min(NPagesBefore, cGroupsCount[FMode]);
     if Assigned(FOnTabFocus) then
       FOnTabFocus(Pages[NPagesAfter].Tabs);
   finally
@@ -1381,6 +1387,23 @@ procedure TATGroups.SplitPercentDecrease;
 begin
   SplitPercent:= Max(SplitPercent - cMinSplitter, cMinSplitter);
 end;
+
+function TATGroups.PagesVisibleCount: Integer;
+begin
+  Result:= cGroupsCount[FMode];
+end;
+
+function TATGroups.SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
+begin
+  Result:=
+    (APageIndex>=1) and
+    (APageIndex<=PagesVisibleCount) and
+    (ATabIndex>=0) and
+    (ATabIndex<Pages[APageIndex].Tabs.TabCount);
+  if Result then
+    Pages[APageIndex].Tabs.TabIndex:= ATabIndex;
+end;
+
 
 end.
 
