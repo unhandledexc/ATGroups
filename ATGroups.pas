@@ -470,10 +470,14 @@ begin
     //changing FMode and actions after changing
     FMode:= Value;
 
-    if FMode in [gm2Horz, gm2Vert] then
-      SetSplitterPopup(FSplit1, FSplitPopup)
-    else
-      SetSplitterPopup(FSplit1, nil);
+    SetSplitterPopup(FSplit1, nil);
+    SetSplitterPopup(FSplit3, nil);
+    case FMode of
+      gm2Horz, gm2Vert:
+        SetSplitterPopup(FSplit1, FSplitPopup);
+      gm3Plus:
+        SetSplitterPopup(FSplit3, FSplitPopup);
+    end;
 
     for i:= Low(Pages) to High(Pages) do
       Pages[i].Visible:= i<=cModesGroupsCount[FMode];
@@ -1039,6 +1043,11 @@ begin
     gm2Vert:
       begin
         Pages1.Height:= ClientHeight * N div 100;
+        SaveSplitPos;
+      end;
+    gm3Plus:
+      begin
+        FPanel1.Width:= ClientWidth * N div 100;
         SaveSplitPos;
       end;
   end;
