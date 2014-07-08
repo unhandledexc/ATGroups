@@ -43,7 +43,7 @@ type
     procedure TabEmpty(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
-    procedure AddTab(AControl: TControl; const ACaption: Widestring;
+    procedure AddTab(AControl: TControl; const ACaption: atString;
       AColor: TColor = clNone);
     property Tabs: TATTabs read FTabs;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -243,6 +243,7 @@ begin
   FTabs.OnTabEmpty:= TabEmpty;
 
   FTabs.TabAngle:= 0;
+  FTabs.TabHeight:= 23;
   FTabs.TabIndentTop:= 1;
   FTabs.TabIndentInter:= 1;
   FTabs.TabIndentXSize:= 14;
@@ -252,7 +253,7 @@ begin
 end;
 
 procedure TATPages.AddTab(AControl: TControl;
-  const ACaption: Widestring; AColor: TColor);
+  const ACaption: atString; AColor: TColor);
 begin
   FTabs.AddTab(-1, ACaption, AControl);
   AControl.Parent:= Self;
