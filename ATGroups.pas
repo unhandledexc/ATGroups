@@ -159,10 +159,16 @@ type
     function PagesIndexOf(APages: TATPages): Integer;
     function PagesIndexOfControl(ACtl: TControl): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
-    function SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
     //
-    function TabTotalCount: Integer;
-    function TabDataOfTotalIndex(N: Integer): TATTabData;
+    property PopupPages: TATPages read FPopupPages;
+    property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
+    //
+    property Mode: TATGroupsMode read FMode write SetMode;
+    function GetTabTotalCount: Integer;
+    function GetTabDataOfTotalIndex(N: Integer): TATTabData;
+    function SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
+    procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
+    //procedure SetTabFont(AFont: TFont);
     //
     function CloseTabsOther(APages: TATPages; ATabIndex: Integer): boolean;
     function CloseTabsAll(APages: TATPages): boolean;
@@ -174,14 +180,9 @@ type
     procedure MoveCurrentTabToNext(ANext: boolean);
     procedure MoveCurrentTabToOpposite;
     //
-    property Mode: TATGroupsMode read FMode write SetMode;
-    property PopupPages: TATPages read FPopupPages;
-    property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
     property SplitPercent: Integer read GetSplitPercent write SetSplitPercent;
     procedure SplitPercentIncrease;
     procedure SplitPercentDecrease;
-    procedure SetTabFont(AFont: TFont);
-    procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
     //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -1196,6 +1197,7 @@ begin
     FOnTabAdd(Sender);
 end;
 
+{
 procedure TATGroups.SetTabFont(AFont: TFont);
 var
   i: Integer;
@@ -1203,6 +1205,7 @@ begin
   for i:= Low(Pages) to High(Pages) do
     Pages[i].Tabs.Font.Assign(AFont);
 end;
+}
 
 procedure TATGroups.SetTabOption(Id: TATTabsOptionId; N: Integer);
 var
@@ -1256,7 +1259,7 @@ begin
   MoveTab(Pages[NFrom], NTabIndex, Pages[NTo], -1, true);
 end;
 
-function TATGroups.TabTotalCount: Integer;
+function TATGroups.GetTabTotalCount: Integer;
 var
   i: Integer;
 begin
@@ -1266,7 +1269,7 @@ begin
 end;
 
 
-function TATGroups.TabDataOfTotalIndex(N: Integer): TATTabData;
+function TATGroups.GetTabDataOfTotalIndex(N: Integer): TATTabData;
 var
   i, Count: Integer;
 begin
@@ -1404,6 +1407,7 @@ begin
   if Result then
     Pages[APageIndex].Tabs.TabIndex:= ATabIndex;
 end;
+
 
 
 end.

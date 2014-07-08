@@ -161,7 +161,6 @@ begin
   Groups.OnTabClose:= TabClose;
   Groups.OnTabAdd:= TabAdd;
 
-  Groups.SetTabFont(Font);
   Groups.SetTabOption(tabColorFont, clBlack);
   Groups.SetTabOption(tabColorActive, clBtnFace);
   Groups.SetTabOption(tabColorPassive, clLtGray);
@@ -190,7 +189,7 @@ begin
   D:= (Sender as TATTabs).GetTabData(ATabIndex);
 
   if ACanContinue then Id:= mb_yesnocancel else Id:= mb_okcancel;
-  Res:= Application.MessageBox(PChar('Close: '+D.TabCaption), 'Close', Id);
+  Res:= Application.MessageBox(PChar(string('Close: '+D.TabCaption)), 'Close', Id);
   
   ACanClose:= (Res=idok) or (Res=idyes);
   ACanContinue:= Res<>idcancel;
