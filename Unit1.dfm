@@ -212,5 +212,9 @@ object Form1: TForm1
         OnClick = toothergroup1Click
       end
     end
+    object mTree: TMenuItem
+      Caption = 'Tree'
+      OnClick = mTreeClick
+    end
   end
 end

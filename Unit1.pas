@@ -63,6 +63,7 @@ type
     mnuCloseOthAll: TMenuItem;
     mnuCloseAll: TMenuItem;
     mnuCloseAllThis: TMenuItem;
+    mTree: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
@@ -102,6 +103,7 @@ type
     procedure mnuCloseOthSameClick(Sender: TObject);
     procedure mnuCloseOthAllClick(Sender: TObject);
     procedure mnuCloseAllThisClick(Sender: TObject);
+    procedure mTreeClick(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer;
@@ -303,13 +305,14 @@ end;
 procedure TForm1.TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
   N: TTreeNode;
+  S: string;
 begin
-  if Source is TControl then
-    Caption:= (Source as TControl).Parent.Name;
+  if Source is TMemo then
+    S:= 'text: '+(Source as TMemo).Lines[0];
 
   N:= Tree.GetNodeAt(X, Y);
   if N=nil then begin Beep; Exit end;
-  Tree.Items.AddChild(N, Caption);
+  Tree.Items.AddChild(N, S);
   Tree.FullExpand;
 end;
 
@@ -424,6 +427,11 @@ end;
 procedure TForm1.mnuCloseAllThisClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseAllThisPage, true);
+end;
+
+procedure TForm1.mTreeClick(Sender: TObject);
+begin
+  with Tree do Visible:= not Visible;
 end;
 
 end.

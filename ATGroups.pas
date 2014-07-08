@@ -920,6 +920,11 @@ begin
         FPos2:= Pages2.Height / ClientHeight;
         FPos3:= Pages3.Height / ClientHeight;
       end;
+    gm3Plus:
+      begin
+        FPos1:= FPanel1.Width / ClientWidth;
+        FPos2:= Pages2.Height / ClientHeight;
+      end;
     gm4Grid:
       begin
         FPos1:= Pages1.Width / ClientWidth;
@@ -958,6 +963,11 @@ begin
         Pages1.Height:= Trunc(FPos1 * ClientHeight);
         Pages2.Height:= Trunc(FPos2 * ClientHeight);
         Pages3.Height:= Trunc(FPos3 * ClientHeight);
+      end;
+    gm3Plus:
+      begin
+        FPanel1.Width:= Trunc(FPos1 * ClientWidth);
+        Pages2.Height:= Trunc(FPos2 * ClientHeight);
       end;
     gm4Grid:
       begin
