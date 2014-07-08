@@ -256,7 +256,7 @@ end;
 procedure TATPages.AddTab(AControl: TControl;
   const ACaption: atString; AColor: TColor);
 begin
-  FTabs.AddTab(-1, ACaption, AControl);
+  FTabs.AddTab(-1, ACaption, AControl, false, AColor);
   AControl.Parent:= Self;
   AControl.Align:= alClient;
   FTabs.TabIndex:= FTabs.TabCount-1;
