@@ -25,6 +25,7 @@ uses
 
 type
   TMySplitter = {$ifdef SP}TSpTbxSplitter{$else}TSplitter{$endif};
+  TMyPopupMenu = {$ifdef SP} TSpTbxPopupMenu {$else} TPopupMenu {$endif};
 
 type
   TATPages = class(TPanel)
@@ -68,14 +69,14 @@ type
     tabColorPassiveOver,
     tabColorBorderActive,
     tabColorBorderPassive,
+    tabOptionFontSize,
     tabOptionBottomTabs,
     tabOptionShowTabs,
     tabOptionShowXButtons,
     tabOptionShowPlus,
     tabOptionShowNums,
     tabOptionDragDrop,
-    tabOptionWidthMax,
-    tabOptionTabHeight  //todo
+    tabOptionWidthMax
     );
 
 type
@@ -111,7 +112,7 @@ type
     FPos3,
     FPos4,
     FPos5: Real;
-    FSplitPopup: {$ifdef SP} TSpTbxPopupMenu {$else} TPopupMenu {$endif};
+    FSplitPopup: TMyPopupMenu;
     FMode: TATGroupsMode;
     FOnTabPopup: TNotifyEvent;
     FOnTabFocus: TNotifyEvent;
@@ -126,8 +127,8 @@ type
       var ACanClose, ACanContinue: boolean);
     procedure TabAdd(Sender: TObject);
     procedure SetMode(Value: TATGroupsMode);
-    function GetSplitPercent: Integer;
-    procedure SetSplitPercent(N: Integer);
+    function GetSplitPos: Integer;
+    procedure SetSplitPos(N: Integer);
     procedure Split1Moved(Sender: TObject);
     procedure Split2Moved(Sender: TObject);
     procedure Split3Moved(Sender: TObject);
@@ -138,8 +139,6 @@ type
     procedure RestoreSplitPos;
     procedure InitSplitterPopup;
     procedure MoveTabsOnModeChanging(Value: TATGroupsMode);
-    procedure LockUpdate;
-    procedure UnlockUpdate;
   protected
     procedure Resize; override;
   public
@@ -162,6 +161,7 @@ type
     //
     property PopupPages: TATPages read FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
+    property SplitterPopupMenu: TMyPopupMenu read FSplitPopup;
     //
     property Mode: TATGroupsMode read FMode write SetMode;
     function GetTabTotalCount: Integer;
@@ -180,9 +180,9 @@ type
     procedure MoveCurrentTabToNext(ANext: boolean);
     procedure MoveCurrentTabToOpposite;
     //
-    property SplitPercent: Integer read GetSplitPercent write SetSplitPercent;
-    procedure SplitPercentIncrease;
-    procedure SplitPercentDecrease;
+    property SplitPos: Integer read GetSplitPos write SetSplitPos;
+    procedure SplitPosIncrease;
+    procedure SplitPosDecrease;
     //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -191,7 +191,9 @@ type
   end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
-  
+procedure DoControlLock(Ctl: TWinControl);
+procedure DoControlUnlock(Ctl: TWinControl);
+
 
 implementation
 
@@ -209,6 +211,19 @@ function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
 begin
   Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(ScreenPnt));
 end;
+
+procedure DoControlLock(Ctl: TWinControl);
+begin
+  Ctl.Perform(WM_SetRedraw, 0, 0);
+end;
+
+procedure DoControlUnlock(Ctl: TWinControl);
+begin
+  Ctl.Perform(WM_SetRedraw, 1, 0);
+  SetWindowPos(Ctl.Handle, 0, 0, 0, 0, 0,
+    SWP_FRAMECHANGED or SWP_NOCOPYBITS or SWP_NOMOVE or SWP_NOZORDER or SWP_NOSIZE);
+end;
+
 
 const
   cGroupsCount: array[TATGroupsMode] of Integer = (
@@ -244,7 +259,7 @@ begin
   FTabs.OnTabEmpty:= TabEmpty;
 
   FTabs.TabAngle:= 0;
-  FTabs.TabHeight:= 23;
+  FTabs.TabHeight:= 24;
   FTabs.TabIndentTop:= 1;
   FTabs.TabIndentInter:= 1;
   FTabs.TabIndentXSize:= 14;
@@ -417,7 +432,7 @@ procedure TATGroups.InitSplitterPopup;
   end;
   //
 begin
-  FSplitPopup:= {$ifdef SP}TSpTbxPopupMenu{$else}TPopupMenu{$endif}.Create(Self);
+  FSplitPopup:= TMyPopupMenu.Create(Self);
   Add(20);
   Add(30);
   Add(40);
@@ -460,7 +475,7 @@ var
 begin
   if Value<>FMode then
   try
-    LockUpdate;
+    DoControlLock(Self);
 
     //actions before changing FMode
     NPagesBefore:= PagesIndexOf(PagesCurrent);
@@ -798,7 +813,7 @@ begin
     if Assigned(FOnTabFocus) then
       FOnTabFocus(Pages[NPagesAfter].Tabs);
   finally
-    UnlockUpdate;
+    DoControlUnlock(Self);
   end;
 end;
 
@@ -1021,10 +1036,10 @@ end;
 
 procedure TATGroups.SplitClick(Sender: TObject);
 begin
-  SetSplitPercent((Sender as TComponent).Tag);
+  SetSplitPos((Sender as TComponent).Tag);
 end;
 
-function TATGroups.GetSplitPercent: Integer;
+function TATGroups.GetSplitPos: Integer;
 begin
   case FMode of
     gm2Horz:
@@ -1040,7 +1055,7 @@ begin
   end;
 end;
 
-procedure TATGroups.SetSplitPercent(N: Integer);
+procedure TATGroups.SetSplitPos(N: Integer);
 begin
   case FMode of
     gm2Horz:
@@ -1222,6 +1237,13 @@ begin
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
         //
+        tabOptionFontSize:
+          begin
+            Font.Size:= N;
+            TabHeight:= Trunc(N * 1.8) + 8; //tested for sizes 8..38
+            Height:= TabHeight+TabIndentTop+1;
+          end;
+        //
         tabOptionBottomTabs:
           begin
             TabBottom:= Bool(N);
@@ -1238,7 +1260,7 @@ begin
         tabOptionDragDrop:
           TabDragEnabled:= Bool(N);
         tabOptionWidthMax:
-          TabWidthMax:= N;    
+          TabWidthMax:= N;
       end;
 end;
 
@@ -1366,30 +1388,18 @@ begin
   Result:= true;
 end;
 
-procedure TATGroups.LockUpdate;
-begin
-  Perform(WM_SetRedraw, 0, 0);
-end;
-
-procedure TATGroups.UnlockUpdate;
-begin
-  Perform(WM_SetRedraw, 1, 0);
-  SetWindowPos(Handle, 0, 0, 0, 0, 0,
-    SWP_FRAMECHANGED or SWP_NOCOPYBITS or SWP_NOMOVE or SWP_NOZORDER or SWP_NOSIZE);
-end;
-
 
 const
   cMinSplitter = 10;
 
-procedure TATGroups.SplitPercentIncrease;
+procedure TATGroups.SplitPosIncrease;
 begin
-  SplitPercent:= Min(SplitPercent + cMinSplitter, 100-cMinSplitter);
+  SplitPos:= Min(SplitPos + cMinSplitter, 100-cMinSplitter);
 end;
 
-procedure TATGroups.SplitPercentDecrease;
+procedure TATGroups.SplitPosDecrease;
 begin
-  SplitPercent:= Max(SplitPercent - cMinSplitter, cMinSplitter);
+  SplitPos:= Max(SplitPos - cMinSplitter, cMinSplitter);
 end;
 
 function TATGroups.PagesVisibleCount: Integer;
