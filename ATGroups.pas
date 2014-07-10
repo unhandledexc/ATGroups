@@ -290,14 +290,19 @@ var
   D: TATTabData;
   Ctl: TWinControl;
 begin
-  for i:= 0 to FTabs.TabCount-1 do
-  begin
-    D:= FTabs.GetTabData(i);
-    if D<>nil then
+  DoControlLock(Self);
+  try
+    for i:= 0 to FTabs.TabCount-1 do
     begin
-      Ctl:= D.TabObject as TWinControl;
-      Ctl.Visible:= i=FTabs.TabIndex;
+      D:= FTabs.GetTabData(i);
+      if D<>nil then
+      begin
+        Ctl:= D.TabObject as TWinControl;
+        Ctl.Visible:= i=FTabs.TabIndex;
+      end;
     end;
+  finally
+    DoControlUnlock(Self);
   end;
 
   D:= FTabs.GetTabData(FTabs.TabIndex);
@@ -1216,8 +1221,14 @@ end;
 procedure TATGroups.TabClose(Sender: TObject; ATabIndex: Integer;
   var ACanClose, ACanContinue: boolean);
 begin
-  if Assigned(FOnTabClose) then
-    FOnTabClose(Sender, ATabIndex, ACanClose, ACanContinue);
+  //not needed
+  //DoControlLock(Self);
+  try
+    if Assigned(FOnTabClose) then
+      FOnTabClose(Sender, ATabIndex, ACanClose, ACanContinue);
+  finally
+    //DoControlUnlock(Self);
+  end;      
 end;
 
 procedure TATGroups.TabAdd(Sender: TObject);
