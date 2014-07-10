@@ -35,6 +35,7 @@ type
     FOnTabClose: TATTabCloseEvent;
     FOnTabAdd: TNotifyEvent;
     FOnTabEmpty: TNotifyEvent;
+    FOnTabOver: TATTabOverEvent;
     procedure SetOnTabClose(AEvent: TATTabCloseEvent);
     procedure SetOnTabAdd(AEvent: TNotifyEvent);
     procedure TabClick(Sender: TObject);
@@ -42,6 +43,7 @@ type
       AType: TATTabElemType; ATabIndex: Integer;
       C: TCanvas; const ARect: TRect; var ACanDraw: boolean);
     procedure TabEmpty(Sender: TObject);
+    procedure TabOver(Sender: TObject; ATabIndex: Integer);
   public
     constructor Create(AOwner: TComponent); override;
     procedure AddTab(AControl: TControl; const ACaption: atString;
@@ -51,6 +53,7 @@ type
     property OnTabClose: TATTabCloseEvent read FOnTabClose write SetOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write SetOnTabAdd;
     property OnTabEmpty: TNotifyEvent read FOnTabEmpty write FOnTabEmpty;
+    property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
   end;
 
 type
@@ -118,6 +121,7 @@ type
     FOnTabFocus: TNotifyEvent;
     FOnTabClose: TATTabCloseEvent;
     FOnTabAdd: TNotifyEvent;
+    FOnTabOver: TATTabOverEvent;
     FPopupPages: TATPages;
     FPopupTabIndex: Integer;
     procedure TabFocus(Sender: TObject);
@@ -126,6 +130,7 @@ type
     procedure TabClose(Sender: TObject; ATabIndex: Integer;
       var ACanClose, ACanContinue: boolean);
     procedure TabAdd(Sender: TObject);
+    procedure TabOver(Sender: TObject; ATabIndex: Integer);
     procedure SetMode(Value: TATGroupsMode);
     function GetSplitPos: Integer;
     procedure SetSplitPos(N: Integer);
@@ -168,7 +173,7 @@ type
     function GetTabDataOfTotalIndex(N: Integer): TATTabData;
     function SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
     procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
-    //procedure SetTabFont(AFont: TFont);
+    procedure SetTabFont(AFont: TFont);
     //
     function CloseTabsOther(APages: TATPages; ATabIndex: Integer): boolean;
     function CloseTabsAll(APages: TATPages): boolean;
@@ -188,6 +193,7 @@ type
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write FOnTabAdd;
+    property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
   end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
@@ -257,6 +263,7 @@ begin
   FTabs.OnTabClick:= TabClick;
   FTabs.OnTabDrawBefore:= TabDrawBefore;
   FTabs.OnTabEmpty:= TabEmpty;
+  FTabs.OnTabOver:= TabOver;
 
   FTabs.TabAngle:= 0;
   FTabs.TabHeight:= 24;
@@ -321,6 +328,12 @@ begin
     FOnTabEmpty(Sender);
 end;
 
+procedure TATPages.TabOver(Sender: TObject; ATabIndex: Integer);
+begin
+  if Assigned(FOnTabOver) then
+    FOnTabOver(Sender, ATabIndex);
+end;
+
 { TATGroups }
 
 constructor TATGroups.Create(AOwner: TComponent);
@@ -367,6 +380,7 @@ begin
       OnTabFocus:= Self.TabFocus;
       OnTabClose:= Self.TabClose;
       OnTabAdd:= Self.TabAdd;
+      OnTabOver:= Self.TabOver;
     end;
 
   FSplit1:= TMySplitter.Create(Self);
@@ -1212,7 +1226,6 @@ begin
     FOnTabAdd(Sender);
 end;
 
-{
 procedure TATGroups.SetTabFont(AFont: TFont);
 var
   i: Integer;
@@ -1220,7 +1233,6 @@ begin
   for i:= Low(Pages) to High(Pages) do
     Pages[i].Tabs.Font.Assign(AFont);
 end;
-}
 
 procedure TATGroups.SetTabOption(Id: TATTabsOptionId; N: Integer);
 var
@@ -1418,7 +1430,11 @@ begin
     Pages[APageIndex].Tabs.TabIndex:= ATabIndex;
 end;
 
-
+procedure TATGroups.TabOver(Sender: TObject; ATabIndex: Integer);
+begin
+  if Assigned(FOnTabOver) then
+    FOnTabOver(Sender, ATabIndex);
+end;
 
 end.
 

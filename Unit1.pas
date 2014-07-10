@@ -64,6 +64,7 @@ type
     mnuCloseAll: TMenuItem;
     mnuCloseAllThis: TMenuItem;
     mTree: TMenuItem;
+    Status: TStatusBar;
     procedure FormCreate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
@@ -112,6 +113,7 @@ type
     procedure AddTab(Pages: TATPages);
     procedure TabPopup(S: TObject);
     procedure TabFocus(S: TObject);
+    procedure TabOver(S: TObject; N: Integer);
     procedure MoveTabTo(Num: Integer);
     procedure MemoFocus(S: TObject);
   public
@@ -160,6 +162,7 @@ begin
   Groups.OnTabFocus:= TabFocus;
   Groups.OnTabClose:= TabClose;
   Groups.OnTabAdd:= TabAdd;
+  Groups.OnTabOver:= TabOver;
 
   Groups.SetTabOption(tabColorFont, clBlack);
   Groups.SetTabOption(tabColorActive, clBtnFace);
@@ -431,6 +434,14 @@ end;
 procedure TForm1.mTreeClick(Sender: TObject);
 begin
   with Tree do Visible:= not Visible;
+end;
+
+procedure TForm1.TabOver(S: TObject; N: Integer);
+begin
+  if N>=0 then
+    Status.SimpleText:= 'Mouse over tab '+IntToStr(N)
+  else
+    Status.SimpleText:= '';  
 end;
 
 end.

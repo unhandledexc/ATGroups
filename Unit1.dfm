@@ -20,7 +20,7 @@ object Form1: TForm1
     Left = 0
     Top = 0
     Width = 121
-    Height = 434
+    Height = 415
     Align = alLeft
     DragMode = dmAutomatic
     HideSelection = False
@@ -36,6 +36,14 @@ object Form1: TForm1
       000000035454321C0000000000000000000000FFFFFFFFFFFFFFFF0000000000
       000000035454311B0000000000000000000000FFFFFFFFFFFFFFFF0000000000
       000000025454}
+  end
+  object Status: TStatusBar
+    Left = 0
+    Top = 415
+    Width = 775
+    Height = 19
+    Panels = <>
+    SimplePanel = True
   end
   object PopupMenu1: TPopupMenu
     Left = 400
