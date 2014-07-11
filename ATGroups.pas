@@ -1069,6 +1069,10 @@ begin
       begin
         Result:= Pages1.Height * 100 div ClientHeight;
       end;
+    gm3Plus:
+      begin
+        Result:= FPanel1.Width * 100 div ClientWidth;
+      end;
     else
       Result:= 50;
   end;
