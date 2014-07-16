@@ -163,8 +163,9 @@ type
     function PagesIndexOf(APages: TATPages): Integer;
     function PagesIndexOfControl(ACtl: TControl): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
+    procedure PagesAndTabIndexOfControl(AObject: TObject; var NPages, NTab: Integer);
     //
-    property PopupPages: TATPages read FPopupPages;
+    property PopupPages: TATPages read FPopupPages write FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
     property SplitterPopupMenu: TMyPopupMenu read FSplitPopup;
     //
@@ -1449,6 +1450,31 @@ procedure TATGroups.TabOver(Sender: TObject; ATabIndex: Integer);
 begin
   if Assigned(FOnTabOver) then
     FOnTabOver(Sender, ATabIndex);
+end;
+
+procedure TATGroups.PagesAndTabIndexOfControl(AObject: TObject;
+  var NPages, NTab: Integer);
+var
+  i, j: Integer;
+  D: TATTabData;
+begin
+  NPages:= -1;
+  NTab:= -1;
+  if AObject=nil then Exit;
+
+  for i:= Low(Pages) to High(Pages) do
+    with Pages[i].Tabs do
+      for j:= 0 to TabCount-1 do
+      begin
+        D:= GetTabData(j);
+        if D<>nil then
+          if D.TabObject=AObject then
+          begin
+            NPages:= i;
+            NTab:= j;
+            Exit
+          end;
+      end;
 end;
 
 end.
