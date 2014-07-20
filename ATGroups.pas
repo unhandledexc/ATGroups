@@ -1419,15 +1419,16 @@ end;
 
 const
   cMinSplitter = 10;
+  cDeltaSplitter = 5;
 
 procedure TATGroups.SplitPosIncrease;
 begin
-  SplitPos:= Min(SplitPos + cMinSplitter, 100-cMinSplitter);
+  SplitPos:= Min(SplitPos + cDeltaSplitter, 100-cMinSplitter);
 end;
 
 procedure TATGroups.SplitPosDecrease;
 begin
-  SplitPos:= Max(SplitPos - cMinSplitter, cMinSplitter);
+  SplitPos:= Max(SplitPos - cDeltaSplitter, cMinSplitter);
 end;
 
 function TATGroups.PagesVisibleCount: Integer;
