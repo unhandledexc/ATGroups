@@ -73,6 +73,7 @@ type
     tabColorBorderActive,
     tabColorBorderPassive,
     tabOptionFontSize,
+    tabOptionAngle,
     tabOptionBottomTabs,
     tabOptionShowTabs,
     tabOptionShowXButtons,
@@ -269,8 +270,9 @@ begin
   FTabs.TabAngle:= 0;
   FTabs.TabHeight:= 24;
   FTabs.TabIndentTop:= 1;
-  FTabs.TabIndentInter:= 1;
+  FTabs.TabIndentInter:= 0;
   FTabs.TabIndentXSize:= 14;
+  FTabs.TabWidthMin:= 18; 
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
   FTabs.ColorBg:= clWindow;
   FTabs.TabShowBorderActiveLow:= true;
@@ -1277,6 +1279,8 @@ begin
             TabBottom:= Bool(N);
             if TabBottom then Align:= alBottom else Align:= alTop;
           end;
+        tabOptionAngle:
+          TabAngle:= N;  
         tabOptionShowTabs:
           Visible:= Bool(N);  
         tabOptionShowXButtons:
