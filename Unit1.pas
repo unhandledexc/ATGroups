@@ -66,6 +66,9 @@ type
     mTree: TMenuItem;
     Status: TStatusBar;
     mnuCloseRt: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    mnuCloseLt: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
@@ -107,6 +110,7 @@ type
     procedure mnuCloseAllThisClick(Sender: TObject);
     procedure mTreeClick(Sender: TObject);
     procedure mnuCloseRtClick(Sender: TObject);
+    procedure mnuCloseLtClick(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer;
@@ -449,6 +453,11 @@ end;
 procedure TForm1.mnuCloseRtClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseRighterThisPage, true);
+end;
+
+procedure TForm1.mnuCloseLtClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseLefterThisPage, true);
 end;
 
 end.

@@ -61,9 +61,10 @@ type
     tabCloseCurrent,
     tabCloseOthersThisPage,
     tabCloseOthersAllPages,
+    tabCloseLefterThisPage,
+    tabCloseRighterThisPage,
     tabCloseAllThisPage,
-    tabCloseAll,
-    tabCloseRighterThisPage
+    tabCloseAll
     );
 type
   TATTabsOptionId = (
@@ -1398,6 +1399,10 @@ begin
     tabCloseOthersThisPage:
       begin
         if not CloseTabsOther(Pages[APagesIndex], ATabIndex, true, true) then Exit;
+      end;
+    tabCloseLefterThisPage:
+      begin
+        if not CloseTabsOther(Pages[APagesIndex], ATabIndex, false, true) then Exit;
       end;
     tabCloseRighterThisPage:
       begin

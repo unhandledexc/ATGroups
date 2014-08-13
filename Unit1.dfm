@@ -62,9 +62,19 @@ object Form1: TForm1
         Caption = 'others (all groups)'
         OnClick = mnuCloseOthAllClick
       end
+      object N5: TMenuItem
+        Caption = '-'
+      end
+      object mnuCloseLt: TMenuItem
+        Caption = 'left tabs (same group)'
+        OnClick = mnuCloseLtClick
+      end
       object mnuCloseRt: TMenuItem
         Caption = 'right tabs (same group)'
         OnClick = mnuCloseRtClick
+      end
+      object N6: TMenuItem
+        Caption = '-'
       end
       object mnuCloseAllThis: TMenuItem
         Caption = 'all (same group)'
