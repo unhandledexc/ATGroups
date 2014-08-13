@@ -62,7 +62,8 @@ type
     tabCloseOthersThisPage,
     tabCloseOthersAllPages,
     tabCloseAllThisPage,
-    tabCloseAll
+    tabCloseAll,
+    tabCloseRighterThisPage
     );
 type
   TATTabsOptionId = (
@@ -177,7 +178,8 @@ type
     procedure SetTabOption(Id: TATTabsOptionId; N: Integer);
     procedure SetTabFont(AFont: TFont);
     //
-    function CloseTabsOther(APages: TATPages; ATabIndex: Integer): boolean;
+    function CloseTabsOther(APages: TATPages; ATabIndex: Integer;
+      ADoRighter, ADoLefter: boolean): boolean;
     function CloseTabsAll(APages: TATPages): boolean;
     function CloseTabs(Id: TATTabCloseId; AForPopupMenu: boolean): boolean;
     //
@@ -1340,17 +1342,20 @@ begin
   end;
 end;
 
-function TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer): boolean;
+function TATGroups.CloseTabsOther(APages: TATPages; ATabIndex: Integer;
+  ADoRighter, ADoLefter: boolean): boolean;
 var
   j: Integer;
 begin
   Result:= false;
   with APages do
   begin
-    for j:= Tabs.TabCount-1 downto ATabIndex+1 do
-      if not Tabs.DeleteTab(j, true, true) then Exit;
-    for j:= ATabIndex-1 downto 0 do
-      if not Tabs.DeleteTab(j, true, true) then Exit;
+    if ADoRighter then
+      for j:= Tabs.TabCount-1 downto ATabIndex+1 do
+        if not Tabs.DeleteTab(j, true, true) then Exit;
+    if ADoLefter then
+      for j:= ATabIndex-1 downto 0 do
+        if not Tabs.DeleteTab(j, true, true) then Exit;
   end;
   Result:= true;
 end;
@@ -1392,14 +1397,18 @@ begin
       end;
     tabCloseOthersThisPage:
       begin
-        if not CloseTabsOther(Pages[APagesIndex], ATabIndex) then Exit;
+        if not CloseTabsOther(Pages[APagesIndex], ATabIndex, true, true) then Exit;
+      end;
+    tabCloseRighterThisPage:
+      begin
+        if not CloseTabsOther(Pages[APagesIndex], ATabIndex, true, false) then Exit;
       end;
     tabCloseOthersAllPages:
       begin
         for i:= High(Pages) downto Low(Pages) do
           if i=APagesIndex then
           begin
-            if not CloseTabsOther(Pages[i], ATabIndex) then Exit;
+            if not CloseTabsOther(Pages[i], ATabIndex, true, true) then Exit;
           end
           else
           begin

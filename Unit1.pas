@@ -65,6 +65,7 @@ type
     mnuCloseAllThis: TMenuItem;
     mTree: TMenuItem;
     Status: TStatusBar;
+    mnuCloseRt: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
@@ -105,6 +106,7 @@ type
     procedure mnuCloseOthAllClick(Sender: TObject);
     procedure mnuCloseAllThisClick(Sender: TObject);
     procedure mTreeClick(Sender: TObject);
+    procedure mnuCloseRtClick(Sender: TObject);
   private
     { Private declarations }
     procedure TabClose(Sender: TObject; ATabIndex: Integer;
@@ -442,6 +444,11 @@ begin
     Status.SimpleText:= 'Mouse over tab '+IntToStr(N)
   else
     Status.SimpleText:= '';  
+end;
+
+procedure TForm1.mnuCloseRtClick(Sender: TObject);
+begin
+  Groups.CloseTabs(tabCloseRighterThisPage, true);
 end;
 
 end.

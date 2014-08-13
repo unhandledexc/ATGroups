@@ -55,15 +55,19 @@ object Form1: TForm1
         OnClick = mnuCloseThisClick
       end
       object mnuCloseOthSame: TMenuItem
-        Caption = 'others in same group'
+        Caption = 'others (same group)'
         OnClick = mnuCloseOthSameClick
       end
       object mnuCloseOthAll: TMenuItem
-        Caption = 'others all'
+        Caption = 'others (all groups)'
         OnClick = mnuCloseOthAllClick
       end
+      object mnuCloseRt: TMenuItem
+        Caption = 'right tabs (same group)'
+        OnClick = mnuCloseRtClick
+      end
       object mnuCloseAllThis: TMenuItem
-        Caption = 'all in same group'
+        Caption = 'all (same group)'
         OnClick = mnuCloseAllThisClick
       end
       object mnuCloseAll: TMenuItem
