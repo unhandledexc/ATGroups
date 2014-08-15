@@ -36,6 +36,7 @@ type
     FOnTabAdd: TNotifyEvent;
     FOnTabEmpty: TNotifyEvent;
     FOnTabOver: TATTabOverEvent;
+    FOnTabMove: TATTabMoveEvent;
     procedure SetOnTabClose(AEvent: TATTabCloseEvent);
     procedure SetOnTabAdd(AEvent: TNotifyEvent);
     procedure TabClick(Sender: TObject);
@@ -44,6 +45,7 @@ type
       C: TCanvas; const ARect: TRect; var ACanDraw: boolean);
     procedure TabEmpty(Sender: TObject);
     procedure TabOver(Sender: TObject; ATabIndex: Integer);
+    procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
   public
     constructor Create(AOwner: TComponent); override;
     procedure AddTab(AControl: TControl; const ACaption: atString;
@@ -54,6 +56,7 @@ type
     property OnTabAdd: TNotifyEvent read FOnTabAdd write SetOnTabAdd;
     property OnTabEmpty: TNotifyEvent read FOnTabEmpty write FOnTabEmpty;
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
+    property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
   end;
 
 type
@@ -125,6 +128,7 @@ type
     FOnTabClose: TATTabCloseEvent;
     FOnTabAdd: TNotifyEvent;
     FOnTabOver: TATTabOverEvent;
+    FOnTabMove: TATTabMoveEvent;
     FPopupPages: TATPages;
     FPopupTabIndex: Integer;
     procedure TabFocus(Sender: TObject);
@@ -134,6 +138,7 @@ type
       var ACanClose, ACanContinue: boolean);
     procedure TabAdd(Sender: TObject);
     procedure TabOver(Sender: TObject; ATabIndex: Integer);
+    procedure TabMove(Sender: TObject; NFrom, NTo: Integer);
     procedure SetMode(Value: TATGroupsMode);
     function GetSplitPos: Integer;
     procedure SetSplitPos(N: Integer);
@@ -199,6 +204,7 @@ type
     property OnTabClose: TATTabCloseEvent read FOnTabClose write FOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write FOnTabAdd;
     property OnTabOver: TATTabOverEvent read FOnTabOver write FOnTabOver;
+    property OnTabMove: TATTabMoveEvent read FOnTabMove write FOnTabMove;
   end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
@@ -269,6 +275,7 @@ begin
   FTabs.OnTabDrawBefore:= TabDrawBefore;
   FTabs.OnTabEmpty:= TabEmpty;
   FTabs.OnTabOver:= TabOver;
+  FTabs.OnTabMove:= TabMove;
 
   FTabs.TabAngle:= 0;
   FTabs.TabHeight:= 24;
@@ -346,6 +353,12 @@ begin
     FOnTabOver(Sender, ATabIndex);
 end;
 
+procedure TATPages.TabMove(Sender: TObject; NFrom, NTo: Integer);
+begin
+  if Assigned(FOnTabMove) then
+    FOnTabMove(Sender, NFrom, NTo);
+end;
+
 { TATGroups }
 
 constructor TATGroups.Create(AOwner: TComponent);
@@ -393,6 +406,7 @@ begin
       OnTabClose:= Self.TabClose;
       OnTabAdd:= Self.TabAdd;
       OnTabOver:= Self.TabOver;
+      OnTabMove:= Self.TabMove;
     end;
 
   FSplit1:= TMySplitter.Create(Self);
@@ -1471,6 +1485,13 @@ begin
   if Assigned(FOnTabOver) then
     FOnTabOver(Sender, ATabIndex);
 end;
+
+procedure TATGroups.TabMove(Sender: TObject; NFrom, NTo: Integer);
+begin
+  if Assigned(FOnTabMove) then
+    FOnTabMove(Sender, NFrom, NTo);
+end;
+
 
 procedure TATGroups.PagesAndTabIndexOfControl(AObject: TObject;
   var NPages, NTab: Integer);
