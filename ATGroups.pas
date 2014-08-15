@@ -279,6 +279,7 @@ begin
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
   FTabs.ColorBg:= clWindow;
   FTabs.TabShowBorderActiveLow:= true;
+  FTabs.TabMiddleClickClose:= true;
 end;
 
 procedure TATPages.AddTab(AControl: TControl;
