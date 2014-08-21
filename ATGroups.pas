@@ -279,6 +279,7 @@ begin
 
   FTabs.TabAngle:= 0;
   FTabs.TabHeight:= 24;
+  FTabs.TabIndentLeft:= 6;
   FTabs.TabIndentTop:= 1;
   FTabs.TabIndentInter:= 0;
   FTabs.TabIndentXSize:= 14;
