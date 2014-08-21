@@ -288,6 +288,7 @@ begin
   FTabs.ColorBg:= clWindow;
   FTabs.TabShowBorderActiveLow:= true;
   FTabs.TabMiddleClickClose:= true;
+  FTabs.TabShowPlusText:= ' + '; //make button not so small
 end;
 
 procedure TATPages.AddTab(AControl: TControl;
