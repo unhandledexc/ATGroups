@@ -285,7 +285,10 @@ begin
   FTabs.TabIndentXSize:= 14;
   FTabs.TabWidthMin:= 18; 
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
+
   FTabs.ColorBg:= clWindow;
+  FTabs.ColorCloseX:= clDkGray;
+
   FTabs.TabShowBorderActiveLow:= true;
   FTabs.TabMiddleClickClose:= true;
   FTabs.TabShowPlusText:= ' + '; //make button not so small
