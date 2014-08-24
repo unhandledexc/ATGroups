@@ -279,19 +279,17 @@ begin
 
   FTabs.TabAngle:= 0;
   FTabs.TabHeight:= 24;
-  FTabs.TabIndentLeft:= 6;
   FTabs.TabIndentTop:= 1;
   FTabs.TabIndentInter:= 0;
   FTabs.TabIndentXSize:= 14;
   FTabs.TabWidthMin:= 18; 
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
 
-  FTabs.ColorBg:= clWindow;
-  FTabs.ColorCloseX:= clDkGray;
-
   FTabs.TabShowBorderActiveLow:= true;
   FTabs.TabMiddleClickClose:= true;
-  FTabs.TabShowPlusText:= ' + '; //make button not so small
+
+  FTabs.ColorBg:= clWindow;
+  FTabs.ColorCloseX:= clDkGray;
 end;
 
 procedure TATPages.AddTab(AControl: TControl;
