@@ -85,7 +85,11 @@ type
     tabOptionShowPlus,
     tabOptionShowNums,
     tabOptionDragDrop,
-    tabOptionWidthMax
+    tabOptionWidthMax,
+    tabOptionIndentInter,
+    tabOptionIndentColor,
+    tabOptionIndentXRight,
+    tabOptionIndentXSize
     );
 
 type
@@ -282,6 +286,7 @@ begin
   FTabs.TabIndentTop:= 1;
   FTabs.TabIndentInter:= 0;
   FTabs.TabIndentXSize:= 14;
+  FTabs.TabIndentColor:= 5;
   FTabs.TabWidthMin:= 18; 
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
 
@@ -1314,6 +1319,14 @@ begin
           TabDragEnabled:= Bool(N);
         tabOptionWidthMax:
           TabWidthMax:= N;
+        tabOptionIndentInter:
+          TabIndentInter:= N;
+        tabOptionIndentColor:
+          TabIndentColor:= N;
+        tabOptionIndentXRight:
+          TabIndentXRight:= N;
+        tabOptionIndentXSize:
+          TabIndentXSize:= N;
       end;
 end;
 
