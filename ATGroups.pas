@@ -292,6 +292,7 @@ begin
 
   FTabs.TabShowBorderActiveLow:= true;
   FTabs.TabMiddleClickClose:= true;
+  FTabs.TabDoubleClickPlus:= true;
 
   FTabs.ColorBg:= clWindow;
   FTabs.ColorCloseX:= clDkGray;
