@@ -75,6 +75,7 @@ type
     tabColorActive,
     tabColorPassive,
     tabColorPassiveOver,
+    tabColorModified,
     tabColorBorderActive,
     tabColorBorderPassive,
     tabOptionFontSize,
@@ -1291,6 +1292,7 @@ begin
         tabColorPassive: ColorTabPassive:= N;
         tabColorPassiveOver: ColorTabOver:= N;
         tabColorFont: Font.Color:= N;
+        tabColorModified: ColorFontModified:= N;
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
         //
