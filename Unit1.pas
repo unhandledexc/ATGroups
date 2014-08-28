@@ -414,7 +414,7 @@ end;
 
 procedure TForm1.mnuCloseThisClick(Sender: TObject);
 begin
-  Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex, true, false);
+  Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex, true, true);
 end;
 
 procedure TForm1.mnuCloseOthSameClick(Sender: TObject);
