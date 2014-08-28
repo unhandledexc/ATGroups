@@ -293,6 +293,7 @@ begin
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
 
   //FTabs.TabShowBorderActiveLow:= true;
+  FTabs.TabShowModifiedText:= #$95;
   FTabs.TabMiddleClickClose:= true;
   FTabs.TabDoubleClickPlus:= true;
 
