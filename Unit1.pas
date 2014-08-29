@@ -170,10 +170,10 @@ begin
   Groups.OnTabAdd:= TabAdd;
   Groups.OnTabOver:= TabOver;
 
-  Groups.SetTabOption(tabColorFont, clBlack);
-  Groups.SetTabOption(tabColorActive, clBtnFace);
-  Groups.SetTabOption(tabColorPassive, clLtGray);
-  Groups.SetTabOption(tabColorPassiveOver, clMedGray);
+  Groups.SetTabOption(tabColorText, clBlack);
+  Groups.SetTabOption(tabColorBgActive, clBtnFace);
+  Groups.SetTabOption(tabColorBgPassive, clLtGray);
+  Groups.SetTabOption(tabColorBgPassiveOver, clMedGray);
   Groups.SetTabOption(tabColorBorderActive, clMedGray);
   Groups.SetTabOption(tabColorBorderPassive, clMedGray);
 
