@@ -85,6 +85,7 @@ type
     tabOptionShowXButtons,
     tabOptionShowPlus,
     tabOptionShowNums,
+    tabOptionShowEntireColor,
     tabOptionDragDrop,
     tabOptionWidthMin,
     tabOptionWidthMax,
@@ -292,7 +293,6 @@ begin
   FTabs.TabWidthMin:= 18; 
   FTabs.Height:= FTabs.TabHeight+FTabs.TabIndentTop+1;
 
-  //FTabs.TabShowBorderActiveLow:= true;
   FTabs.TabShowModifiedText:= #$95;
   FTabs.TabMiddleClickClose:= true;
   FTabs.TabDoubleClickPlus:= true;
@@ -1320,6 +1320,8 @@ begin
           TabShowPlus:= Bool(N);
         tabOptionShowNums:
           TabNumPrefix:= IfThen(Bool(N), '%d. ', '');
+        tabOptionShowEntireColor:
+          TabShowEntireColor:= Bool(N);  
         tabOptionDragDrop:
           TabDragEnabled:= Bool(N);
         tabOptionWidthMin:
