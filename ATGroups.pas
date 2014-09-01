@@ -31,6 +31,7 @@ type
   TATPages = class(TPanel)
   private
     FTabs: TATTabs;
+    FEnabledEmpty: boolean;
     FOnTabFocus: TNotifyEvent;
     FOnTabClose: TATTabCloseEvent;
     FOnTabAdd: TNotifyEvent;
@@ -51,6 +52,7 @@ type
     procedure AddTab(AControl: TControl; const ACaption: atString;
       AColor: TColor = clNone);
     property Tabs: TATTabs read FTabs;
+    property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
     property OnTabClose: TATTabCloseEvent read FOnTabClose write SetOnTabClose;
     property OnTabAdd: TNotifyEvent read FOnTabAdd write SetOnTabAdd;
@@ -274,6 +276,7 @@ begin
   BorderStyle:= bsNone;
   BevelInner:= bvNone;
   BevelOuter:= bvNone;
+  FEnabledEmpty:= true;
 
   FTabs:= TATTabs.Create(Self);
   FTabs.Parent:= Self;
@@ -393,6 +396,7 @@ begin
   Pages5:= TATPages.Create(Self);
   Pages6:= TATPages.Create(Self);
 
+  Pages1.EnabledEmpty:= false;
   PagesCurrent:= Pages1;
   Pages[1]:= Pages1;
   Pages[2]:= Pages2;
@@ -1072,12 +1076,16 @@ end;
 
 
 procedure TATGroups.TabEmpty(Sender: TObject);
+var
+  APages: TATPages;
 begin
+  APages:= (Sender as TATTabs).Parent as TATPages;
+
   //if last tab closed on Pages1, add new tab
   //if last tab closed on Pages2..Pages4, activate Pages1
-  if Sender=Pages1.Tabs then
+  if not APages.EnabledEmpty then
   begin
-    Pages1.OnTabAdd(Pages1.Tabs);
+    APages.OnTabAdd(Pages1.Tabs);
   end
   else
   begin
