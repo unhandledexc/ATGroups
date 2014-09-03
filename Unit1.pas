@@ -150,7 +150,7 @@ begin
   ch:= Chr(Ord('A')+Random(26));
   for i:= 0 to 1+Random(4) do
     F.Lines.Add(StringOfChar(ch, 2+Random(50)));
-  Pages.AddTab(F, 'tab'+ch);
+  Pages.AddTab(F, 'tab'+ch, false);
 end;
 
 
