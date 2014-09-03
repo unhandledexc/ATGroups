@@ -1415,8 +1415,11 @@ var
 begin
   Result:= false;
   with APages do
+  begin
+    Tabs.TabIndex:= 0; //activate 1st tab to remove TabIndex change on closing
     for j:= Tabs.TabCount-1 downto 0 do
       if not Tabs.DeleteTab(j, true, true) then Exit;
+  end;
   Result:= true;
 end;
 
