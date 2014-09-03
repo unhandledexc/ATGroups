@@ -50,7 +50,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     procedure AddTab(AControl: TControl; const ACaption: atString;
-      AColor: TColor = clNone);
+      AModified: boolean; AColor: TColor = clNone);
     property Tabs: TATTabs read FTabs;
     property EnabledEmpty: boolean read FEnabledEmpty write FEnabledEmpty;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
@@ -305,9 +305,9 @@ begin
 end;
 
 procedure TATPages.AddTab(AControl: TControl;
-  const ACaption: atString; AColor: TColor);
+  const ACaption: atString; AModified: boolean; AColor: TColor);
 begin
-  FTabs.AddTab(-1, ACaption, AControl, false, AColor);
+  FTabs.AddTab(-1, ACaption, AControl, AModified, AColor);
   AControl.Parent:= Self;
   AControl.Align:= alClient;
   FTabs.TabIndex:= FTabs.TabCount-1;
@@ -1147,7 +1147,7 @@ var
 begin
   D:= AFromPages.Tabs.GetTabData(AFromIndex);
   if D=nil then Exit;
-  AToPages.AddTab(D.TabObject as TControl, D.TabCaption, D.TabColor);
+  AToPages.AddTab(D.TabObject as TControl, D.TabCaption, D.TabModified, D.TabColor);
   AFromPages.Tabs.DeleteTab(AFromIndex, false, false);
 
   if AActivateTabAfter then
