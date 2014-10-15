@@ -949,11 +949,17 @@ begin
   case AType of
     aeBackground:
     begin
-      CurrentSkin.PaintBackground(
-        C, ARect,
-        skncDock, sknsNormal, true{BG}, false{Borders});
+      if SkinManager.CurrentSkinName='Default' then
+      begin
+        C.Brush.Color:= clBtnFace;
+        C.FillRect(ARect);
+      end
+      else
+        CurrentSkin.PaintBackground(C, ARect,
+          skncDock, sknsNormal, true{BG}, false{Borders});
       ACanDraw:= false;
     end;
+
     aeXButton:
     begin
       //if ATabMouseOver then
@@ -962,6 +968,7 @@ begin
         CurrentSkin.GetTextColor(skncToolbarItem, sknsNormal));
       ACanDraw:= false;
     end;
+
     aeXButtonOver:
     begin
       SpDrawXPToolbarButton(C,
