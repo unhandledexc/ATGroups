@@ -233,6 +233,24 @@ uses
   {$endif}
   Math, Dialogs;
 
+procedure UpdW(C: TControl; Value: Integer);
+begin
+  if C.Align<>alClient then
+  begin
+    C.Width:= Value;
+    if C.Width<>Value then
+      ShowMessage('UpdW cannot update width of '+C.Name);
+  end;
+end;
+
+procedure UpdH(C: TControl; Value: Integer);
+begin
+  if C.Align<>alClient then
+  begin
+    C.Height:= Value;
+  end;
+end;
+
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
 begin
   Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(ScreenPnt));
@@ -240,14 +258,18 @@ end;
 
 procedure DoControlLock(Ctl: TWinControl);
 begin
+  {$ifdef windows}
   Ctl.Perform(WM_SetRedraw, 0, 0);
+  {$endif}
 end;
 
 procedure DoControlUnlock(Ctl: TWinControl);
 begin
+  {$ifdef windows}
   Ctl.Perform(WM_SetRedraw, 1, 0);
   SetWindowPos(Ctl.Handle, 0, 0, 0, 0, 0,
     SWP_FRAMECHANGED or SWP_NOCOPYBITS or SWP_NOMOVE or SWP_NOZORDER or SWP_NOSIZE);
+  {$endif}
 end;
 
 
@@ -409,9 +431,9 @@ begin
     with Pages[i] do
     begin
       Visible:= i=Low(Pages);
-      //Name:= 'aPages'+IntToStr(i);
+      Name:= 'aPages'+IntToStr(i); //debug
       Caption:= '';
-      //Tabs.Name:= 'aPagesTabs'+IntToStr(i);
+      Tabs.Name:= 'aPagesTabs'+IntToStr(i); //debug
       //
       Parent:= Self;
       Align:= alLeft;
@@ -655,7 +677,7 @@ begin
           Pages2.Align:= alClient;
           FSplit1.Align:= alLeft;
           //size
-          Pages1.Width:= Trunc(ClientWidth * NSplit);
+          UpdW(Pages1, Trunc(ClientWidth * NSplit));
           //pos
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
@@ -671,7 +693,7 @@ begin
           Pages2.Align:= alClient;
           FSplit1.Align:= alTop;
           //size
-          Pages1.Height:= Trunc(ClientHeight * NSplit);
+          UpdH(Pages1, Trunc(ClientHeight * NSplit));
           //pos
           FSplit1.Top:= ClientHeight;
           Pages2.Top:= ClientHeight;
@@ -689,8 +711,8 @@ begin
           FSplit1.Align:= alLeft;
           FSplit2.Align:= alLeft;
           //size
-          Pages1.Width:= ClientWidth div 3;
-          Pages2.Width:= ClientWidth div 3;
+          UpdW(Pages1, ClientWidth div 3);
+          UpdW(Pages2, ClientWidth div 3);
           //pos
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
@@ -710,8 +732,8 @@ begin
           FSplit1.Align:= alTop;
           FSplit2.Align:= alTop;
           //size
-          Pages1.Height:= ClientHeight div 3;
-          Pages2.Height:= ClientHeight div 3;
+          UpdH(Pages1, ClientHeight div 3);
+          UpdH(Pages2, ClientHeight div 3);
           //pos
           FSplit1.Top:= ClientHeight;
           Pages2.Top:= ClientHeight;
@@ -733,9 +755,9 @@ begin
           FSplit2.Align:= alLeft;
           FSplit3.Align:= alLeft;
           //size
-          Pages1.Width:= ClientWidth div 4;
-          Pages2.Width:= ClientWidth div 4;
-          Pages3.Width:= ClientWidth div 4;
+          UpdW(Pages1, ClientWidth div 4);
+          UpdW(Pages2, ClientWidth div 4);
+          UpdW(Pages3, ClientWidth div 4);
           //pos
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
@@ -759,9 +781,9 @@ begin
           FSplit2.Align:= alTop;
           FSplit3.Align:= alTop;
           //size
-          Pages1.Height:= ClientHeight div 4;
-          Pages2.Height:= ClientHeight div 4;
-          Pages3.Height:= ClientHeight div 4;
+          UpdH(Pages1, ClientHeight div 4);
+          UpdH(Pages2, ClientHeight div 4);
+          UpdH(Pages3, ClientHeight div 4);
           //pos
           FSplit1.Top:= ClientHeight;
           Pages2.Top:= ClientHeight;
@@ -785,9 +807,9 @@ begin
           FSplit2.Align:= alLeft;
           FSplit3.Align:= alTop;
           //size
-          Pages1.Width:= ClientWidth div 2;
-          Pages3.Width:= ClientWidth div 2;
-          FPanel1.Height:= ClientHeight div 2;
+          UpdW(Pages1, ClientWidth div 2);
+          UpdW(Pages3, ClientWidth div 2);
+          UpdH(FPanel1, ClientHeight div 2);
           //pos-a
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
@@ -813,8 +835,8 @@ begin
           FSplit2.Align:= alTop;
           FSplit3.Align:= alLeft;
           //size
-          Pages2.Height:= ClientHeight div 2;
-          FPanel1.Width:= ClientWidth div 2;
+          UpdH(Pages2, ClientHeight div 2);
+          UpdW(FPanel1, ClientWidth div 2);
           //pos-b
           FSplit2.Top:= ClientHeight;
           Pages4.Top:= ClientHeight;
@@ -841,11 +863,11 @@ begin
           FSplit4.Align:= alLeft;
           FSplit5.Align:= alLeft;
           //size
-          Pages1.Width:= ClientWidth div 3;
-          Pages2.Width:= ClientWidth div 3;
-          Pages4.Width:= ClientWidth div 3;
-          Pages5.Width:= ClientWidth div 3;
-          FPanel1.Height:= ClientHeight div 2;
+          UpdW(Pages1, ClientWidth div 3);
+          UpdW(Pages2, ClientWidth div 3);
+          UpdW(Pages4, ClientWidth div 3);
+          UpdW(Pages5, ClientWidth div 3);
+          UpdH(FPanel1, ClientHeight div 2);
           //pos-a
           FSplit1.Left:= ClientWidth;
           Pages2.Left:= ClientWidth;
@@ -876,9 +898,9 @@ end;
 procedure TATGroups.Split1Moved(Sender: TObject);
 begin
   if FMode=gm4Grid then
-    Pages3.Width:= Pages1.Width;
+    UpdW(Pages3, Pages1.Width);
   if FMode=gm6Grid then
-    Pages4.Width:= Pages1.Width;
+    UpdW(Pages4, Pages1.Width);
 
   SaveSplitPos;
 end;
@@ -886,9 +908,9 @@ end;
 procedure TATGroups.Split2Moved(Sender: TObject);
 begin
   if FMode=gm4Grid then
-    Pages1.Width:= Pages3.Width;
+    UpdW(Pages1, Pages3.Width);
   if FMode=gm6Grid then
-    Pages5.Width:= Pages2.Width;
+    UpdW(Pages5, Pages2.Width);
 
   SaveSplitPos;
 end;
@@ -901,7 +923,7 @@ end;
 procedure TATGroups.Split4Moved(Sender: TObject);
 begin
   if FMode=gm6Grid then
-    Pages1.Width:= Pages4.Width;
+    UpdW(Pages1, Pages4.Width);
 
   SaveSplitPos;
 end;
@@ -909,7 +931,7 @@ end;
 procedure TATGroups.Split5Moved(Sender: TObject);
 begin
   if FMode=gm6Grid then
-    Pages2.Width:= Pages5.Width;
+    UpdW(Pages2, Pages5.Width);
 
   SaveSplitPos;
 end;
@@ -1042,36 +1064,36 @@ begin
     gm3Horz,
     gm4Horz:
       begin
-        Pages1.Width:= Trunc(FPos1 * ClientWidth);
-        Pages2.Width:= Trunc(FPos2 * ClientWidth);
-        Pages3.Width:= Trunc(FPos3 * ClientWidth);
+        UpdW(Pages1, Trunc(FPos1 * ClientWidth));
+        UpdW(Pages2, Trunc(FPos2 * ClientWidth));
+        UpdW(Pages3, Trunc(FPos3 * ClientWidth));
       end;
     gm2Vert,
     gm3Vert,
     gm4Vert:
       begin
-        Pages1.Height:= Trunc(FPos1 * ClientHeight);
-        Pages2.Height:= Trunc(FPos2 * ClientHeight);
-        Pages3.Height:= Trunc(FPos3 * ClientHeight);
+        UpdH(Pages1, Trunc(FPos1 * ClientHeight));
+        UpdH(Pages2, Trunc(FPos2 * ClientHeight));
+        UpdH(Pages3, Trunc(FPos3 * ClientHeight));
       end;
     gm3Plus:
       begin
-        FPanel1.Width:= Trunc(FPos1 * ClientWidth);
-        Pages2.Height:= Trunc(FPos2 * ClientHeight);
+        UpdW(FPanel1, Trunc(FPos1 * ClientWidth));
+        UpdH(Pages2, Trunc(FPos2 * ClientHeight));
       end;
     gm4Grid:
       begin
-        Pages1.Width:= Trunc(FPos1 * ClientWidth);
-        Pages3.Width:= Trunc(FPos2 * ClientWidth);
-        FPanel1.Height:= Trunc(FPos3 * ClientHeight);
+        UpdW(Pages1, Trunc(FPos1 * ClientWidth));
+        UpdW(Pages3, Trunc(FPos2 * ClientWidth));
+        UpdH(FPanel1, Trunc(FPos3 * ClientHeight));
       end;
     gm6Grid:
       begin
-        Pages1.Width:= Trunc(FPos1 * ClientWidth);
-        Pages2.Width:= Trunc(FPos2 * ClientWidth);
-        FPanel1.Height:= Trunc(FPos3 * ClientHeight);
-        Pages4.Width:= Trunc(FPos4 * ClientWidth);
-        Pages5.Width:= Trunc(FPos5 * ClientWidth);
+        UpdW(Pages1, Trunc(FPos1 * ClientWidth));
+        UpdW(Pages2, Trunc(FPos2 * ClientWidth));
+        UpdH(FPanel1, Trunc(FPos3 * ClientHeight));
+        UpdW(Pages4, Trunc(FPos4 * ClientWidth));
+        UpdW(Pages5, Trunc(FPos5 * ClientWidth));
       end;
   end;
 end;
@@ -1131,17 +1153,17 @@ begin
   case FMode of
     gm2Horz:
       begin
-        Pages1.Width:= ClientWidth * N div 100;
+        UpdW(Pages1, ClientWidth * N div 100);
         SaveSplitPos;
       end;
     gm2Vert:
       begin
-        Pages1.Height:= ClientHeight * N div 100;
+        UpdH(Pages1, ClientHeight * N div 100);
         SaveSplitPos;
       end;
     gm3Plus:
       begin
-        FPanel1.Width:= ClientWidth * N div 100;
+        UpdW(FPanel1, ClientWidth * N div 100);
         SaveSplitPos;
       end;
   end;
@@ -1322,23 +1344,23 @@ begin
         //
         tabOptionBottomTabs:
           begin
-            TabBottom:= Bool(N);
+            TabBottom:= Boolean(N);
             if TabBottom then Align:= alBottom else Align:= alTop;
           end;
         tabOptionAngle:
           TabAngle:= N;  
         tabOptionShowTabs:
-          Visible:= Bool(N);  
+          Visible:= Boolean(N);  
         tabOptionShowXButtons:
           TabShowClose:= TATTabShowClose(N);
         tabOptionShowPlus:
-          TabShowPlus:= Bool(N);
+          TabShowPlus:= Boolean(N);
         tabOptionShowNums:
-          TabNumPrefix:= IfThen(Bool(N), '%d. ', '');
+          TabNumPrefix:= IfThen(Boolean(N), '%d. ', '');
         tabOptionShowEntireColor:
-          TabShowEntireColor:= Bool(N);  
+          TabShowEntireColor:= Boolean(N);  
         tabOptionDragDrop:
-          TabDragEnabled:= Bool(N);
+          TabDragEnabled:= Boolean(N);
         tabOptionWidthMin:
           TabWidthMin:= N;  
         tabOptionWidthMax:
@@ -1562,4 +1584,3 @@ begin
 end;
 
 end.
-
