@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="9">
+      <Unit0>
+        <Filename Value="demo.dpr"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="37" Y="9"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="unfmtest.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fmTest"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="unfmtest"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="97"/>
+        <CursorPos X="53" Y="105"/>
+        <UsageCount Value="20"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="unit_dbg.pas"/>
+        <ComponentName Value="FormDbg"/>
+        <ResourceBaseClass Value="Form"/>
+        <TopLine Value="21"/>
+        <CursorPos X="36" Y="28"/>
+        <UsageCount Value="22"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="ATGroups.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="473"/>
+        <CursorPos Y="478"/>
+        <UsageCount Value="11"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="E:\lazarus\lcl\controls.pp"/>
+        <TopLine Value="611"/>
+        <CursorPos X="14" Y="616"/>
+        <UsageCount Value="10"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="E:\lazarus15\lazarus\lcl\include\control.inc"/>
+        <TopLine Value="3982"/>
+        <CursorPos X="3" Y="3990"/>
+        <UsageCount Value="10"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="E:\lazarus15\lazarus\lcl\include\wincontrol.inc"/>
+        <TopLine Value="3997"/>
+        <CursorPos Y="4007"/>
+        <UsageCount Value="10"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="E:\lazarus15\lazarus\lcl\controls.pp"/>
+        <TopLine Value="1171"/>
+        <CursorPos X="15" Y="1178"/>
+        <UsageCount Value="10"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="ATTabs.pas"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="1"/>
+        <TopLine Value="18"/>
+        <CursorPos Y="30"/>
+        <UsageCount Value="10"/>
+      </Unit8>
+    </Units>
+    <JumpHistory Count="2" HistoryIndex="1">
+      <Position1>
+        <Filename Value="Demo.dpr"/>
+        <Caret Line="9"/>
+      </Position1>
+      <Position2>
+        <Filename Value="Demo.dpr"/>
+        <Caret Line="8" Column="30"/>
+      </Position2>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
