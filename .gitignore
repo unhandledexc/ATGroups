@@ -34,3 +34,4 @@ __history/
 lib/
 backup/
 *.bak
+*.lps
