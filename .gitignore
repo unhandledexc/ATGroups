@@ -1,7 +1,7 @@
 # Delphi compiler-generated binaries (safe to delete)
 *.dbg
 *.ico
-##*.exe
+*.exe
 *.dll
 *.bpl
 *.bpi
