@@ -9,6 +9,7 @@ uses
   unfmtest in 'unfmtest.pas' {fmTest};
 
 begin
+  Application.Title:='Demo';
   Application.Initialize;
   Application.CreateForm(TfmTest, fmTest);
   Application.Run;
