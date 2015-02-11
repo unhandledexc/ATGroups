@@ -4,7 +4,7 @@
   {$define SP}
 {$endif}
 
-unit unfmtest;
+unit demoform;
 
 interface
 

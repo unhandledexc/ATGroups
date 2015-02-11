@@ -6,10 +6,10 @@ uses
   Interfaces,
   {$endif}
   ATGroups in 'ATGroups.pas',
-  unfmtest in 'unfmtest.pas' {fmTest};
+  demoform in 'demoform.pas' {fmTest};
 
 begin
-  Application.Title:='Demo';
+  Application.Title:= 'Demo';
   Application.Initialize;
   Application.CreateForm(TfmTest, fmTest);
   Application.Run;
