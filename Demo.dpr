@@ -5,13 +5,11 @@ uses
   {$ifdef FPC}
   Interfaces,
   {$endif}
-  Unit1 in 'Unit1.pas' {Form1},
-  ATGroups in 'ATGroups.pas';
-
-{$R *.res}
+  ATGroups in 'ATGroups.pas',
+  unfmtest in 'unfmtest.pas' {fmTest};
 
 begin
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TfmTest, fmTest);
   Application.Run;
 end.

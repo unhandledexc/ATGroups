@@ -130,6 +130,8 @@ type
     FPos3,
     FPos4,
     FPos5: Real;
+    FPrevWidth,
+    FPrevHeight: Integer;
     FSplitPopup: TMyPopupMenu;
     FMode: TATGroupsMode;
     FOnTabPopup: TNotifyEvent;
@@ -233,22 +235,25 @@ uses
   {$endif}
   Math, Dialogs;
 
+const
+  cAbsMin = 4;
+
 procedure UpdW(C: TControl; Value: Integer);
 begin
   if C.Align<>alClient then
-  begin
-    C.Width:= Value;
-    if C.Width<>Value then
-      ShowMessage('UpdW cannot update width of '+C.Name);
-  end;
+    if Value>cAbsMin then
+    begin
+      C.Width:= Value;
+    end;
 end;
 
 procedure UpdH(C: TControl; Value: Integer);
 begin
   if C.Align<>alClient then
-  begin
-    C.Height:= Value;
-  end;
+    if Value>cAbsMin then
+    begin
+      C.Height:= Value;
+    end;
 end;
 
 function PtInControl(Control: TControl; const ScreenPnt: TPoint): boolean;
@@ -471,6 +476,20 @@ begin
   FSplit5.Parent:= Self;
   FSplit5.OnMoved:= Split5Moved;
   FSplit5.MinSize:= cMinSize;
+
+  FSplit1.ResizeStyle:= rsPattern;
+  FSplit2.ResizeStyle:= rsPattern;
+  FSplit3.ResizeStyle:= rsPattern;
+  FSplit4.ResizeStyle:= rsPattern;
+  FSplit5.ResizeStyle:= rsPattern;
+  
+  {$ifdef fpc}
+  FSplit1.AutoSnap:= false;
+  FSplit2.AutoSnap:= false;
+  FSplit3.AutoSnap:= false;
+  FSplit4.AutoSnap:= false;
+  FSplit5.AutoSnap:= false;
+  {$endif}
 
   FPanel1:= TPanel.Create(Self);
   FPanel1.Parent:= Self;
@@ -1100,7 +1119,14 @@ end;
 
 procedure TATGroups.Resize;
 begin
-  RestoreSplitPos;
+  //Logic FPrev* needed for Lazarus!! laz calls onresize also for internal things like
+  //splitter move and this causes bad things (resize group1 to width=0 in horz-view)
+  if (FPrevWidth<>Width) or (FPrevHeight<>Height) then
+  begin
+    FPrevWidth:= Width;
+    FPrevHeight:= Height;
+    RestoreSplitPos;
+  end;
 end;
 
 

@@ -33,3 +33,4 @@ __history/
 
 lib/
 backup/
+*.bak

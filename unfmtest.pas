@@ -4,12 +4,17 @@
   {$define SP}
 {$endif}
 
-unit Unit1;
+unit unfmtest;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  {$ifdef fpc}
+  LclType, //mb_okcancel
+  {$else}
+  Windows,
+  {$endif}
+  Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ATGroups, StdCtrls, ExtCtrls, ATTabs, Menus,
   {$ifdef SP}
   SpTbxSkins,
@@ -17,7 +22,8 @@ uses
   ComCtrls;
 
 type
-  TForm1 = class(TForm)
+  { TfmTest }
+  TfmTest = class(TForm)
     PopupMenu1: TPopupMenu;
     mnuClose: TMenuItem;
     MainMenu1: TMainMenu;
@@ -69,7 +75,9 @@ type
     N5: TMenuItem;
     N6: TMenuItem;
     mnuCloseLt: TMenuItem;
+    mnuTreeToggle: TMenuItem;
     procedure FormCreate(Sender: TObject);
+    procedure mnuTreeToggleClick(Sender: TObject);
     procedure N11Click(Sender: TObject);
     procedure N2horz1Click(Sender: TObject);
     procedure N2vert1Click(Sender: TObject);
@@ -108,7 +116,6 @@ type
     procedure mnuCloseOthSameClick(Sender: TObject);
     procedure mnuCloseOthAllClick(Sender: TObject);
     procedure mnuCloseAllThisClick(Sender: TObject);
-    procedure mTreeClick(Sender: TObject);
     procedure mnuCloseRtClick(Sender: TObject);
     procedure mnuCloseLtClick(Sender: TObject);
   private
@@ -128,13 +135,17 @@ type
   end;
 
 var
-  Form1: TForm1;
+  fmTest: TfmTest;
 
 implementation
 
+{$ifdef fpc}
+{$R *.lfm}
+{$else}
 {$R *.dfm}
+{$endif}
 
-procedure TForm1.AddTab(Pages: TATPages);
+procedure TfmTest.AddTab(Pages: TATPages);
 var
   F: TMemo;
   i: Integer;
@@ -154,7 +165,7 @@ begin
 end;
 
 
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TfmTest.FormCreate(Sender: TObject);
 begin
   Tree.FullExpand;
   {$ifdef SP}
@@ -184,12 +195,17 @@ begin
   AddTab(Groups.Pages2);
 end;
 
-procedure TForm1.TabAdd(Sender: TObject);
+procedure TfmTest.mnuTreeToggleClick(Sender: TObject);
+begin
+  with Tree do Visible:= not Visible;
+end;
+
+procedure TfmTest.TabAdd(Sender: TObject);
 begin
   AddTab((Sender as TATTabs).Parent as TATPages);
 end;
 
-procedure TForm1.TabClose(Sender: TObject; ATabIndex: Integer;
+procedure TfmTest.TabClose(Sender: TObject; ATabIndex: Integer;
   var ACanClose, ACanContinue: boolean);
 var
   D: TATTabData;
@@ -207,7 +223,7 @@ begin
     D.TabObject.Free;
 end;
 
-procedure TForm1.TabPopup(S: TObject);
+procedure TfmTest.TabPopup(S: TObject);
 var
   D: TATTabData;
   P: TPoint;
@@ -220,97 +236,97 @@ begin
   PopupMenu1.Popup(P.X, P.Y);
 end;
 
-procedure TForm1.N11Click(Sender: TObject);
+procedure TfmTest.N11Click(Sender: TObject);
 begin
   Groups.Mode:= gmOne;
 end;
 
-procedure TForm1.N2horz1Click(Sender: TObject);
+procedure TfmTest.N2horz1Click(Sender: TObject);
 begin
   Groups.Mode:= gm2Horz;
 end;
 
-procedure TForm1.N2vert1Click(Sender: TObject);
+procedure TfmTest.N2vert1Click(Sender: TObject);
 begin
   Groups.Mode:= gm2Vert;
 end;
 
-procedure TForm1.N3horz1Click(Sender: TObject);
+procedure TfmTest.N3horz1Click(Sender: TObject);
 begin
   Groups.Mode:= gm3Horz;
 end;
 
-procedure TForm1.N3vert1Click(Sender: TObject);
+procedure TfmTest.N3vert1Click(Sender: TObject);
 begin
   Groups.Mode:= gm3Vert;
 end;
 
-procedure TForm1.N121Click(Sender: TObject);
+procedure TfmTest.N121Click(Sender: TObject);
 begin
   Groups.Mode:= gm3Plus;
 end;
 
-procedure TForm1.N4horz1Click(Sender: TObject);
+procedure TfmTest.N4horz1Click(Sender: TObject);
 begin
   Groups.Mode:= gm4Horz;
 end;
 
-procedure TForm1.N4vert1Click(Sender: TObject);
+procedure TfmTest.N4vert1Click(Sender: TObject);
 begin
   Groups.Mode:= gm4Vert;
 end;
 
-procedure TForm1.N4grid1Click(Sender: TObject);
+procedure TfmTest.N4grid1Click(Sender: TObject);
 begin
   Groups.Mode:= gm4Grid;
 end;
 
-procedure TForm1.N6grid1Click(Sender: TObject);
+procedure TfmTest.N6grid1Click(Sender: TObject);
 begin
   Groups.Mode:= gm6Grid;
 end;
 
-procedure TForm1.FormShow(Sender: TObject);
+procedure TfmTest.FormShow(Sender: TObject);
 begin
   Groups.Mode:= gm2Horz;
 end;
 
-procedure TForm1.MoveTabTo(Num: Integer);
+procedure TfmTest.MoveTabTo(Num: Integer);
 begin
   Groups.MoveTab(Groups.PopupPages, Groups.PopupTabIndex, Groups.Pages[Num], -1, false);
 end;
 
-procedure TForm1.m1Click(Sender: TObject);
+procedure TfmTest.m1Click(Sender: TObject);
 begin
   MoveTabTo(1);
 end;
 
-procedure TForm1.m2Click(Sender: TObject);
+procedure TfmTest.m2Click(Sender: TObject);
 begin
   MoveTabTo(2);
 end;
 
-procedure TForm1.m3Click(Sender: TObject);
+procedure TfmTest.m3Click(Sender: TObject);
 begin
   MoveTabTo(3);
 end;
 
-procedure TForm1.m4Click(Sender: TObject);
+procedure TfmTest.m4Click(Sender: TObject);
 begin
   MoveTabTo(4);
 end;
 
-procedure TForm1.togroup51Click(Sender: TObject);
+procedure TfmTest.togroup51Click(Sender: TObject);
 begin
   MoveTabTo(5);
 end;
 
-procedure TForm1.togroup61Click(Sender: TObject);
+procedure TfmTest.togroup61Click(Sender: TObject);
 begin
   MoveTabTo(6);
 end;
 
-procedure TForm1.TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TfmTest.TreeDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
   N: TTreeNode;
   S: string;
@@ -324,57 +340,57 @@ begin
   Tree.FullExpand;
 end;
 
-procedure TForm1.Next1Click(Sender: TObject);
+procedure TfmTest.Next1Click(Sender: TObject);
 begin
   Groups.PagesSetNext(true);
 end;
 
-procedure TForm1.Pr1Click(Sender: TObject);
+procedure TfmTest.Pr1Click(Sender: TObject);
 begin
   Groups.PagesSetNext(false);
 end;
 
-procedure TForm1.N12Click(Sender: TObject);
+procedure TfmTest.N12Click(Sender: TObject);
 begin
-  if not Groups.PagesSetIndex(1) then beep;
+  if not Groups.PagesSetIndex(1) then Beep;
 end;
 
-procedure TForm1.N21Click(Sender: TObject);
+procedure TfmTest.N21Click(Sender: TObject);
 begin
-  if not Groups.PagesSetIndex(2) then beep;
+  if not Groups.PagesSetIndex(2) then Beep;
 end;
 
-procedure TForm1.N31Click(Sender: TObject);
+procedure TfmTest.N31Click(Sender: TObject);
 begin
-  if not Groups.PagesSetIndex(3) then beep;
+  if not Groups.PagesSetIndex(3) then Beep;
 end;
 
-procedure TForm1.N41Click(Sender: TObject);
+procedure TfmTest.N41Click(Sender: TObject);
 begin
-  if not Groups.PagesSetIndex(4) then beep;
+  if not Groups.PagesSetIndex(4) then Beep;
 end;
 
-procedure TForm1.group51Click(Sender: TObject);
+procedure TfmTest.group51Click(Sender: TObject);
 begin
-  if not Groups.PagesSetIndex(5) then beep;
+  if not Groups.PagesSetIndex(5) then Beep;
 end;
 
-procedure TForm1.group61Click(Sender: TObject);
+procedure TfmTest.group61Click(Sender: TObject);
 begin
-  if not Groups.PagesSetIndex(6) then beep;
+  if not Groups.PagesSetIndex(6) then Beep;
 end;
 
-procedure TForm1.mNextClick(Sender: TObject);
+procedure TfmTest.mNextClick(Sender: TObject);
 begin
   Groups.MovePopupTabToNext(true);
 end;
 
-procedure TForm1.mPreClick(Sender: TObject);
+procedure TfmTest.mPreClick(Sender: TObject);
 begin
   Groups.MovePopupTabToNext(false);
 end;
 
-procedure TForm1.TabFocus(S: TObject);
+procedure TfmTest.TabFocus(S: TObject);
 var
   D: TATTabData;
 begin
@@ -385,64 +401,59 @@ begin
   end;
 end;
 
-procedure TForm1.MemoFocus(S: TObject);
+procedure TfmTest.MemoFocus(S: TObject);
 begin
   Groups.PagesCurrent:= (S as TMemo).Parent as TATPages;
   Caption:= Format('Group: %d', [Groups.PagesIndexOf(Groups.PagesCurrent)]);
 end;
 
-procedure TForm1.tonext1Click(Sender: TObject);
+procedure TfmTest.tonext1Click(Sender: TObject);
 begin
   Groups.MoveCurrentTabToNext(true);
 end;
 
-procedure TForm1.toprev1Click(Sender: TObject);
+procedure TfmTest.toprev1Click(Sender: TObject);
 begin
   Groups.MoveCurrentTabToNext(false);
 end;
 
-procedure TForm1.TreeDragOver(Sender, Source: TObject; X, Y: Integer;
+procedure TfmTest.TreeDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
   Accept:= true;
 end;
 
-procedure TForm1.toothergroup1Click(Sender: TObject);
+procedure TfmTest.toothergroup1Click(Sender: TObject);
 begin
   Groups.MoveCurrentTabToOpposite;
 end;
 
-procedure TForm1.mnuCloseThisClick(Sender: TObject);
+procedure TfmTest.mnuCloseThisClick(Sender: TObject);
 begin
   Groups.PopupPages.Tabs.DeleteTab(Groups.PopupTabIndex, true, true);
 end;
 
-procedure TForm1.mnuCloseOthSameClick(Sender: TObject);
+procedure TfmTest.mnuCloseOthSameClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseOthersThisPage, true);
 end;
 
-procedure TForm1.mnuCloseOthAllClick(Sender: TObject);
+procedure TfmTest.mnuCloseOthAllClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseOthersAllPages, true);
 end;
 
-procedure TForm1.mnuCloseAllClick(Sender: TObject);
+procedure TfmTest.mnuCloseAllClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseAll, false);
 end;
 
-procedure TForm1.mnuCloseAllThisClick(Sender: TObject);
+procedure TfmTest.mnuCloseAllThisClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseAllThisPage, true);
 end;
 
-procedure TForm1.mTreeClick(Sender: TObject);
-begin
-  with Tree do Visible:= not Visible;
-end;
-
-procedure TForm1.TabOver(S: TObject; N: Integer);
+procedure TfmTest.TabOver(S: TObject; N: Integer);
 begin
   if N>=0 then
     Status.SimpleText:= 'Mouse over tab '+IntToStr(N)
@@ -450,14 +461,15 @@ begin
     Status.SimpleText:= '';  
 end;
 
-procedure TForm1.mnuCloseRtClick(Sender: TObject);
+procedure TfmTest.mnuCloseRtClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseRighterThisPage, true);
 end;
 
-procedure TForm1.mnuCloseLtClick(Sender: TObject);
+procedure TfmTest.mnuCloseLtClick(Sender: TObject);
 begin
   Groups.CloseTabs(tabCloseLefterThisPage, true);
 end;
+
 
 end.
