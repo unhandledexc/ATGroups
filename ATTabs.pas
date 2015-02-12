@@ -1359,7 +1359,7 @@ begin
     mi.Tag:= i;
     mi.Caption:= TATTabData(FTabList[i]).TabCaption;
     mi.OnClick:= TabMenuClick;
-    mi.RadioItem:= true;
+    //mi.RadioItem:= true; //bug in Lazarus/gtk2
     mi.Checked:= i=FTabIndex;
     FTabMenu.Items.Add(mi);
   end;
