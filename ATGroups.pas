@@ -88,6 +88,7 @@ type
     tabOptionShowPlus,
     tabOptionShowNums,
     tabOptionShowEntireColor,
+    tabOptionDoubleClickClose,
     tabOptionDragDrop,
     tabOptionWidthMin,
     tabOptionWidthMax,
@@ -1384,7 +1385,9 @@ begin
         tabOptionShowNums:
           TabNumPrefix:= IfThen(Boolean(N), '%d. ', '');
         tabOptionShowEntireColor:
-          TabShowEntireColor:= Boolean(N);  
+          TabShowEntireColor:= Boolean(N);
+        tabOptionDoubleClickClose:
+          TabDoubleClickClose:= Boolean(N);    
         tabOptionDragDrop:
           TabDragEnabled:= Boolean(N);
         tabOptionWidthMin:
