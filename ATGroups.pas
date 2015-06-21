@@ -75,11 +75,14 @@ type
   TATTabsOptionId = (
     tabColorText,
     tabColorTextModified,
+    tabColorBg,
     tabColorBgActive,
     tabColorBgPassive,
     tabColorBgPassiveOver,
     tabColorBorderActive,
     tabColorBorderPassive,
+    tabColorArrow,
+    tabColorArrowOver,
     tabOptionFontSize,
     tabOptionAngle,
     tabOptionBottomTabs,
@@ -1354,6 +1357,11 @@ begin
     with Pages[i].Tabs do
       case Id of
         //
+        tabColorBg:
+          begin
+            Pages[i].Color:= N;
+            ColorBg:= N;
+          end;
         tabColorBgActive: ColorTabActive:= N;
         tabColorBgPassive: ColorTabPassive:= N;
         tabColorBgPassiveOver: ColorTabOver:= N;
@@ -1361,6 +1369,8 @@ begin
         tabColorTextModified: ColorFontModified:= N;
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
+        tabColorArrow: ColorArrow:= N;
+        tabColorArrowOver: ColorArrowOver:= N;
         //
         tabOptionFontSize:
           begin
