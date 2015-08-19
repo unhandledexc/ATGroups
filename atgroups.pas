@@ -93,12 +93,17 @@ type
     tabOptionShowEntireColor,
     tabOptionDoubleClickClose,
     tabOptionDragDrop,
+    tabOptionHeight1,
+    tabOptionHeight2,
     tabOptionWidthMin,
     tabOptionWidthMax,
+    tabOptionIndentInit,
+    tabOptionIndentText,
     tabOptionIndentInter,
     tabOptionIndentColor,
     tabOptionIndentXRight,
-    tabOptionIndentXSize
+    tabOptionIndentXSize,
+    tabOptionWidecharModified
     );
 
 type
@@ -1357,11 +1362,7 @@ begin
     with Pages[i].Tabs do
       case Id of
         //
-        tabColorBg:
-          begin
-            Pages[i].Color:= N;
-            ColorBg:= N;
-          end;
+        tabColorBg: begin Pages[i].Color:= N; ColorBg:= N; end;
         tabColorBgActive: ColorTabActive:= N;
         tabColorBgPassive: ColorTabPassive:= N;
         tabColorBgPassiveOver: ColorTabOver:= N;
@@ -1384,34 +1385,25 @@ begin
             TabBottom:= Boolean(N);
             if TabBottom then Align:= alBottom else Align:= alTop;
           end;
-        tabOptionAngle:
-          TabAngle:= N;  
-        tabOptionShowTabs:
-          Visible:= Boolean(N);  
-        tabOptionShowXButtons:
-          TabShowClose:= TATTabShowClose(N);
-        tabOptionShowPlus:
-          TabShowPlus:= Boolean(N);
-        tabOptionShowNums:
-          TabNumPrefix:= IfThen(Boolean(N), '%d. ', '');
-        tabOptionShowEntireColor:
-          TabShowEntireColor:= Boolean(N);
-        tabOptionDoubleClickClose:
-          TabDoubleClickClose:= Boolean(N);    
-        tabOptionDragDrop:
-          TabDragEnabled:= Boolean(N);
-        tabOptionWidthMin:
-          TabWidthMin:= N;  
-        tabOptionWidthMax:
-          TabWidthMax:= N;
-        tabOptionIndentInter:
-          TabIndentInter:= N;
-        tabOptionIndentColor:
-          TabIndentColor:= N;
-        tabOptionIndentXRight:
-          TabIndentXRight:= N;
-        tabOptionIndentXSize:
-          TabIndentXSize:= N;
+        tabOptionShowTabs:         Visible:= Boolean(N);
+        tabOptionShowXButtons:     TabShowClose:= TATTabShowClose(N);
+        tabOptionShowPlus:         TabShowPlus:= Boolean(N);
+        tabOptionShowNums:         TabNumPrefix:= IfThen(Boolean(N), '%d. ', '');
+        tabOptionShowEntireColor:  TabShowEntireColor:= Boolean(N);
+        tabOptionDoubleClickClose: TabDoubleClickClose:= Boolean(N);
+        tabOptionDragDrop:         TabDragEnabled:= Boolean(N);
+        tabOptionAngle:            TabAngle:= N;
+        tabOptionHeight1:          Height:= N;
+        tabOptionHeight2:          TabHeight:= N;
+        tabOptionWidthMin:         TabWidthMin:= N;
+        tabOptionWidthMax:         TabWidthMax:= N;
+        tabOptionIndentInit:       TabIndentInit:= N;
+        tabOptionIndentText:       TabIndentText:= N;
+        tabOptionIndentInter:      TabIndentInter:= N;
+        tabOptionIndentColor:      TabIndentColor:= N;
+        tabOptionIndentXRight:     TabIndentXRight:= N;
+        tabOptionIndentXSize:      TabIndentXSize:= N;
+        tabOptionWidecharModified: TabShowModifiedText:= Widechar(N);
       end;
 end;
 

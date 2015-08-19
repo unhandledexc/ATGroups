@@ -7,16 +7,16 @@ It's used in SynWrite text editor as app skeleton. It contains 6 page-controls, 
 
 mode 2x1
 
-![img](mode2x1.png?raw=true)
+![img](img/mode2x1.png?raw=true)
 
 mode 1x3
 
-![img](mode1x3.png?raw=true)
+![img](img/mode1x3.png?raw=true)
 
 mode 2x2 grid
 
-![img](mode2x2.png?raw=true)
+![img](img/mode2x2.png?raw=true)
 
 mode 3x2 grid
 
-![img](mode3x2.png?raw=true)
+![img](img/mode3x2.png?raw=true)
