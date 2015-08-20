@@ -81,6 +81,11 @@ type
     tabColorBgPassiveOver,
     tabColorBorderActive,
     tabColorBorderPassive,
+    tabColorCloseBg,
+    tabColorCloseBgOver,
+    tabColorCloseBorderOver,
+    tabColorCloseX,
+    tabColorCloseXOver,
     tabColorArrow,
     tabColorArrowOver,
     tabOptionFontSize,
@@ -1362,7 +1367,16 @@ begin
     with Pages[i].Tabs do
       case Id of
         //
-        tabColorBg: begin Pages[i].Color:= N; ColorBg:= N; end;
+        tabColorBg:
+          begin
+            ColorBg:= N;
+            Pages[i].Color:= N;
+            FSplit1.Color:= N;
+            FSplit2.Color:= N;
+            FSplit3.Color:= N;
+            FSplit4.Color:= N;
+            FSplit5.Color:= N;
+          end;
         tabColorBgActive: ColorTabActive:= N;
         tabColorBgPassive: ColorTabPassive:= N;
         tabColorBgPassiveOver: ColorTabOver:= N;
@@ -1370,6 +1384,11 @@ begin
         tabColorTextModified: ColorFontModified:= N;
         tabColorBorderActive: ColorBorderActive:= N;
         tabColorBorderPassive: ColorBorderPassive:= N;
+        tabColorCloseBg: ColorCloseBg:= N;
+        tabColorCloseBgOver: ColorCloseBgOver:= N;
+        tabColorCloseBorderOver: ColorCloseBorderOver:= N;
+        tabColorCloseX: ColorCloseX:= N;
+        tabColorCloseXOver: ColorCloseXOver:= N;
         tabColorArrow: ColorArrow:= N;
         tabColorArrowOver: ColorArrowOver:= N;
         //
