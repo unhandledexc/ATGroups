@@ -173,8 +173,6 @@ type
     procedure Split4Moved(Sender: TObject);
     procedure Split5Moved(Sender: TObject);
     procedure SplitClick(Sender: TObject);
-    procedure SaveSplitPos;
-    procedure RestoreSplitPos;
     procedure InitSplitterPopup;
     procedure MoveTabsOnModeChanging(Value: TATGroupsMode);
   protected
@@ -188,6 +186,14 @@ type
     Pages6,
     PagesCurrent: TATPages;
     Pages: array[TATGroupsNums] of TATPages;
+    //
+    property Panel1: TPanel read FPanel1;
+    property Splitter1: TMySplitter read FSplit1;
+    property Splitter2: TMySplitter read FSplit2;
+    property Splitter3: TMySplitter read FSplit3;
+    property Splitter4: TMySplitter read FSplit4;
+    property Splitter5: TMySplitter read FSplit5;
+    //
     constructor Create(AOwner: TComponent); override;
     //
     function PagesVisibleCount: Integer;
@@ -223,6 +229,8 @@ type
     property SplitPos: Integer read GetSplitPos write SetSplitPos;
     procedure SplitPosIncrease;
     procedure SplitPosDecrease;
+    procedure SaveSplitPos;
+    procedure RestoreSplitPos;
     //
     property OnTabPopup: TNotifyEvent read FOnTabPopup write FOnTabPopup;
     property OnTabFocus: TNotifyEvent read FOnTabFocus write FOnTabFocus;
