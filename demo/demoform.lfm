@@ -4,7 +4,7 @@ object fmTest: TfmTest
   Top = 240
   Width = 791
   Caption = 'Groups'
-  ClientHeight = 422
+  ClientHeight = 442
   ClientWidth = 791
   Color = clBtnFace
   Font.Color = clWindowText
@@ -14,10 +14,10 @@ object fmTest: TfmTest
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.5'
+  LCLVersion = '1.7'
   object Tree: TTreeView
     Left = 0
-    Height = 399
+    Height = 421
     Top = 0
     Width = 121
     Align = alLeft
@@ -41,8 +41,8 @@ object fmTest: TfmTest
   end
   object Status: TStatusBar
     Left = 0
-    Height = 23
-    Top = 399
+    Height = 21
+    Top = 421
     Width = 791
     Panels = <>
   end
@@ -130,45 +130,49 @@ object fmTest: TfmTest
     top = 96
     object Mode1: TMenuItem
       Caption = 'Mode'
-      object N11: TMenuItem
+      object mnuMode1: TMenuItem
         Caption = 'single'
-        OnClick = N11Click
+        OnClick = mnuMode1Click
       end
-      object N2horz1: TMenuItem
-        Caption = '2 horz'
-        OnClick = N2horz1Click
-      end
-      object N2vert1: TMenuItem
+      object mnuMode2V: TMenuItem
         Caption = '2 vert'
-        OnClick = N2vert1Click
+        OnClick = mnuMode2VClick
       end
-      object N3horz1: TMenuItem
-        Caption = '3 horz'
-        OnClick = N3horz1Click
+      object mnuMode2H: TMenuItem
+        Caption = '2 horz'
+        OnClick = mnuMode2HClick
       end
-      object N3vert1: TMenuItem
+      object mnuMode3V: TMenuItem
         Caption = '3 vert'
-        OnClick = N3vert1Click
+        OnClick = mnuMode3VClick
       end
-      object N121: TMenuItem
-        Caption = '3 as 1+2'
-        OnClick = N121Click
+      object mnuMode3H: TMenuItem
+        Caption = '3 horz'
+        OnClick = mnuMode3HClick
       end
-      object N4horz1: TMenuItem
-        Caption = '4 horz'
-        OnClick = N4horz1Click
+      object modeMode12V: TMenuItem
+        Caption = '1+2 vert'
+        OnClick = modeMode12VClick
       end
-      object N4vert1: TMenuItem
+      object mnuMode12H: TMenuItem
+        Caption = '1+2 horz'
+        OnClick = mnuMode12HClick
+      end
+      object mnuMode4V: TMenuItem
         Caption = '4 vert'
-        OnClick = N4vert1Click
+        OnClick = mnuMode4VClick
       end
-      object N4grid1: TMenuItem
+      object mnuMode4H: TMenuItem
+        Caption = '4 horz'
+        OnClick = mnuMode4HClick
+      end
+      object mnuMode4G: TMenuItem
         Caption = '4 grid'
-        OnClick = N4grid1Click
+        OnClick = mnuMode4GClick
       end
-      object N6grid1: TMenuItem
+      object mnuMode6: TMenuItem
         Caption = '6 grid'
-        OnClick = N6grid1Click
+        OnClick = mnuMode6Click
       end
     end
     object Focus1: TMenuItem

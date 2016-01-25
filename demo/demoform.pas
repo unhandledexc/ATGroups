@@ -24,18 +24,19 @@ uses
 type
   { TfmTest }
   TfmTest = class(TForm)
+    mnuMode12H: TMenuItem;
     PopupMenu1: TPopupMenu;
     mnuClose: TMenuItem;
     MainMenu1: TMainMenu;
     Mode1: TMenuItem;
-    N11: TMenuItem;
-    N2horz1: TMenuItem;
-    N2vert1: TMenuItem;
-    N3horz1: TMenuItem;
-    N3vert1: TMenuItem;
-    N4horz1: TMenuItem;
-    N4vert1: TMenuItem;
-    N4grid1: TMenuItem;
+    mnuMode1: TMenuItem;
+    mnuMode2V: TMenuItem;
+    mnuMode2H: TMenuItem;
+    mnuMode3V: TMenuItem;
+    mnuMode3H: TMenuItem;
+    mnuMode4V: TMenuItem;
+    mnuMode4H: TMenuItem;
+    mnuMode4G: TMenuItem;
     N1: TMenuItem;
     m1: TMenuItem;
     m2: TMenuItem;
@@ -56,14 +57,14 @@ type
     Movetab1: TMenuItem;
     tonext1: TMenuItem;
     toprev1: TMenuItem;
-    N6grid1: TMenuItem;
+    mnuMode6: TMenuItem;
     group51: TMenuItem;
     group61: TMenuItem;
     togroup51: TMenuItem;
     togroup61: TMenuItem;
     N4: TMenuItem;
     toothergroup1: TMenuItem;
-    N121: TMenuItem;
+    modeMode12V: TMenuItem;
     mnuCloseThis: TMenuItem;
     mnuCloseOthSame: TMenuItem;
     mnuCloseOthAll: TMenuItem;
@@ -77,15 +78,16 @@ type
     mnuCloseLt: TMenuItem;
     mnuTreeToggle: TMenuItem;
     procedure FormCreate(Sender: TObject);
+    procedure mnuMode12HClick(Sender: TObject);
     procedure mnuTreeToggleClick(Sender: TObject);
-    procedure N11Click(Sender: TObject);
-    procedure N2horz1Click(Sender: TObject);
-    procedure N2vert1Click(Sender: TObject);
-    procedure N3horz1Click(Sender: TObject);
-    procedure N3vert1Click(Sender: TObject);
-    procedure N4horz1Click(Sender: TObject);
-    procedure N4vert1Click(Sender: TObject);
-    procedure N4grid1Click(Sender: TObject);
+    procedure mnuMode1Click(Sender: TObject);
+    procedure mnuMode2VClick(Sender: TObject);
+    procedure mnuMode2HClick(Sender: TObject);
+    procedure mnuMode3VClick(Sender: TObject);
+    procedure mnuMode3HClick(Sender: TObject);
+    procedure mnuMode4VClick(Sender: TObject);
+    procedure mnuMode4HClick(Sender: TObject);
+    procedure mnuMode4GClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure m1Click(Sender: TObject);
     procedure m2Click(Sender: TObject);
@@ -104,13 +106,13 @@ type
     procedure toprev1Click(Sender: TObject);
     procedure TreeDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
-    procedure N6grid1Click(Sender: TObject);
+    procedure mnuMode6Click(Sender: TObject);
     procedure group51Click(Sender: TObject);
     procedure group61Click(Sender: TObject);
     procedure togroup51Click(Sender: TObject);
     procedure togroup61Click(Sender: TObject);
     procedure toothergroup1Click(Sender: TObject);
-    procedure N121Click(Sender: TObject);
+    procedure modeMode12VClick(Sender: TObject);
     procedure mnuCloseThisClick(Sender: TObject);
     procedure mnuCloseAllClick(Sender: TObject);
     procedure mnuCloseOthSameClick(Sender: TObject);
@@ -195,6 +197,11 @@ begin
   AddTab(Groups.Pages2);
 end;
 
+procedure TfmTest.mnuMode12HClick(Sender: TObject);
+begin
+  Groups.Mode:= gm3PlusHorz;
+end;
+
 procedure TfmTest.mnuTreeToggleClick(Sender: TObject);
 begin
   with Tree do Visible:= not Visible;
@@ -236,52 +243,52 @@ begin
   PopupMenu1.Popup(P.X, P.Y);
 end;
 
-procedure TfmTest.N11Click(Sender: TObject);
+procedure TfmTest.mnuMode1Click(Sender: TObject);
 begin
   Groups.Mode:= gmOne;
 end;
 
-procedure TfmTest.N2horz1Click(Sender: TObject);
+procedure TfmTest.mnuMode2VClick(Sender: TObject);
 begin
   Groups.Mode:= gm2Horz;
 end;
 
-procedure TfmTest.N2vert1Click(Sender: TObject);
+procedure TfmTest.mnuMode2HClick(Sender: TObject);
 begin
   Groups.Mode:= gm2Vert;
 end;
 
-procedure TfmTest.N3horz1Click(Sender: TObject);
+procedure TfmTest.mnuMode3VClick(Sender: TObject);
 begin
   Groups.Mode:= gm3Horz;
 end;
 
-procedure TfmTest.N3vert1Click(Sender: TObject);
+procedure TfmTest.mnuMode3HClick(Sender: TObject);
 begin
   Groups.Mode:= gm3Vert;
 end;
 
-procedure TfmTest.N121Click(Sender: TObject);
+procedure TfmTest.modeMode12VClick(Sender: TObject);
 begin
   Groups.Mode:= gm3Plus;
 end;
 
-procedure TfmTest.N4horz1Click(Sender: TObject);
+procedure TfmTest.mnuMode4VClick(Sender: TObject);
 begin
   Groups.Mode:= gm4Horz;
 end;
 
-procedure TfmTest.N4vert1Click(Sender: TObject);
+procedure TfmTest.mnuMode4HClick(Sender: TObject);
 begin
   Groups.Mode:= gm4Vert;
 end;
 
-procedure TfmTest.N4grid1Click(Sender: TObject);
+procedure TfmTest.mnuMode4GClick(Sender: TObject);
 begin
   Groups.Mode:= gm4Grid;
 end;
 
-procedure TfmTest.N6grid1Click(Sender: TObject);
+procedure TfmTest.mnuMode6Click(Sender: TObject);
 begin
   Groups.Mode:= gm6Grid;
 end;

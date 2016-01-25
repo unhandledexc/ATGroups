@@ -120,6 +120,7 @@ type
     gm3Horz,
     gm3Vert,
     gm3Plus,
+    gm3PlusHorz,
     gm4Horz,
     gm4Vert,
     gm4Grid,
@@ -306,6 +307,7 @@ const
     1,
     2,
     2,
+    3,
     3,
     3,
     3,
@@ -617,7 +619,7 @@ begin
     case FMode of
       gm2Horz, gm2Vert:
         SetSplitterPopup(FSplit1, FSplitPopup);
-      gm3Plus:
+      gm3Plus, gm3PlusHorz:
         SetSplitterPopup(FSplit3, FSplitPopup);
     end;
 
@@ -642,6 +644,24 @@ begin
         FSplit5.Parent:= Self;
         //
         FPanel1.Align:= alLeft;
+      end;
+      gm3PlusHorz:
+      begin
+        FPanel1.Visible:= true;
+        FPanel2.Visible:= true;
+        Pages1.Parent:= FPanel1;
+        Pages2.Parent:= FPanel2;
+        Pages3.Parent:= FPanel2;
+        Pages4.Parent:= FPanel2;
+        Pages5.Parent:= FPanel2;
+        Pages6.Parent:= FPanel2;
+        FSplit1.Parent:= FPanel1;
+        FSplit2.Parent:= FPanel2;
+        FSplit3.Parent:= Self;
+        FSplit4.Parent:= Self;
+        FSplit5.Parent:= Self;
+        //
+        FPanel1.Align:= alTop;
       end;
       gm4Grid:
       begin
@@ -885,6 +905,30 @@ begin
           FSplit3.Left:= ClientWidth;
           FPanel2.Left:= ClientWidth;
         end;
+      gm3PlusHorz:
+        begin
+          FSplit1.Visible:= false;
+          FSplit2.Visible:= true;
+          FSplit3.Visible:= true;
+          FSplit4.Visible:= false;
+          FSplit5.Visible:= false;
+          Pages1.Align:= alClient; //pages1 on panel1
+          Pages2.Align:= alLeft; //pages2 on panel2
+          Pages3.Align:= alClient;
+          Pages4.Align:= alRight;
+          FSplit1.Align:= alLeft;
+          FSplit2.Align:= alLeft;
+          FSplit3.Align:= alTop;
+          //size
+          UpdW(Pages2, ClientWidth div 2);
+          UpdH(FPanel1, ClientHeight div 2);
+          //pos-b
+          FSplit2.Left:= ClientWidth;
+          Pages4.Left:= ClientWidth;
+          //pos-c
+          FSplit3.Top:= ClientHeight;
+          FPanel2.Top:= ClientHeight;
+        end;
       gm6Grid:
         begin
           FSplit1.Visible:= true;
@@ -1078,6 +1122,11 @@ begin
         FPos1:= FPanel1.Width / ClientWidth;
         FPos2:= Pages2.Height / ClientHeight;
       end;
+    gm3PlusHorz:
+      begin
+        FPos1:= FPanel1.Height / ClientHeight;
+        FPos2:= Pages2.Width / ClientWidth;
+      end;
     gm4Grid:
       begin
         FPos1:= Pages1.Width / ClientWidth;
@@ -1121,6 +1170,11 @@ begin
       begin
         UpdW(FPanel1, Trunc(FPos1 * ClientWidth));
         UpdH(Pages2, Trunc(FPos2 * ClientHeight));
+      end;
+    gm3PlusHorz:
+      begin
+        UpdH(FPanel1, Trunc(FPos1 * ClientHeight));
+        UpdW(Pages2, Trunc(FPos2 * ClientWidth));
       end;
     gm4Grid:
       begin
@@ -1191,6 +1245,10 @@ begin
       begin
         Result:= FPanel1.Width * 100 div ClientWidth;
       end;
+    gm3PlusHorz:
+      begin
+        Result:= FPanel1.Height * 100 div ClientHeight;
+      end;
     else
       Result:= 50;
   end;
@@ -1212,6 +1270,11 @@ begin
     gm3Plus:
       begin
         UpdW(FPanel1, ClientWidth * N div 100);
+        SaveSplitPos;
+      end;
+    gm3PlusHorz:
+      begin
+        UpdH(FPanel1, ClientHeight * N div 100);
         SaveSplitPos;
       end;
   end;
