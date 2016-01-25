@@ -119,8 +119,8 @@ type
     gm2Vert,
     gm3Horz,
     gm3Vert,
-    gm3Plus,
-    gm3PlusHorz,
+    gm1plus2Vert,
+    gm1plus2Horz,
     gm4Horz,
     gm4Vert,
     gm4Grid,
@@ -619,7 +619,7 @@ begin
     case FMode of
       gm2Horz, gm2Vert:
         SetSplitterPopup(FSplit1, FSplitPopup);
-      gm3Plus, gm3PlusHorz:
+      gm1plus2Vert, gm1plus2Horz:
         SetSplitterPopup(FSplit3, FSplitPopup);
     end;
 
@@ -627,7 +627,7 @@ begin
       Pages[i].Visible:= i<=cGroupsCount[FMode];
 
     case FMode of
-      gm3Plus:
+      gm1plus2Vert:
       begin
         FPanel1.Visible:= true;
         FPanel2.Visible:= true;
@@ -645,7 +645,7 @@ begin
         //
         FPanel1.Align:= alLeft;
       end;
-      gm3PlusHorz:
+      gm1plus2Horz:
       begin
         FPanel1.Visible:= true;
         FPanel2.Visible:= true;
@@ -881,7 +881,7 @@ begin
           FSplit3.Top:= ClientHeight;
           FPanel2.Top:= ClientHeight;
         end;
-      gm3Plus:
+      gm1plus2Vert:
         begin
           FSplit1.Visible:= false;
           FSplit2.Visible:= true;
@@ -905,7 +905,7 @@ begin
           FSplit3.Left:= ClientWidth;
           FPanel2.Left:= ClientWidth;
         end;
-      gm3PlusHorz:
+      gm1plus2Horz:
         begin
           FSplit1.Visible:= false;
           FSplit2.Visible:= true;
@@ -1117,12 +1117,12 @@ begin
         FPos2:= Pages2.Height / ClientHeight;
         FPos3:= Pages3.Height / ClientHeight;
       end;
-    gm3Plus:
+    gm1plus2Vert:
       begin
         FPos1:= FPanel1.Width / ClientWidth;
         FPos2:= Pages2.Height / ClientHeight;
       end;
-    gm3PlusHorz:
+    gm1plus2Horz:
       begin
         FPos1:= FPanel1.Height / ClientHeight;
         FPos2:= Pages2.Width / ClientWidth;
@@ -1166,12 +1166,12 @@ begin
         UpdH(Pages2, Trunc(FPos2 * ClientHeight));
         UpdH(Pages3, Trunc(FPos3 * ClientHeight));
       end;
-    gm3Plus:
+    gm1plus2Vert:
       begin
         UpdW(FPanel1, Trunc(FPos1 * ClientWidth));
         UpdH(Pages2, Trunc(FPos2 * ClientHeight));
       end;
-    gm3PlusHorz:
+    gm1plus2Horz:
       begin
         UpdH(FPanel1, Trunc(FPos1 * ClientHeight));
         UpdW(Pages2, Trunc(FPos2 * ClientWidth));
@@ -1241,11 +1241,11 @@ begin
       begin
         Result:= Pages1.Height * 100 div ClientHeight;
       end;
-    gm3Plus:
+    gm1plus2Vert:
       begin
         Result:= FPanel1.Width * 100 div ClientWidth;
       end;
-    gm3PlusHorz:
+    gm1plus2Horz:
       begin
         Result:= FPanel1.Height * 100 div ClientHeight;
       end;
@@ -1267,12 +1267,12 @@ begin
         UpdH(Pages1, ClientHeight * N div 100);
         SaveSplitPos;
       end;
-    gm3Plus:
+    gm1plus2Vert:
       begin
         UpdW(FPanel1, ClientWidth * N div 100);
         SaveSplitPos;
       end;
-    gm3PlusHorz:
+    gm1plus2Horz:
       begin
         UpdH(FPanel1, ClientHeight * N div 100);
         SaveSplitPos;

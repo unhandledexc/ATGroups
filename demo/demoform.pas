@@ -199,7 +199,7 @@ end;
 
 procedure TfmTest.mnuMode12HClick(Sender: TObject);
 begin
-  Groups.Mode:= gm3PlusHorz;
+  Groups.Mode:= gm1plus2Horz;
 end;
 
 procedure TfmTest.mnuTreeToggleClick(Sender: TObject);
@@ -270,7 +270,7 @@ end;
 
 procedure TfmTest.modeMode12VClick(Sender: TObject);
 begin
-  Groups.Mode:= gm3Plus;
+  Groups.Mode:= gm1plus2Vert;
 end;
 
 procedure TfmTest.mnuMode4VClick(Sender: TObject);
