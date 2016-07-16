@@ -21,7 +21,7 @@ object fmTest: TfmTest
     Left = 0
     Top = 0
     Width = 121
-    Height = 415
+    Height = 414
     Align = alLeft
     DragMode = dmAutomatic
     HideSelection = False
@@ -40,7 +40,7 @@ object fmTest: TfmTest
   end
   object Status: TStatusBar
     Left = 0
-    Top = 415
+    Top = 414
     Width = 775
     Height = 19
     Panels = <>
@@ -130,109 +130,113 @@ object fmTest: TfmTest
     Top = 96
     object Mode1: TMenuItem
       Caption = 'Mode'
-      object N11: TMenuItem
+      object mnuMode1: TMenuItem
         Caption = 'single'
-        OnClick = N11Click
+        OnClick = mnuMode1Click
       end
-      object N2horz1: TMenuItem
+      object mnuMode2H: TMenuItem
         Caption = '2 horz'
-        OnClick = N2horz1Click
+        OnClick = mnuMode2HClick
       end
-      object N2vert1: TMenuItem
+      object mnuMode2V: TMenuItem
         Caption = '2 vert'
-        OnClick = N2vert1Click
+        OnClick = mnuMode2VClick
       end
-      object N3horz1: TMenuItem
+      object mnuMode3H: TMenuItem
         Caption = '3 horz'
-        OnClick = N3horz1Click
+        OnClick = mnuMode3HClick
       end
-      object N3vert1: TMenuItem
+      object mnuMode3V: TMenuItem
         Caption = '3 vert'
-        OnClick = N3vert1Click
+        OnClick = mnuMode3VClick
       end
-      object N121: TMenuItem
-        Caption = '3 as 1+2'
-        OnClick = N121Click
+      object mnuMode12H: TMenuItem
+        Caption = '3 as 1+2 horz'
+        OnClick = mnuMode12HClick
       end
-      object N4horz1: TMenuItem
+      object mnuMode12V: TMenuItem
+        Caption = '3 as 1+2 vert'
+        OnClick = mnuMode12VClick
+      end
+      object mnuMode4H: TMenuItem
         Caption = '4 horz'
-        OnClick = N4horz1Click
+        OnClick = mnuMode4HClick
       end
-      object N4vert1: TMenuItem
+      object mnuMode4V: TMenuItem
         Caption = '4 vert'
-        OnClick = N4vert1Click
+        OnClick = mnuMode4VClick
       end
-      object N4grid1: TMenuItem
+      object mnuMode4G: TMenuItem
         Caption = '4 grid'
-        OnClick = N4grid1Click
+        OnClick = mnuMode4GClick
       end
-      object N6grid1: TMenuItem
+      object mnuMode6: TMenuItem
         Caption = '6 grid'
-        OnClick = N6grid1Click
+        OnClick = mnuMode6Click
       end
     end
     object Focus1: TMenuItem
       Caption = 'Focus'
-      object N12: TMenuItem
+      object mnuG1: TMenuItem
         Caption = 'group 1'
         ShortCut = 112
-        OnClick = N12Click
+        OnClick = mnuG1Click
       end
-      object N21: TMenuItem
+      object mnuG2: TMenuItem
         Caption = 'group 2'
         ShortCut = 113
-        OnClick = N21Click
+        OnClick = mnuG2Click
       end
-      object N31: TMenuItem
+      object mnuG3: TMenuItem
         Caption = 'group 3'
         ShortCut = 114
-        OnClick = N31Click
+        OnClick = mnuG3Click
       end
-      object N41: TMenuItem
+      object mnuG4: TMenuItem
         Caption = 'group 4'
         ShortCut = 115
-        OnClick = N41Click
+        OnClick = mnuG4Click
       end
-      object group51: TMenuItem
+      object mnuG5: TMenuItem
         Caption = 'group 5'
         ShortCut = 116
-        OnClick = group51Click
+        OnClick = mnuG5Click
       end
-      object group61: TMenuItem
+      object mnuG6: TMenuItem
         Caption = 'group 6'
         ShortCut = 117
-        OnClick = group61Click
+        OnClick = mnuG6Click
       end
       object N2: TMenuItem
         Caption = '-'
       end
-      object Next1: TMenuItem
+      object mnuGNext: TMenuItem
         Caption = 'group next'
         ShortCut = 120
-        OnClick = Next1Click
+        OnClick = mnuGNextClick
       end
-      object Pr1: TMenuItem
+      object mnuGPrev: TMenuItem
         Caption = 'group prev'
         ShortCut = 121
-        OnClick = Pr1Click
+        OnClick = mnuGPrevClick
       end
     end
     object Movetab1: TMenuItem
       Caption = 'Move current tab'
-      object tonext1: TMenuItem
+      object mnuMoveNext: TMenuItem
         Caption = 'to next group'
-        OnClick = tonext1Click
+        OnClick = mnuMoveNextClick
       end
-      object toprev1: TMenuItem
+      object mnuMovePrev: TMenuItem
         Caption = 'to prev group'
-        OnClick = toprev1Click
+        OnClick = mnuMovePrevClick
       end
       object N4: TMenuItem
         Caption = '-'
       end
-      object toothergroup1: TMenuItem
+      object mnuMoveOpp: TMenuItem
         Caption = 'to opposite group (1->2, 2..6->1)'
-        OnClick = toothergroup1Click
+        OnClick = mnuMoveOppClick
       end
     end
     object mTree: TMenuItem

@@ -35,7 +35,7 @@
     </RequiredPackages>
     <Units Count="2">
       <Unit0>
-        <Filename Value="demo.dpr"/>
+        <Filename Value="demo.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>

@@ -1,42 +1,23 @@
-{$ifdef FPC}
-  {$mode delphi}
-{$else}
-  {$define SP}
-{$endif}
+{$mode delphi}
 
 unit demoform;
 
 interface
 
 uses
-  {$ifdef fpc}
   LclType, //mb_okcancel
-  {$else}
-  Windows,
-  {$endif}
-  Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ATGroups, StdCtrls, ExtCtrls, ATTabs, Menus,
-  {$ifdef SP}
-  SpTbxSkins,
-  {$endif}
+  SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, ExtCtrls, Menus,
+  ATGroups, ATTabs, 
   ComCtrls;
 
 type
   { TfmTest }
   TfmTest = class(TForm)
-    mnuMode12H: TMenuItem;
     PopupMenu1: TPopupMenu;
     mnuClose: TMenuItem;
     MainMenu1: TMainMenu;
     Mode1: TMenuItem;
-    mnuMode1: TMenuItem;
-    mnuMode2V: TMenuItem;
-    mnuMode2H: TMenuItem;
-    mnuMode3V: TMenuItem;
-    mnuMode3H: TMenuItem;
-    mnuMode4V: TMenuItem;
-    mnuMode4H: TMenuItem;
-    mnuMode4G: TMenuItem;
     N1: TMenuItem;
     m1: TMenuItem;
     m2: TMenuItem;
@@ -57,14 +38,12 @@ type
     Movetab1: TMenuItem;
     tonext1: TMenuItem;
     toprev1: TMenuItem;
-    mnuMode6: TMenuItem;
     group51: TMenuItem;
     group61: TMenuItem;
     togroup51: TMenuItem;
     togroup61: TMenuItem;
     N4: TMenuItem;
     toothergroup1: TMenuItem;
-    modeMode12V: TMenuItem;
     mnuCloseThis: TMenuItem;
     mnuCloseOthSame: TMenuItem;
     mnuCloseOthAll: TMenuItem;
@@ -141,11 +120,7 @@ var
 
 implementation
 
-{$ifdef fpc}
 {$R *.lfm}
-{$else}
-{$R *.dfm}
-{$endif}
 
 procedure TfmTest.AddTab(Pages: TATPages);
 var
