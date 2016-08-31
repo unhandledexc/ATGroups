@@ -77,7 +77,7 @@ type
 
 type
   TATTriType = (triDown, triLeft, triRight);
-  TATTabShowClose = (tbShowNone, tbShowAll, tbShowActive);
+  TATTabShowClose = (tbShowNone, tbShowAll, tbShowActive, tbShowMouseOver);
 
 //int constants for GetTabAt
 const
@@ -179,6 +179,7 @@ type
     procedure DoPaintXTo(C: TCanvas; const R: TRect; ATabBg, ATabCloseBg,
       ATabCloseBorder, ATabCloseXMark: TColor);
     procedure DoPaintDropMark(C: TCanvas);
+    procedure SetTabAngle(AValue: Integer);
     procedure SetTabIndex(AIndex: Integer);
     procedure GetTabCloseColor(AIndex: Integer; const ARect: TRect; var AColorXBg,
       AColorXBorder, AColorXMark: TColor);
@@ -250,7 +251,7 @@ type
     property ColorArrowOver: TColor read FColorArrowOver write FColorArrowOver;
     //spaces
     property TabBottom: boolean read FTabBottom write FTabBottom;
-    property TabAngle: Integer read FTabAngle write FTabAngle;
+    property TabAngle: Integer read FTabAngle write SetTabAngle;
     property TabHeight: Integer read FTabHeight write FTabHeight;
     property TabWidthMin: Integer read FTabWidthMin write FTabWidthMin;
     property TabWidthMax: Integer read FTabWidthMax write FTabWidthMax;
@@ -528,7 +529,7 @@ begin
   FColorArrowOver:= $E0E0E0;
 
   FTabBottom:= false;
-  FTabAngle:= 5;
+  FTabAngle:= {$ifdef darwin} 0 {$else} 5 {$endif};
   FTabHeight:= 24;
   FTabWidthMin:= 20;
   FTabWidthMax:= 130;
@@ -1069,6 +1070,17 @@ begin
   end;
 end;
 
+procedure TATTabs.SetTabAngle(AValue: Integer);
+begin
+  {$ifdef darwin}
+  //osx paints angle badly
+  exit;
+  {$endif}
+
+  if FTabAngle=AValue then Exit;
+  FTabAngle:= AValue;
+end;
+
 
 function TATTabs.GetTabAt(X, Y: Integer): Integer;
 var
@@ -1478,6 +1490,7 @@ begin
     tbShowNone: Result:= false;
     tbShowAll: Result:= true;
     tbShowActive: Result:= AIndex=FTabIndex;
+    tbShowMouseOver: Result:= AIndex=FTabIndexOver;
     else Result:= false;
   end;
 
