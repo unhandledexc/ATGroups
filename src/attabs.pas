@@ -201,6 +201,7 @@ type
     procedure DoUpdateTabRects;
   public
     constructor Create(AOnwer: TComponent); override;
+    function CanFocus: boolean; override;
     destructor Destroy; override;
     function GetTabRectWidth(APlusBtn: boolean): Integer;
     function GetTabRect(AIndex: Integer): TRect;
@@ -221,6 +222,7 @@ type
     procedure ShowTabMenu;
     procedure SwitchTab(ANext: boolean);
     procedure MoveTab(AFrom, ATo: integer; AActivateThen: boolean);
+    procedure DragDrop(Source: TObject; X, Y: Integer); override;
   protected
     procedure Paint; override;
     procedure Resize; override;
@@ -232,9 +234,7 @@ type
     {$ifdef windows}
     procedure WMEraseBkgnd(var Message: TMessage); message WM_ERASEBKGND;
     {$endif}
-    procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState;
-      var Accept: Boolean); override;
-    procedure DragDrop(Source: TObject; X, Y: Integer); override;
+    procedure DragOver(Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean); override;
   published
     property DoubleBuffered;
     //colors
@@ -583,6 +583,11 @@ begin
   FOnTabDrawBefore:= nil;
   FOnTabDrawAfter:= nil;
   FOnTabChangeQuery:= nil;
+end;
+
+function TATTabs.CanFocus: boolean;
+begin
+  Result:= false;
 end;
 
 destructor TATTabs.Destroy;
@@ -960,6 +965,7 @@ begin
     ARect:= GetTabRect_Plus;
     AColorXBg:= clNone;
     AColorXBorder:= clNone;
+    AColorXMark:= clWhite;
     if FTabIndexOver=cAtTabPlus then
       AType:= aeTabPlusOver
     else
@@ -1184,7 +1190,7 @@ end;
 procedure TATTabs.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
-  FMouseDown:= true;
+  FMouseDown:= Button=mbLeft;
   FMouseDownPnt:= Point(X, Y);
   FMouseDownButton:= Button;
   FMouseDownShift:= Shift;
