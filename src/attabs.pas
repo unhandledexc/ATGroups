@@ -556,7 +556,7 @@ begin
   FTabShowMenu:= true;
   FTabShowBorderActiveLow:= false;
   FTabShowEntireColor:= false;
-  FTabMiddleClickClose:= false;
+  FTabMiddleClickClose:= true;
   FTabDoubleClickClose:= true;
   FTabDoubleClickPlus:= false;
   FTabDragEnabled:= true;
@@ -1152,6 +1152,21 @@ begin
        (Abs(Y-FMouseDownPnt.Y) < cTabsMouseMaxDistanceToClick) then
     begin
       FMouseDown:= false;
+
+      //double click?
+      if FMouseDownDbl then
+      begin
+        FMouseDownDbl:= false;
+
+        if FTabDoubleClickClose and (FTabIndexOver>=0) then
+          DeleteTab(FTabIndexOver, true, true)
+        else
+        if FTabDoubleClickPlus and (FTabIndexOver=-1) then
+          if Assigned(FOnTabPlusClick) then
+            FOnTabPlusClick(Self);
+        Exit
+      end;
+
       DoHandleClick;
       Exit
     end;
@@ -1171,26 +1186,12 @@ begin
       Exit
     end;
   end;
-
-  //dbl click?
-  if FMouseDownDbl then
-  begin
-    FMouseDownDbl:= false;
-
-    if FTabDoubleClickClose and (FTabIndexOver>=0) then
-      DeleteTab(FTabIndexOver, true, true)
-    else
-    if FTabDoubleClickPlus and (FTabIndexOver=-1) then
-      if Assigned(FOnTabPlusClick) then
-        FOnTabPlusClick(Self);
-    Exit
-  end;
 end;
 
 procedure TATTabs.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: Integer);
 begin
-  FMouseDown:= Button=mbLeft;
+  FMouseDown:= Button in [mbLeft, mbMiddle]; //but not mbRight
   FMouseDownPnt:= Point(X, Y);
   FMouseDownButton:= Button;
   FMouseDownShift:= Shift;
