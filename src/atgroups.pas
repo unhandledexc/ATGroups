@@ -91,10 +91,12 @@ type
     tabColorCloseXOver,
     tabColorArrow,
     tabColorArrowOver,
-    tabColorMarks,
+    tabColorSpecMarks,
+    tabColorActiveMark,
     tabOptionFontSize,
     tabOptionAngle,
-    tabOptionBottomTabs,
+    tabOptionPosition,
+    tabOptionShowFlat,
     tabOptionShowTabs,
     tabOptionShowXButtons,
     tabOptionShowPlus,
@@ -107,10 +109,10 @@ type
     tabOptionHeightInner,
     tabOptionWidthMin,
     tabOptionWidthMax,
-    tabOptionIndentTop,
+    tabOptionSpacer,
     tabOptionIndentInit,
     tabOptionIndentInter,
-    tabOptionIndentColor,
+    tabOptionColorBandSize,
     tabOptionIndentXRight,
     tabOptionIndentXSize,
     tabOptionArrowSize,
@@ -363,12 +365,13 @@ begin
 
   FTabs.OptTabAngle:= 0;
   FTabs.OptTabHeight:= 24;
-  FTabs.OptSpaceOnTop:= 2;
+  FTabs.OptSpacer:= 2;
+  FTabs.OptSpacer2:= 4;
   FTabs.OptSpaceBetweenTabs:= 0;
   FTabs.OptSpaceXSize:= 14;
   FTabs.OptColoredBandSize:= 5;
   FTabs.OptTabWidthMinimal:= 40;
-  FTabs.Height:= FTabs.OptTabHeight+FTabs.OptSpaceOnTop+1;
+  FTabs.Height:= FTabs.OptTabHeight+FTabs.OptSpacer+1;
 
   FTabs.OptShowModifiedText:= #$95;
   FTabs.OptMouseMiddleClickClose:= true;
@@ -1479,20 +1482,43 @@ begin
         tabColorCloseXOver: ColorCloseXOver:= N;
         tabColorArrow: ColorArrow:= N;
         tabColorArrowOver: ColorArrowOver:= N;
-        tabColorMarks: begin ColorDropMark:= N; ColorScrollMark:= N; end;
+        tabColorSpecMarks: begin ColorDropMark:= N; ColorScrollMark:= N; end;
+        tabColorActiveMark: ColorActiveMark:= N;
         //
         tabOptionFontSize:
           begin
             Font.Size:= N;
             OptTabHeight:= Trunc(N * 1.8) + 8; //tested for sizes 8..38
-            Height:= DoScale(OptTabHeight+OptSpaceOnTop+1);
+            Height:= DoScale(OptTabHeight+OptSpacer+1);
           end;
         //
-        tabOptionBottomTabs:
+        tabOptionPosition:
           begin
-            OptShowAtBottom:= Boolean(N);
-            if OptShowAtBottom then Align:= alBottom else Align:= alTop;
+            OptPosition:= TATTabPosition(N);
+            case OptPosition of
+              atpTop:
+                begin
+                  Align:= alTop;
+                  Height:= DoScale(OptTabHeight+OptSpacer+1);
+                end;
+              atpBottom:
+                begin
+                  Align:= alBottom;
+                  Height:= DoScale(OptTabHeight+OptSpacer+1);
+                end;
+              atpLeft:
+                begin
+                  Align:= alLeft;
+                  Width:= DoScale(OptTabWidthNormal);
+                end;
+              atpRight:
+                begin
+                  Align:= alRight;
+                  Width:= DoScale(OptTabWidthNormal);
+                end;
+            end;
           end;
+        tabOptionShowFlat:         OptShowFlat:= Boolean(N);
         tabOptionShowTabs:         Visible:= Boolean(N);
         tabOptionShowXButtons:     OptShowXButtons:= TATTabShowClose(N);
         tabOptionShowPlus:         OptShowPlusTab:= Boolean(N);
@@ -1506,10 +1532,10 @@ begin
         tabOptionHeightInner:      OptTabHeight:= DoScale(N);
         tabOptionWidthMin:         OptTabWidthMinimal:= DoScale(N);
         tabOptionWidthMax:         OptTabWidthNormal:= DoScale(N);
-        tabOptionIndentTop:        OptSpaceOnTop:= DoScale(N);
+        tabOptionSpacer:           OptSpacer:= DoScale(N);
         tabOptionIndentInit:       OptSpaceInitial:= DoScale(N);
         tabOptionIndentInter:      OptSpaceBetweenTabs:= DoScale(N);
-        tabOptionIndentColor:      OptColoredBandSize:= DoScale(N);
+        tabOptionColorBandSize:    OptColoredBandSize:= DoScale(N);
         tabOptionIndentXRight:     OptSpaceXRight:= DoScale(N);
         tabOptionIndentXSize:      OptSpaceXSize:= DoScale(N);
         tabOptionArrowSize:        OptArrowSize:= DoScale(N);
