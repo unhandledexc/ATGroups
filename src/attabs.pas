@@ -49,9 +49,11 @@ type
     TabObject: TObject;
     TabColor: TColor;
     TabModified: boolean;
+    TabSpecial: boolean;
     TabRect: TRect;
     TabImageIndex: integer;
     TabPopupMenu: TPopupMenu;
+    TabFontStyle: TFontStyles;
     constructor Create; virtual;
   end;
 
@@ -102,6 +104,15 @@ type
     atpBottom,
     atpLeft,
     atpRight
+    );
+
+type
+  TATTabIconPosition = (
+    aipIconLefterThanText,
+    aipIconRighterThanText,
+    aipIconCentered,
+    aipIconAboveTextCentered,
+    aipIconBelowTextCentered
     );
 
 type
@@ -168,8 +179,6 @@ const
 const
   _InitOptButtonLayout = '<>,v';
   _InitOptButtonSize = 16;
-  _InitOptTabAngle = 4;
-  _InitOptUseAngleForMaxTabs = 10;
   _InitOptTabHeight = 24;
   _InitOptTabWidthMinimal = 40;
   _InitOptTabWidthNormal = 130;
@@ -177,6 +186,7 @@ const
   _InitOptSpaceInitial = 5;
   _InitOptSpaceBeforeText = 6;
   _InitOptSpaceBetweenTabs = 0;
+  _InitOptSpaceBetweenIconCaption = 0;
   _InitOptSpacer = 4;
   _InitOptSpacer2 = 15;
   _InitOptSpaceXRight = 10;
@@ -245,13 +255,12 @@ type
     FOptButtonSize: integer;
     FOptButtonLayout: string;
 
-    FOptTabAngle: integer; //angle of tab border: from 0 (vertcal border) to any size
-    FOptUseAngleForMaxTabs: integer; //maximal tab count, for which TabAngle is used (else used 0)
     FOptTabHeight: integer;
     FOptTabWidthMinimal: integer; //tab minimal width (used when lot of tabs)
     FOptTabWidthNormal: integer; //tab maximal width (used when only few tabs)
     FOptTabWidthMinimalHidesX: integer; //tab minimal width, after which "x" mark hides for inactive tabs
-    FOptSpaceBetweenTabs: integer; //space between nearest tabs (no need for angled tabs)
+    FOptSpaceBetweenTabs: integer; //space between nearest tabs
+    FOptSpaceBetweenIconCaption: integer;
     FOptSpaceInitial: integer; //space between first tab and left control edge
     FOptSpaceBeforeText: integer; //space between text and tab left edge
     FOptSpacer: integer; //height of top empty space (colored with bg)
@@ -270,8 +279,10 @@ type
     FOptScrollMarkSizeX: integer;
     FOptScrollMarkSizeY: integer;
 
-    FOptShowFlat: boolean;
     FOptPosition: TATTabPosition;
+    FOptIconPosition: TATTabIconPosition;
+    FOptCaptionAlignment: TAlignment;
+    FOptShowFlat: boolean;
     FOptShowXButtons: TATTabShowClose; //show mode for "x" buttons
     FOptShowArrowsNear: boolean;
     FOptShowPlusTab: boolean; //show "plus" tab
@@ -338,14 +349,14 @@ type
     procedure DoPaintArrowRight(C: TCanvas);
     procedure DoPaintButtonClose(C: TCanvas);
     procedure DoPaintButtonPlus(C: TCanvas);
-    procedure DoPaintColoredBand(C: TCanvas; PL1, PL2, PR1, PR2: TPoint;
-      AColor: TColor);
+    procedure DoPaintButtonsBG(C: TCanvas);
+    procedure DoPaintColoredBand(C: TCanvas; PL1, PL2, PR1, PR2: TPoint; AColor: TColor);
     procedure DoPaintTo(C: TCanvas);
     procedure DoPaintBgTo(C: TCanvas; const ARect: TRect);
     procedure DoPaintTabTo(C: TCanvas; ARect: TRect; const ACaption: TATTabString;
       ATabBg, ATabBorder, ATabBorderLow, ATabHilite, ATabCloseBg,
-      ATabCloseBorder, ATabCloseXMark: TColor; ACloseBtn, AModified: boolean;
-      AImageIndex: integer);
+  ATabCloseBorder, ATabCloseXMark: TColor; ACloseBtn, AModified,
+  ATabActive: boolean; AImageIndex: integer; AFontStyle: TFontStyles);
     procedure DoPaintArrowTo(C: TCanvas; ATyp: TATTabTriangle; ARect: TRect;
       AColorArr, AColorBg: TColor);
     procedure DoPaintUserButtons(C: TCanvas);
@@ -363,7 +374,6 @@ type
     function GetRectOfButton(AButton: TATTabButton): TRect;
     function GetRectOfButtonIndex(AIndex: integer; AtLeft: boolean): TRect;
     function GetScrollPageSize: integer;
-    function RealTabAngle: integer;
     procedure SetTabs(AValue: TStrings);
     procedure SetOptButtonLayout(const AValue: string);
     procedure SetTabIndex(AIndex: integer);
@@ -402,7 +412,8 @@ type
       AModified: boolean = false;
       AColor: TColor = clNone;
       AImageIndex: integer = -1;
-      APopupMenu: TPopupMenu = nil);
+      APopupMenu: TPopupMenu = nil;
+      AFontStyle: TFontStyles = []);
     procedure Clear;
     function DeleteTab(AIndex: integer; AAllowEvent, AWithCancelBtn: boolean): boolean;
     procedure ShowTabMenu;
@@ -494,9 +505,8 @@ type
     property OptTabWidthNormal: integer read FOptTabWidthNormal write FOptTabWidthNormal default _InitOptTabWidthNormal;
     property OptTabWidthMinimal: integer read FOptTabWidthMinimal write FOptTabWidthMinimal default _InitOptTabWidthMinimal;
     property OptTabWidthMinimalHidesX: integer read FOptTabWidthMinimalHidesX write FOptTabWidthMinimalHidesX default _InitOptTabWidthMinimalHidesX;
-    property OptTabAngle: integer read FOptTabAngle write FOptTabAngle default _InitOptTabAngle;
-    property OptUseAngleForMaxTabs: integer read FOptUseAngleForMaxTabs write FOptUseAngleForMaxTabs default _InitOptUseAngleForMaxTabs;
     property OptSpaceBetweenTabs: integer read FOptSpaceBetweenTabs write FOptSpaceBetweenTabs default _InitOptSpaceBetweenTabs;
+    property OptSpaceBetweenIconCaption: integer read FOptSpaceBetweenIconCaption write FOptSpaceBetweenIconCaption default _InitOptSpaceBetweenIconCaption;
     property OptSpaceInitial: integer read FOptSpaceInitial write FOptSpaceInitial default _InitOptSpaceInitial;
     property OptSpaceBeforeText: integer read FOptSpaceBeforeText write FOptSpaceBeforeText default _InitOptSpaceBeforeText;
     property OptSpacer: integer read FOptSpacer write FOptSpacer default _InitOptSpacer;
@@ -515,8 +525,10 @@ type
     property OptScrollMarkSizeY: integer read FOptScrollMarkSizeY write FOptScrollMarkSizeY default _InitOptScrollMarkSizeY;
     property OptDropMarkSize: integer read FOptDropMarkSize write FOptDropMarkSize default _InitOptDropMarkSize;
 
-    property OptShowFlat: boolean read FOptShowFlat write FOptShowFlat default _InitOptShowFlat;
     property OptPosition: TATTabPosition read FOptPosition write FOptPosition default _InitOptPosition;
+    property OptIconPosition: TATTabIconPosition read FOptIconPosition write FOptIconPosition default aipIconLefterThanText;
+    property OptCaptionAlignment: TAlignment read FOptCaptionAlignment write FOptCaptionAlignment default taLeftJustify;
+    property OptShowFlat: boolean read FOptShowFlat write FOptShowFlat default _InitOptShowFlat;
     property OptShowScrollMark: boolean read FOptShowScrollMark write FOptShowScrollMark default _InitOptShowScrollMark;
     property OptShowDropMark: boolean read FOptShowDropMark write FOptShowDropMark default _InitOptShowDropMark;
     property OptShowXButtons: TATTabShowClose read FOptShowXButtons write FOptShowXButtons default _InitOptShowXButtons;
@@ -583,121 +595,19 @@ begin
   Result:= PtInRect(Control.ClientRect, Control.ScreenToClient(ScreenPnt));
 end;
 
-procedure DrawAntialisedLine(Canvas: TCanvas; const AX1, AY1, AX2, AY2: {real}integer; const LineColor: TColor);
-// http://stackoverflow.com/a/3613953/1789574
-var
-  swapped: boolean;
-
-  procedure plot(const x, y, c: real);
-  var
-    resclr: TColor;
-  begin
-    if swapped then
-      resclr := Canvas.Pixels[round(y), round(x)]
-    else
-      resclr := Canvas.Pixels[round(x), round(y)];
-    if resclr<0 then exit; //prevent except in GetRValue
-    resclr := RGB(round(GetRValue(resclr) * (1-c) + GetRValue(LineColor) * c),
-                  round(GetGValue(resclr) * (1-c) + GetGValue(LineColor) * c),
-                  round(GetBValue(resclr) * (1-c) + GetBValue(LineColor) * c));
-    if swapped then
-      Canvas.Pixels[round(y), round(x)] := resclr
-    else
-      Canvas.Pixels[round(x), round(y)] := resclr;
-  end;
-
-  function rfrac(const x: real): real;
-  begin
-    rfrac := 1 - frac(x);
-  end;
-
-  procedure swap(var a, b: real);
-  var
-    tmp: real;
-  begin
-    tmp := a;
-    a := b;
-    b := tmp;
-  end;
-
-var
-  x1, x2, y1, y2, dx, dy, gradient, xend, yend, xgap, xpxl1, ypxl1,
-  xpxl2, ypxl2, intery: real;
-  x: integer;
-
+procedure DrawLine(C: TCanvas; X1, Y1, X2, Y2: integer; AColor: TColor);
 begin
-  if AX1<0 then exit;
-  if AX2<0 then exit;
+  if Y1=Y2 then
+    if X2>X1 then Inc(X2) else Dec(X2);
+  if X1=X2 then
+    if Y2>Y1 then Inc(Y2) else Dec(Y2);
 
-  //speed up drawing (AT)
-  if (AX1 = AX2) or (AY1 = AY2) then
-  begin
-    Canvas.Pen.Width:= 1;
-    Canvas.Pen.Color:= LineColor;
-    if (AX1 = AX2) then
-    begin
-      Canvas.MoveTo(AX1, AY1);
-      Canvas.LineTo(AX2, AY2+1);
-    end
-    else
-    begin
-      Canvas.MoveTo(AX1, AY1);
-      Canvas.LineTo(AX2+1, AY2);
-    end;
-    Exit
-  end;
-
-  x1 := AX1;
-  x2 := AX2;
-  y1 := AY1;
-  y2 := AY2;
-
-  dx := x2 - x1;
-  dy := y2 - y1;
-
-  swapped := abs(dx) < abs(dy);
-  if swapped then
-  begin
-    swap(x1, y1);
-    swap(x2, y2);
-    swap(dx, dy);
-  end;
-  if x2 < x1 then
-  begin
-    swap(x1, x2);
-    swap(y1, y2);
-  end;
-
-  gradient := dy / dx;
-
-  xend := round(x1);
-  yend := y1 + gradient * (xend - x1);
-  xgap := rfrac(x1 + 0.5);
-  xpxl1 := xend;
-  ypxl1 := floor(yend);
-  plot(xpxl1, ypxl1, rfrac(yend) * xgap);
-  plot(xpxl1, ypxl1 + 1, frac(yend) * xgap);
-  intery := yend + gradient;
-
-  xend := round(x2);
-  yend := y2 + gradient * (xend - x2);
-  xgap := frac(x2 + 0.5);
-  xpxl2 := xend;
-  ypxl2 := floor(yend);
-  plot(xpxl2, ypxl2, rfrac(yend) * xgap);
-  plot(xpxl2, ypxl2 + 1, frac(yend) * xgap);
-
-  for x := round(xpxl1) + 1 to round(xpxl2) - 1 do
-  begin
-    plot(x, floor(intery), rfrac(intery));
-    plot(x, floor(intery) + 1, frac(intery));
-    intery := intery + gradient;
-  end;
-
+  C.Pen.Color:= AColor;
+  C.MoveTo(X1, Y1);
+  C.LineTo(X2, Y2);
 end;
 
 procedure DrawTriangleRaw(C: TCanvas; const P1, P2, P3: TPoint; Color: TColor);
-//optimize later, make antialiased draw
 begin
   C.Brush.Color:= Color;
   C.Pen.Color:= Color;
@@ -739,15 +649,10 @@ procedure DrawPlusSign(C: TCanvas; const R: TRect; ASize: integer; AColor: TColo
 var
   CX, CY: integer;
 begin
-  C.Pen.Color:= AColor;
   CX:= (R.Left+R.Right) div 2;
   CY:= (R.Top+R.Bottom) div 2;
-
-  C.MoveTo(CX - ASize, CY);
-  C.LineTo(CX + ASize+1, CY);
-
-  C.MoveTo(CX, CY - ASize);
-  C.LineTo(CX, CY + ASize+1);
+  DrawLine(C, CX-ASize, CY, CX+ASize, CY, AColor);
+  DrawLine(C, CX, CY-ASize, CX, CY+ASize, AColor);
 end;
 
 
@@ -775,6 +680,7 @@ begin
   TabColor:= clNone;
   TabImageIndex:= -1;
   TabPopupMenu:= nil;
+  TabFontStyle:= [];
 end;
 
 { TATTabs }
@@ -826,8 +732,8 @@ begin
   FOptButtonLayout:= _InitOptButtonLayout;
   ApplyButtonLayout;
   FOptButtonSize:= _InitOptButtonSize;
-  FOptTabAngle:= _InitOptTabAngle;
-  FOptUseAngleForMaxTabs:= _InitOptUseAngleForMaxTabs;
+  FOptCaptionAlignment:= taLeftJustify;
+  FOptIconPosition:= aipIconLefterThanText;
   FOptTabHeight:= _InitOptTabHeight;
   FOptTabWidthMinimal:= _InitOptTabWidthMinimal;
   FOptTabWidthNormal:= _InitOptTabWidthNormal;
@@ -835,6 +741,7 @@ begin
   FOptSpaceInitial:= _InitOptSpaceInitial;
   FOptSpaceBeforeText:= _InitOptSpaceBeforeText;
   FOptSpaceBetweenTabs:= _InitOptSpaceBetweenTabs;
+  FOptSpaceBetweenIconCaption:= _InitOptSpaceBetweenIconCaption;
   FOptSpacer:= _InitOptSpacer;
   FOptSpacer2:= _InitOptSpacer2;
   FOptSpaceXRight:= _InitOptSpaceXRight;
@@ -933,23 +840,23 @@ end;
 procedure TATTabs.DoPaintTabTo(
   C: TCanvas; ARect: TRect; const ACaption: TATTabString;
   ATabBg, ATabBorder, ATabBorderLow, ATabHilite, ATabCloseBg, ATabCloseBorder, ATabCloseXMark: TColor;
-  ACloseBtn, AModified: boolean;
-  AImageIndex: integer);
+  ACloseBtn, AModified, ATabActive: boolean;
+  AImageIndex: integer;
+  AFontStyle: TFontStyles);
 var
   PL1, PL2, PR1, PR2: TPoint;
   RectText: TRect;
   NIndentL, NIndentR, NIndentTop: integer;
   ElemType: TATTabElemType;
-  AInvert, NAngle: integer;
   TempCaption: TATTabString;
-  bActive, bNeedMoreSpace: boolean;
+  Extent: TSize;
+  bNeedMoreSpace: boolean;
 begin
   //optimize for 200 tabs
   if ARect.Left>=ClientWidth then exit;
   //skip tabs scrolled lefter
   if ARect.Right<=0 then exit;
 
-  bActive:= ATabBg=ColorTabActive;
   if FOptShowFlat then
     ATabBg:= ColorBg;
 
@@ -959,15 +866,9 @@ begin
   C.Pen.Color:= ATabBg;
   C.Brush.Color:= ATabBg;
 
-  if FOptPosition=atpBottom then
-    AInvert:= -1
-  else
-    AInvert:= 1;
-
-  NAngle:= RealTabAngle;
-  RectText:= Rect(ARect.Left+NAngle, ARect.Top, ARect.Right-NAngle, ARect.Bottom);
+  RectText:= Rect(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
   bNeedMoreSpace:= (RectText.Right-RectText.Left<=30) and (ACaption<>'');
-  NIndentL:= IfThen(not bNeedMoreSpace, NAngle+FOptSpaceBeforeText, 2);
+  NIndentL:= IfThen(not bNeedMoreSpace, FOptSpaceBeforeText, 2);
   NIndentR:= NIndentL+IfThen(ACloseBtn, FOptSpaceXRight);
   C.FillRect(RectText);
   RectText:= Rect(ARect.Left+NIndentL, ARect.Top, ARect.Right-NIndentR, ARect.Bottom);
@@ -975,39 +876,52 @@ begin
   //imagelist
   if Assigned(FImages) then
     if (AImageIndex>=0) and (AImageIndex<FImages.Count) then
-    begin
-      FImages.Draw(C,
-        RectText.Left-2,
-        (RectText.Top + RectText.Bottom - FImages.Height) div 2,
-        AImageIndex);
-      Inc(RectText.Left, FImages.Width);
-    end;
+      case FOptIconPosition of
+        aipIconLefterThanText:
+          begin
+            FImages.Draw(C,
+              RectText.Left - 2,
+              (RectText.Top + RectText.Bottom - FImages.Height) div 2,
+              AImageIndex);
+            Inc(RectText.Left, FImages.Width+FOptSpaceBetweenIconCaption);
+          end;
+        aipIconRighterThanText:
+          begin
+            FImages.Draw(C,
+              RectText.Right - FImages.Width + 2,
+              (RectText.Top + RectText.Bottom - FImages.Height) div 2,
+              AImageIndex);
+            Dec(RectText.Right, FImages.Width+FOptSpaceBetweenIconCaption);
+          end;
+        aipIconCentered:
+          begin
+            FImages.Draw(C,
+              (RectText.Left + RectText.Right - FImages.Width) div 2,
+              (RectText.Top + RectText.Bottom - FImages.Height) div 2,
+              AImageIndex);
+          end;
+        aipIconAboveTextCentered:
+          begin
+            FImages.Draw(C,
+              (RectText.Left + RectText.Right - FImages.Width) div 2,
+              RectText.Top + FOptColoredBandSize,
+              AImageIndex);
+            Inc(RectText.Top, FImages.Height+FOptSpaceBetweenIconCaption);
+          end;
+        aipIconBelowTextCentered:
+          begin
+            FImages.Draw(C,
+              (RectText.Left + RectText.Right - FImages.Width) div 2,
+              RectText.Bottom - FImages.Height,
+              AImageIndex);
+            Dec(RectText.Bottom, FImages.Height+FOptSpaceBetweenIconCaption);
+          end;
+      end;
 
-  //left triangle
-  PL1:= Point(ARect.Left+NAngle*AInvert, ARect.Top);
-  PL2:= Point(ARect.Left-NAngle*AInvert, ARect.Bottom-1);
-  if NAngle>0 then
-  begin
-    //DrawTriangleRaw(C, PL1, PL2, Point(PL1.X, PL2.Y), ATabBg);
-    //draw little shifted line- bottom-left point x+=1
-    if FOptPosition=atpBottom then
-      DrawTriangleRaw(C, PL1, Point(PL2.X+1, PL2.Y), Point(PL2.X, PL1.Y), ATabBg)
-    else
-      DrawTriangleRaw(C, PL1, Point(PL2.X+1, PL2.Y), Point(PL1.X, PL2.Y), ATabBg);
-  end;
-
-  //right triangle
-  PR1:= Point(ARect.Right-NAngle*AInvert-1, ARect.Top);
-  PR2:= Point(ARect.Right+NAngle*AInvert-1, ARect.Bottom-1);
-  if NAngle>0 then
-  begin
-    //DrawTriangleRaw(C, PR1, PR2, Point(PR1.X, PR2.Y), ATabBg);
-    //draw little shifted line- bottom-right point x-=1
-    if FOptPosition=atpBottom then
-      DrawTriangleRaw(C, PR1, Point(PR2.X-1, PR2.Y), Point(PR2.X, PR1.Y), ATabBg)
-    else
-      DrawTriangleRaw(C, PR1, Point(PR2.X-1, PR2.Y), Point(PR1.X, PR2.Y), ATabBg);
-  end;
+  PL1:= Point(ARect.Left, ARect.Top);
+  PL2:= Point(ARect.Left, ARect.Bottom-1);
+  PR1:= Point(ARect.Right-1, ARect.Top);
+  PR2:= Point(ARect.Right-1, ARect.Bottom-1);
 
   //caption
   if RectText.Right-RectText.Left>=8 then
@@ -1015,10 +929,25 @@ begin
     C.Font.Assign(Self.Font);
     if AModified then
       C.Font.Color:= FColorFontModified;
+    C.Font.Style:= AFontStyle;
 
     TempCaption:= IfThen(AModified, FOptShowModifiedText) + ACaption;
+    Extent:= C.TextExtent(TempCaption);
 
-    NIndentTop:= (FOptTabHeight - C.TextHeight('Wj')) div 2 + 1;
+    NIndentTop:= (RectText.Bottom-RectText.Top-Extent.cy) div 2 + 1;
+
+    case FOptCaptionAlignment of
+      taCenter:
+        RectText.Left:= Max(
+          RectText.Left,
+          (RectText.Left+RectText.Right-Extent.cx) div 2
+          );
+      taRightJustify:
+        RectText.Left:= Max(
+          RectText.Left,
+          RectText.Right-Extent.cx
+          );
+    end;
 
     {$ifdef WIDE}
     ExtTextOutW(C.Handle,
@@ -1044,7 +973,7 @@ begin
   //borders
   if FOptShowFlat then
   begin
-    if bActive then
+    if ATabActive then
     begin
       C.Brush.Color:= ColorActiveMark;
       case FOptPosition of
@@ -1063,35 +992,35 @@ begin
   case FOptPosition of
     atpTop:
       begin
-        DrawAntialisedLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y+1, ATabBorder);
-        DrawAntialisedLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y+1, ATabBorder);
-        DrawAntialisedLine(C, PL1.X, PL1.Y, PR1.X, PL1.Y, ATabBorder);
+        DrawLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y+1, ATabBorder);
+        DrawLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y+1, ATabBorder);
+        DrawLine(C, PL1.X, PL1.Y, PR1.X, PL1.Y, ATabBorder);
         if ATabBorderLow<>clNone then
-          DrawAntialisedLine(C, PL2.X, ARect.Bottom, PR2.X, ARect.Bottom, ATabBorderLow)
+          DrawLine(C, PL2.X, ARect.Bottom, PR2.X, ARect.Bottom, ATabBorderLow)
         else
-          DrawAntialisedLine(C, PL2.X+1, ARect.Bottom, PR2.X-1, ARect.Bottom, ATabBg);
+          DrawLine(C, PL2.X+1, ARect.Bottom, PR2.X-1, ARect.Bottom, ATabBg);
       end;
     atpBottom:
       begin
-        DrawAntialisedLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y+1, ATabBorder);
-        DrawAntialisedLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y+1, ATabBorder);
-        DrawAntialisedLine(C, PL2.X, PL2.Y+1, PR2.X, PL2.Y+1, ATabBorder);
+        DrawLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y+1, ATabBorder);
+        DrawLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y+1, ATabBorder);
+        DrawLine(C, PL2.X, PL2.Y+1, PR2.X, PL2.Y+1, ATabBorder);
         if ATabBorderLow<>clNone then
-          DrawAntialisedLine(C, PL1.X, ARect.Top, PR1.X, ARect.Top, ATabBorderLow)
+          DrawLine(C, PL1.X, ARect.Top, PR1.X, ARect.Top, ATabBorderLow)
       end;
     atpLeft:
       begin
-        DrawAntialisedLine(C, PL1.X, PL1.Y, PR1.X, PR1.Y, ATabBorder);
-        DrawAntialisedLine(C, PL2.X, PL2.Y, PR2.X, PR2.Y, ATabBorder);
-        DrawAntialisedLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y, ATabBorder);
-        DrawAntialisedLine(C, PR1.X+1, PR1.Y+1, PR1.X+1, PR2.Y-1, IfThen(ATabBorderLow<>clNone, ATabBorderLow, ATabBg));
+        DrawLine(C, PL1.X, PL1.Y, PR1.X, PR1.Y, ATabBorder);
+        DrawLine(C, PL2.X, PL2.Y, PR2.X, PR2.Y, ATabBorder);
+        DrawLine(C, PL1.X, PL1.Y, PL2.X, PL2.Y, ATabBorder);
+        DrawLine(C, PR1.X+1, PR1.Y+1, PR1.X+1, PR2.Y-1, IfThen(ATabBorderLow<>clNone, ATabBorderLow, ATabBg));
       end;
     atpRight:
       begin
-        DrawAntialisedLine(C, PL1.X, PL1.Y, PR1.X, PR1.Y, ATabBorder);
-        DrawAntialisedLine(C, PL2.X, PL2.Y, PR2.X, PR2.Y, ATabBorder);
-        DrawAntialisedLine(C, PL1.X-1, PL1.Y+1, PL1.X-1, PL2.Y-1, IfThen(ATabBorderLow<>clNone, ATabBorderLow, ATabBg));
-        DrawAntialisedLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y, ATabBorder);
+        DrawLine(C, PL1.X, PL1.Y, PR1.X, PR1.Y, ATabBorder);
+        DrawLine(C, PL2.X, PL2.Y, PR2.X, PR2.Y, ATabBorder);
+        DrawLine(C, PL1.X-1, PL1.Y+1, PL1.X-1, PL2.Y-1, IfThen(ATabBorderLow<>clNone, ATabBorderLow, ATabBg));
+        DrawLine(C, PR1.X, PR1.Y, PR2.X, PR2.Y, ATabBorder);
       end;
   end;
 
@@ -1169,7 +1098,7 @@ begin
           Result:= GetTabWidth_Plus_Raw
         else
           Result:= FOptTabWidthNormal;
-        Inc(Result, 2*(RealTabAngle + FOptSpaceBeforeText));
+        Inc(Result, 2*FOptSpaceBeforeText);
       end;
   end;
 end;
@@ -1225,7 +1154,7 @@ begin
     exit;
   end;
 
-  R.Left:= FRealIndentLeft+RealTabAngle;
+  R.Left:= FRealIndentLeft;
   R.Right:= R.Left;
   R.Top:= FOptSpacer;
   R.Bottom:= R.Top+FOptTabHeight;
@@ -1256,7 +1185,7 @@ begin
         begin
           Result.Top:= FOptSpacer;
           Result.Bottom:= Result.Top + FOptTabHeight;
-          Result.Left:= FRealIndentLeft + RealTabAngle;
+          Result.Left:= FRealIndentLeft;
           Result.Right:= Result.Left + GetTabRectWidth(true);
         end;
       end;
@@ -1284,7 +1213,7 @@ var
   P: TPoint;
 begin
   P:= Point(
-    ARect.Right-RealTabAngle-FOptSpaceXRight,
+    ARect.Right-FOptSpaceXRight,
     (ARect.Top+ARect.Bottom) div 2 + 1);
   Dec(P.X, FOptSpaceXSize div 2);
   Dec(P.Y, FOptSpaceXSize div 2);
@@ -1397,28 +1326,28 @@ begin
           RBottom:= Rect(0, FOptSpacer+FOptTabHeight, ClientWidth, ClientHeight);
           C.Brush.Color:= FColorTabActive;
           C.FillRect(RBottom);
-          DrawAntialisedLine(C, RBottom.Left, RBottom.Top, RBottom.Right, RBottom.Top, FColorBorderActive);
+          DrawLine(C, RBottom.Left, RBottom.Top, RBottom.Right, RBottom.Top, FColorBorderActive);
         end;
       atpBottom:
         begin
           RBottom:= Rect(0, 0, ClientWidth, FOptSpacer);
           C.Brush.Color:= FColorTabActive;
           C.FillRect(RBottom);
-          DrawAntialisedLine(C, RBottom.Left, RBottom.Bottom, RBottom.Right, RBottom.Bottom, FColorBorderActive);
+          DrawLine(C, RBottom.Left, RBottom.Bottom, RBottom.Right, RBottom.Bottom, FColorBorderActive);
         end;
       atpLeft:
         begin
           RBottom:= Rect(ClientWidth-FOptSpacer2, 0, ClientWidth, ClientHeight);
           C.Brush.Color:= FColorTabActive;
           C.FillRect(RBottom);
-          DrawAntialisedLine(C, RBottom.Left, RBottom.Top, RBottom.Left, RBottom.Bottom, FColorBorderActive);
+          DrawLine(C, RBottom.Left, RBottom.Top, RBottom.Left, RBottom.Bottom, FColorBorderActive);
         end;
       atpRight:
         begin
           RBottom:= Rect(0, 0, FOptSpacer2, ClientHeight);
           C.Brush.Color:= FColorTabActive;
           C.FillRect(RBottom);
-          DrawAntialisedLine(C, RBottom.Right, RBottom.Top, RBottom.Right, RBottom.Bottom, FColorBorderActive);
+          DrawLine(C, RBottom.Right, RBottom.Top, RBottom.Right, RBottom.Bottom, FColorBorderActive);
         end;
     end;
 
@@ -1446,7 +1375,9 @@ begin
         NColorXMark,
         false,
         false,
-        -1 //no icon
+        false,
+        -1, //no icon
+        []
         );
       DrawPlusSign(C, RRect, FOptArrowSize, Font.Color);
       DoPaintAfter(ElemType, -1, C, RRect);
@@ -1477,7 +1408,9 @@ begin
           NColorXMark,
           IsShowX(i),
           Data.TabModified,
-          Data.TabImageIndex
+          false,
+          Data.TabImageIndex,
+          Data.TabFontStyle
           );
         DoPaintAfter(ElemType, i, C, RRect);
       end;
@@ -1503,12 +1436,17 @@ begin
         NColorXMark,
         IsShowX(i),
         Data.TabModified,
-        Data.TabImageIndex
+        true,
+        Data.TabImageIndex,
+        Data.TabFontStyle
         );
       DoPaintAfter(aeTabActive, i, C, RRect);
     end;  
   end;
 
+  //button back
+  DoPaintButtonsBG(C);
+  //buttons
   DoPaintArrowLeft(C);
   DoPaintArrowRight(C);
   DoPaintArrowDown(C);
@@ -1645,22 +1583,6 @@ begin
         end;
       end;
   end;
-end;
-
-function TATTabs.RealTabAngle: integer;
-begin
-  {$ifdef darwin}
-  //macOS paints angled tab bad
-  exit(0);
-  {$endif}
-
-  if FOptPosition in [atpLeft, atpRight] then
-    Result:= 0
-  else
-  if FTabList.Count>FOptUseAngleForMaxTabs then
-    Result:= 0
-  else
-    Result:= FOptTabAngle;
 end;
 
 procedure TATTabs.SetTabs(AValue: TStrings);
@@ -1951,7 +1873,8 @@ procedure TATTabs.AddTab(
   AModified: boolean = false;
   AColor: TColor = clNone;
   AImageIndex: integer = -1;
-  APopupMenu: TPopupMenu = nil);
+  APopupMenu: TPopupMenu = nil;
+  AFontStyle: TFontStyles = []);
 var
   Data: TATTabData;
 begin
@@ -1962,6 +1885,7 @@ begin
   Data.TabColor:= AColor;
   Data.TabImageIndex:= AImageIndex;
   Data.TabPopupMenu:= APopupMenu;
+  Data.TabFontStyle:= AFontStyle;
 
   if IsIndexOk(AIndex) then
     FTabList.Insert(AIndex, Data)
@@ -2214,7 +2138,7 @@ end;
 
 procedure TATTabs.DoUpdateTabWidths;
 var
-  Value, Count, NAngle: integer;
+  Value, Count: integer;
 begin
   Count:= TabCount;
   if Count=0 then Exit;
@@ -2226,10 +2150,8 @@ begin
   end;
 
   //tricky formula: calculate auto-width
-  NAngle:= RealTabAngle;
   Value:= (ClientWidth
-    - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + 2*FOptSpaceBeforeText + 1*NAngle)
-    - NAngle*2
+    - IfThen(FOptShowPlusTab, GetTabWidth_Plus_Raw + 2*FOptSpaceBeforeText)
     - FOptSpaceBetweenTabs
     - FRealIndentLeft
     - FRealIndentRight) div Count
@@ -2316,8 +2238,15 @@ begin
   Data:= GetTabData(NTab);
   if Data=nil then Exit;
 
-  ATabs.AddTab(NTabTo, Data.TabCaption, Data.TabObject,
-    Data.TabModified, Data.TabColor, Data.TabImageIndex);
+  ATabs.AddTab(NTabTo,
+    Data.TabCaption,
+    Data.TabObject,
+    Data.TabModified,
+    Data.TabColor,
+    Data.TabImageIndex,
+    Data.TabPopupMenu,
+    Data.TabFontStyle
+    );
 
   //correct TabObject parent
   if Data.TabObject is TWinControl then
@@ -2758,6 +2687,20 @@ begin
   C.Brush.Color:= NColor;
 end;
 
+procedure TATTabs.DoPaintButtonsBG(C: TCanvas);
+var
+  RL, RR: TRect;
+begin
+  if FOptPosition in [atpLeft, atpRight] then
+    if FOptButtonLayout<>'' then
+    begin
+      RL:= GetRectOfButtonIndex(0, true);
+      RR:= GetRectOfButtonIndex(0, false);
+      DoPaintBgTo(C, Rect(
+        RL.Left, 0,
+        RR.Right, FOptTabHeight));
+    end;
+end;
 
 end.
 

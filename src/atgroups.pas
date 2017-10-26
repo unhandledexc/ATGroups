@@ -94,7 +94,6 @@ type
     tabColorSpecMarks,
     tabColorActiveMark,
     tabOptionFontSize,
-    tabOptionAngle,
     tabOptionPosition,
     tabOptionShowFlat,
     tabOptionShowTabs,
@@ -116,6 +115,7 @@ type
     tabOptionIndentXRight,
     tabOptionIndentXSize,
     tabOptionArrowSize,
+    tabOptionButtonSize,
     tabOptionShowArrowsNear,
     tabOptionWidecharModified
     );
@@ -220,7 +220,7 @@ type
     procedure PagesSetNext(ANext: boolean);
     function PagesIndexOf(APages: TATPages): Integer;
     function PagesNextIndex(AIndex: Integer; ANext: boolean; AEnableEmpty: boolean): Integer;
-    procedure PagesAndTabIndexOfControl(AObject: TObject; var NPages, NTab: Integer);
+    procedure PagesAndTabIndexOfControl(AObject: TObject; out NPages, NTab: Integer);
     //
     property PopupPages: TATPages read FPopupPages write FPopupPages;
     property PopupTabIndex: Integer read FPopupTabIndex write FPopupTabIndex;
@@ -363,7 +363,6 @@ begin
     //it breaks all on Delphi7
   {$endif}
 
-  FTabs.OptTabAngle:= 0;
   FTabs.OptTabHeight:= 24;
   FTabs.OptSpacer:= 2;
   FTabs.OptSpacer2:= 4;
@@ -1527,7 +1526,6 @@ begin
         tabOptionDoubleClickClose: OptMouseDoubleClickClose:= Boolean(N);
         tabOptionMiddleClickClose: OptMouseMiddleClickClose:= Boolean(N);
         tabOptionDragDrop:         OptMouseDragEnabled:= Boolean(N);
-        tabOptionAngle:            OptTabAngle:= DoScale(N);
         tabOptionHeight:           Height:= DoScale(N);
         tabOptionHeightInner:      OptTabHeight:= DoScale(N);
         tabOptionWidthMin:         OptTabWidthMinimal:= DoScale(N);
@@ -1544,6 +1542,7 @@ begin
         tabOptionIndentXRight:     OptSpaceXRight:= DoScale(N);
         tabOptionIndentXSize:      OptSpaceXSize:= DoScale(N);
         tabOptionArrowSize:        OptArrowSize:= DoScale(N);
+        tabOptionButtonSize:       OptButtonSize:= DoScale(N);
         tabOptionShowArrowsNear:   OptShowArrowsNear:= Boolean(N);
         tabOptionWidecharModified: OptShowModifiedText:= chr(N);
       end;
@@ -1732,7 +1731,7 @@ end;
 
 
 procedure TATGroups.PagesAndTabIndexOfControl(AObject: TObject;
-  var NPages, NTab: Integer);
+  out NPages, NTab: Integer);
 var
   i, j: Integer;
   D: TATTabData;
