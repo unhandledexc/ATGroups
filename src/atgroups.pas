@@ -143,6 +143,22 @@ type
     gm6Grid
     );
 
+const
+  cGroupsCount: array[TATGroupsMode] of Integer = (
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    6
+    );
+
 type
   TATGroupsNums = 0..5;
 
@@ -329,22 +345,6 @@ begin
   {$endif}
 end;
 
-
-const
-  cGroupsCount: array[TATGroupsMode] of Integer = (
-    1,
-    1,
-    2,
-    2,
-    3,
-    3,
-    3,
-    3,
-    4,
-    4,
-    4,
-    6
-    );
 
 { TATPages }
 
@@ -1727,8 +1727,8 @@ end;
 function TATGroups.SetPagesAndTabIndex(APageIndex, ATabIndex: Integer): boolean;
 begin
   Result:=
-    (APageIndex>=1) and
-    (APageIndex<=PagesVisibleCount) and
+    (APageIndex>=0) and
+    (APageIndex<PagesVisibleCount) and
     (ATabIndex>=0) and
     (ATabIndex<Pages[APageIndex].Tabs.TabCount);
   if Result then
