@@ -100,6 +100,7 @@ type
     tabColorArrowOver,
     tabColorSpecMarks,
     tabColorActiveMark,
+    tabOptionMultiline,
     tabOptionAngled,
     tabOptionFontSize,
     tabOptionPosition,
@@ -117,6 +118,7 @@ type
     tabOptionWidthMin,
     tabOptionWidthMax,
     tabOptionSpacer,
+    tabOptionSpacer2,
     tabOptionSpaceInitial,
     tabOptionSpaceBetweenTabs,
     tabOptionColoredBandSize,
@@ -1535,6 +1537,8 @@ begin
                 end;
             end;
           end;
+
+        tabOptionMultiline:        OptMultiline:= Boolean(N);
         tabOptionAngled:           OptShowAngled:= Boolean(N);
         tabOptionShowFlat:         OptShowFlat:= Boolean(N);
         tabOptionShowTabs:         Visible:= Boolean(N);
@@ -1556,6 +1560,7 @@ begin
               Width:= OptTabWidthNormal;
           end;
         tabOptionSpacer:           OptSpacer:= DoScale(N);
+        tabOptionSpacer2:          OptSpacer2:= DoScale(N);
         tabOptionSpaceInitial:     OptSpaceInitial:= DoScale(N);
         tabOptionSpaceBetweenTabs: OptSpaceBetweenTabs:= DoScale(N);
         tabOptionColoredBandSize:  OptColoredBandSize:= DoScale(N);
